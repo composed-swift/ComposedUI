@@ -76,8 +76,8 @@ public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, 
         return cell
     }
 
-    private func sectionInfo(for section: Int) -> CollectionUIConfiguration? {
-        return (mapper.provider.sections[section] as? CollectionUIConfigurationProvider)?.collectionUIConfiguration
+    private func sectionInfo(for section: Int) -> CollectionProvider? {
+        return (mapper.provider.sections[section] as? CollectionSectionProvider)?.collectionSection
     }
 
 }

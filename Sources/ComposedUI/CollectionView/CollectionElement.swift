@@ -1,7 +1,7 @@
 import UIKit
 
 /// Defines a provider for a view, prototype and configuration handler. Cells, headers and footers can all be configured with this provider
-public final class CollectionUIViewProvider {
+public final class CollectionElement {
 
     /// The method to use when dequeuing a view from a UICollectionView
     ///

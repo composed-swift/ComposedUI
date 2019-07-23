@@ -1,11 +1,11 @@
 import UIKit
 import Composed
 
-open class SectionCollectionUIConfiguration: CollectionUIConfiguration {
+open class CollectionSection: CollectionProvider {
 
-    public let header: CollectionUIViewProvider?
-    public let footer: CollectionUIViewProvider?
-    public let background: CollectionUIViewProvider?
+    public let header: CollectionElement?
+    public let footer: CollectionElement?
+    public let background: CollectionElement?
 
     open var numberOfElements: Int {
         return section?.numberOfElements ?? 0
@@ -15,7 +15,7 @@ open class SectionCollectionUIConfiguration: CollectionUIConfiguration {
         return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
     }()
 
-    public let dequeueMethod: CollectionUIViewProvider.DequeueMethod
+    public let dequeueMethod: CollectionElement.DequeueMethod
 
     private let prototypeProvider: () -> UICollectionReusableView
     private var _prototypeView: UICollectionReusableView?
@@ -32,12 +32,12 @@ open class SectionCollectionUIConfiguration: CollectionUIConfiguration {
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
                                                                        prototype: @escaping @autoclosure () -> Cell,
-                                                                       cellDequeueMethod: CollectionUIViewProvider.DequeueMethod,
+                                                                       cellDequeueMethod: CollectionElement.DequeueMethod,
                                                                        cellReuseIdentifier: String? = nil,
                                                                        cellConfigurator: @escaping (Cell, Int, Section) -> Void,
-                                                                       header: CollectionUIViewProvider? = nil,
-                                                                       footer: CollectionUIViewProvider? = nil,
-                                                                       background: CollectionUIViewProvider? = nil) {
+                                                                       header: CollectionElement? = nil,
+                                                                       footer: CollectionElement? = nil,
+                                                                       background: CollectionElement? = nil) {
         self.section = section
         self.prototypeProvider = prototype
         self.dequeueMethod = cellDequeueMethod
