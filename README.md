@@ -1,3 +1,3 @@
 # ComposedUI
 
-A description of this package.
+A framework for building UI components with the Composed framework.
