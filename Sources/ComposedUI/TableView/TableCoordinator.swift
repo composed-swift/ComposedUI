@@ -1,7 +1,7 @@
 import UIKit
 import Composed
 
-open final class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegate, SectionProviderMappingDelegate {
+open class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegate, SectionProviderMappingDelegate {
 
     private let mapper: SectionProviderMapping
     private let tableView: UITableView
@@ -105,15 +105,21 @@ open final class TableCoordinator: NSObject, UITableViewDataSource, UITableViewD
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
-        let type = Swift.type(of: configuration.prototype)
         switch configuration.dequeueMethod {
-        case .nib:
-            let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-            tableView.register(nib, forCellReuseIdentifier: configuration.reuseIdentifier)
-        case .class:
-            tableView.register(type, forCellReuseIdentifier: configuration.reuseIdentifier)
         case .storyboard:
+            // if we're loading from storyboard we don't need to register anything
             break
+        default:
+            let type = configuration.prototypeType
+            switch configuration.dequeueMethod {
+            case .nib:
+                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                tableView.register(nib, forCellReuseIdentifier: configuration.reuseIdentifier)
+            case .class:
+                tableView.register(type, forCellReuseIdentifier: configuration.reuseIdentifier)
+            case .storyboard:
+                break
+            }
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: configuration.reuseIdentifier, for: indexPath)

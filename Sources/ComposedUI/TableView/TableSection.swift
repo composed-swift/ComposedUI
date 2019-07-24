@@ -17,13 +17,16 @@ open class TableSection: TableProvider {
     }
 
     public private(set) lazy var reuseIdentifier: String = {
-        return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
+        let identifier = prototype?.reuseIdentifier ?? prototypeType.reuseIdentifier
+        return identifier.isEmpty ? prototypeType.reuseIdentifier : identifier
     }()
 
     public let dequeueMethod: DequeueMethod<UITableViewCell>
 
-    private let prototypeProvider: () -> UITableViewCell
-    public lazy private(set) var prototype: UITableViewCell = {
+    private let prototypeProvider: () -> UITableViewCell?
+    public let prototypeType: UITableViewCell.Type
+
+    public lazy private(set) var prototype: UITableViewCell? = {
         return prototypeProvider()
     }()
 
@@ -31,15 +34,31 @@ open class TableSection: TableProvider {
     private let configureCell: (UITableViewCell, Int, TableElement<UITableViewCell>.Context) -> Void
 
     public init<Cell: UITableViewCell, Section: Composed.Section>(section: Section,
-                                                                  prototype: @escaping @autoclosure () -> Cell,
                                                                   cellDequeueMethod: DequeueMethod<Cell>,
                                                                   cellReuseIdentifier: String? = nil,
                                                                   cellConfigurator: @escaping (Cell, Int, Section, TableElement<Cell>.Context) -> Void,
                                                                   header: HeaderFooter = .none,
                                                                   footer: HeaderFooter = .none) {
+        self.prototypeType = Cell.self
         self.section = section
-        self.prototypeProvider = prototype
-        self.dequeueMethod = cellDequeueMethod as! DequeueMethod<UITableViewCell>
+
+        self.prototypeProvider = {
+            switch cellDequeueMethod {
+            case let .class(type):
+                return type.init()
+            case let .nib(type):
+                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                return nib.instantiate(withOwner: nil, options: nil).first as? UITableViewCell
+            case .storyboard:
+                return nil
+            }
+        }
+
+        switch cellDequeueMethod {
+        case let .class(type): self.dequeueMethod = .class(type)
+        case let .nib(type): self.dequeueMethod = .nib(type)
+        case let .storyboard(type): self.dequeueMethod = .storyboard(type)
+        }
 
         self.configureCell = { [weak section] c, index, context in
             guard let cell = c as? Cell else {
@@ -50,7 +69,14 @@ open class TableSection: TableProvider {
                 assertionFailure("Asked to configure cell after section has been deallocated")
                 return
             }
-            cellConfigurator(cell, index, section, context as! TableElement<Cell>.Context)
+
+            let cellContext: TableElement<Cell>.Context
+            switch context {
+            case .sizing: cellContext = .sizing
+            case .presentation: cellContext = .presentation
+            }
+            
+            cellConfigurator(cell, index, section, cellContext)
         }
 
         switch header {
@@ -73,6 +99,10 @@ open class TableSection: TableProvider {
             })
         case let .element(element):
             self.footer = element
+        }
+
+        if let identifier = cellReuseIdentifier {
+            self.reuseIdentifier = identifier
         }
     }
 

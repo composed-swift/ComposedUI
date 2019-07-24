@@ -71,7 +71,7 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
-        let type = Swift.type(of: configuration.prototype)
+        let type = configuration.prototypeType
         switch configuration.dequeueMethod {
         case .nib:
             let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
@@ -124,8 +124,8 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
             return layout.estimatedItemSize != .zero ? layout.estimatedItemSize : layout.itemSize
         }
 
-        guard let cell = configuration.prototype as? UICollectionViewCell else {
-            fatalError("The configuration doesn't provide a cell. Expected: UICollectionViewCell, Got: \(type(of: configuration.prototype))")
+        guard let cell = configuration.prototype else {
+            return layout.estimatedItemSize != .zero ? layout.estimatedItemSize : layout.itemSize
         }
 
         configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
