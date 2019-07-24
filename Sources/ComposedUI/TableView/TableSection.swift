@@ -34,8 +34,8 @@ open class TableSection: TableProvider {
                                                                   cellDequeueMethod: DequeueMethod,
                                                                   cellReuseIdentifier: String? = nil,
                                                                   cellConfigurator: @escaping (Cell, Int, Section) -> Void,
-                                                                  header: String? = nil,
-                                                                  footer: String? = nil) {
+                                                                  header: String?,
+                                                                  footer: String?) {
         self.section = section
         self.prototypeProvider = prototype
         self.dequeueMethod = cellDequeueMethod
@@ -73,8 +73,8 @@ open class TableSection: TableProvider {
                                                                   cellDequeueMethod: DequeueMethod,
                                                                   cellReuseIdentifier: String? = nil,
                                                                   cellConfigurator: @escaping (Cell, Int, Section) -> Void,
-                                                                  header: TableElement<UITableViewHeaderFooterView>? = nil,
-                                                                  footer: TableElement<UITableViewHeaderFooterView>? = nil) {
+                                                                  header: TableElement<UITableViewHeaderFooterView>?,
+                                                                  footer: TableElement<UITableViewHeaderFooterView>?) {
         self.section = section
         self.prototypeProvider = prototype
         self.dequeueMethod = cellDequeueMethod

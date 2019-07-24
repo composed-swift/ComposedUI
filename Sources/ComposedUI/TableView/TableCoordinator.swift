@@ -1,7 +1,7 @@
 import UIKit
 import Composed
 
-public final class TableCoordinator: NSObject, UITableViewDataSource, SectionProviderMappingDelegate {
+public final class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegate, SectionProviderMappingDelegate {
 
     private let mapper: SectionProviderMapping
     private let tableView: UITableView
@@ -13,6 +13,7 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, SectionPro
         super.init()
 
         tableView.dataSource = self
+        tableView.delegate = self
     }
 
     // MARK: - SectionProviderMappingDelegate
@@ -48,6 +49,40 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, SectionPro
     }
 
     // MARK: - UITableViewDataSource
+
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableSection(for: section)?.header else { return nil }
+
+        let type = Swift.type(of: header.prototype)
+        switch header.dequeueMethod {
+        case .nib:
+            let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+            tableView.register(nib, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
+        case .class:
+            tableView.register(type, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
+        }
+
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: header.reuseIdentifier) else { return nil }
+        header.configure(view, IndexPath(row: 0, section: section), .sizing)
+        return view
+    }
+
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let footer = tableSection(for: section)?.footer else { return nil }
+
+        let type = Swift.type(of: footer.prototype)
+        switch footer.dequeueMethod {
+        case .nib:
+            let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+            tableView.register(nib, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
+        case .class:
+            tableView.register(type, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
+        }
+
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footer.reuseIdentifier) else { return nil }
+        footer.configure(view, IndexPath(row: 0, section: section), .sizing)
+        return view
+    }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
         return mapper.numberOfSections
