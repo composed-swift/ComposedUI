@@ -89,9 +89,9 @@ open class CollectionSectionFlowLayout: CollectionSection {
     public let header: CollectionElement<UICollectionReusableView>?
     public let footer: CollectionElement<UICollectionReusableView>?
 
-    public let sectionInsets: UIEdgeInsets
-    public let minimumLineSpacing: CGFloat
-    public let minimumInteritemSpacing: CGFloat
+    public let sectionInsets: UIEdgeInsets?
+    public let minimumLineSpacing: CGFloat?
+    public let minimumInteritemSpacing: CGFloat?
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
                                                                        cellDequeueMethod: DequeueMethod<Cell>,
@@ -100,9 +100,9 @@ open class CollectionSectionFlowLayout: CollectionSection {
                                                                        background: CollectionElement<UICollectionReusableView>? = nil,
                                                                        header: CollectionElement<UICollectionReusableView>? = nil,
                                                                        footer: CollectionElement<UICollectionReusableView>? = nil,
-                                                                       sectionInsets: UIEdgeInsets = .zero,
-                                                                       minimumLineSpacing: CGFloat = 0,
-                                                                       minimumInteritemSpacing: CGFloat = 0) {
+                                                                       sectionInsets: UIEdgeInsets? = nil,
+                                                                       minimumLineSpacing: CGFloat? = nil,
+                                                                       minimumInteritemSpacing: CGFloat? = nil) {
         self.sectionInsets = sectionInsets
         self.minimumLineSpacing = minimumLineSpacing
         self.minimumInteritemSpacing = minimumInteritemSpacing
