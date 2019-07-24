@@ -115,17 +115,9 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
 
-        // if the user had previously selected auto-sizing we don't want to do anything to interfere
-        if layout.estimatedItemSize == UICollectionViewFlowLayout.automaticSize {
-            return UICollectionViewFlowLayout.automaticSize
-        }
-
-        guard let configuration = collectionSection(for: indexPath.section) as? CollectionSectionFlowLayout else {
-            return layout.estimatedItemSize != .zero ? layout.estimatedItemSize : layout.itemSize
-        }
-
-        guard let cell = configuration.prototype else {
-            return layout.estimatedItemSize != .zero ? layout.estimatedItemSize : layout.itemSize
+        guard let configuration = collectionSection(for: indexPath.section), let cell = configuration.prototype else {
+            // if the configuration doesn't provide a prototype, we can't auto-size so we fall back to the layout size
+            return layout.itemSize
         }
 
         configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
