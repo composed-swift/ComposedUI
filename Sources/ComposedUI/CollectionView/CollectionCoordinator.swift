@@ -1,10 +1,14 @@
 import UIKit
 import Composed
 
-public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionProviderMappingDelegate {
+open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionProviderMappingDelegate {
 
     private let mapper: SectionProviderMapping
     private let collectionView: UICollectionView
+
+    public var sections: [Section] {
+        return mapper.provider.sections
+    }
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
@@ -74,6 +78,8 @@ public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, 
             collectionView.register(nib, forCellWithReuseIdentifier: configuration.reuseIdentifier)
         case .class:
             collectionView.register(type, forCellWithReuseIdentifier: configuration.reuseIdentifier)
+        case .storyboard:
+            break
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: configuration.reuseIdentifier, for: indexPath)
@@ -83,33 +89,39 @@ public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, 
 
     private func collectionSection(for section: Int) -> CollectionProvider? {
         guard mapper.provider.sections.indices.contains(section) else { return nil }
-        return (mapper.provider.sections[section] as? CollectionSectionProvider)?.collectionSection
+        let env = Environment(bounds: collectionView.bounds, traitCollection: collectionView.traitCollection)
+        return (mapper.provider.sections[section] as? CollectionSectionProvider)?.section(with: env)
     }
 
 }
 
 extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout else { return .zero }
+        return configuration.sectionInsets
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout else { return 0 }
+        return configuration.minimumInteritemSpacing
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout else { return 0 }
+        return configuration.minimumLineSpacing
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+
         // if the user had previously selected auto-sizing we don't want to do anything to interfere
-        if let layout = collectionViewLayout as? UICollectionViewFlowLayout, layout.estimatedItemSize == UICollectionViewFlowLayout.automaticSize {
+        if layout.estimatedItemSize == UICollectionViewFlowLayout.automaticSize {
             return UICollectionViewFlowLayout.automaticSize
         }
 
-        guard let configuration = collectionSection(for: indexPath.section) else {
-            fatalError("No configuration available for section \(indexPath.section)")
+        guard let configuration = collectionSection(for: indexPath.section) as? CollectionSectionFlowLayout else {
+            return layout.estimatedItemSize != .zero ? layout.estimatedItemSize : layout.itemSize
         }
 
         guard let cell = configuration.prototype as? UICollectionViewCell else {

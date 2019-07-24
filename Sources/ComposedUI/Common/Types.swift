@@ -2,9 +2,11 @@
 ///
 /// - nib: Load from a XIB
 /// - `class`: Load from a class
-public enum DequeueMethod {
+public enum DequeueMethod<View> {
     /// Load from a nib
-    case nib
+    case nib(View.Type)
     /// Load from a class
-    case `class`
+    case `class`(View.Type)
+    /// Load from a storyboard
+    case storyboard(View.Type)
 }

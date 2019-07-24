@@ -1,7 +1,7 @@
 import UIKit
 
 /// Defines a provider for a view, prototype and configuration handler. Cells, headers and footers can all be configured with this provider
-public final class CollectionElement {
+public final class CollectionElement<View: UICollectionReusableView> {
 
     public enum Context {
         case sizing
@@ -10,7 +10,7 @@ public final class CollectionElement {
 
     public typealias ViewType = UICollectionReusableView
 
-    public let dequeueMethod: DequeueMethod
+    public let dequeueMethod: DequeueMethod<View>
     public let configure: (UICollectionReusableView, IndexPath, Context) -> Void
 
     private let prototypeProvider: () -> UICollectionReusableView
@@ -23,7 +23,7 @@ public final class CollectionElement {
         return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
     }()
 
-    public init<View>(prototype: @escaping @autoclosure () -> View, dequeueMethod: DequeueMethod, reuseIdentifier: String? = nil, _ configure: @escaping (View, IndexPath, Context) -> Void) where View: UICollectionReusableView {
+    public init(prototype: @escaping @autoclosure () -> View, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, _ configure: @escaping (View, IndexPath, Context) -> Void) {
 
         self.prototypeProvider = prototype
         self.dequeueMethod = dequeueMethod

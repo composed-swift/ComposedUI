@@ -3,9 +3,9 @@ import Composed
 
 open class CollectionSection: CollectionProvider {
 
-    public let header: CollectionElement?
-    public let footer: CollectionElement?
-    public let background: CollectionElement?
+    public let header: CollectionElement<UICollectionReusableView>?
+    public let footer: CollectionElement<UICollectionReusableView>?
+    public let background: CollectionElement<UICollectionReusableView>?
 
     open var numberOfElements: Int {
         return section?.numberOfElements ?? 0
@@ -16,7 +16,7 @@ open class CollectionSection: CollectionProvider {
         return identifier.isEmpty ? type(of: prototype).reuseIdentifier : identifier
     }()
 
-    public let dequeueMethod: DequeueMethod
+    public let dequeueMethod: DequeueMethod<UICollectionViewCell>
 
     private let prototypeProvider: () -> UICollectionReusableView
     public private(set) lazy var prototype: UICollectionReusableView = {
@@ -24,16 +24,16 @@ open class CollectionSection: CollectionProvider {
     }()
 
     private weak var section: Section?
-    private let configureCell: (UICollectionViewCell, Int, CollectionElement.Context) -> Void
+    private let configureCell: (UICollectionViewCell, Int, CollectionElement<UICollectionViewCell>.Context) -> Void
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
                                                                        prototype: @escaping @autoclosure () -> Cell,
-                                                                       cellDequeueMethod: DequeueMethod,
+                                                                       cellDequeueMethod: DequeueMethod<UICollectionViewCell>,
                                                                        cellReuseIdentifier: String? = nil,
-                                                                       cellConfigurator: @escaping (Cell, Int, Section, CollectionElement.Context) -> Void,
-                                                                       header: CollectionElement? = nil,
-                                                                       footer: CollectionElement? = nil,
-                                                                       background: CollectionElement? = nil) {
+                                                                       cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<UICollectionViewCell>.Context) -> Void,
+                                                                       header: CollectionElement<UICollectionReusableView>? = nil,
+                                                                       footer: CollectionElement<UICollectionReusableView>? = nil,
+                                                                       background: CollectionElement<UICollectionReusableView>? = nil) {
         self.section = section
         self.prototypeProvider = prototype
         self.dequeueMethod = cellDequeueMethod
@@ -57,8 +57,34 @@ open class CollectionSection: CollectionProvider {
         }
     }
 
-    public func configure(cell: UICollectionViewCell, at index: Int, context: CollectionElement.Context) {
+    public func configure(cell: UICollectionViewCell, at index: Int, context: CollectionElement<UICollectionViewCell>.Context) {
         configureCell(cell, index, context)
+    }
+
+}
+
+open class CollectionSectionFlowLayout: CollectionSection {
+
+    public let sectionInsets: UIEdgeInsets
+    public let minimumLineSpacing: CGFloat
+    public let minimumInteritemSpacing: CGFloat
+
+    public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
+                                                                       prototype: @escaping @autoclosure () -> Cell,
+                                                                       cellDequeueMethod: DequeueMethod<UICollectionViewCell>,
+                                                                       cellReuseIdentifier: String? = nil,
+                                                                       cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<UICollectionViewCell>.Context) -> Void,
+                                                                       header: CollectionElement<UICollectionReusableView>? = nil,
+                                                                       footer: CollectionElement<UICollectionReusableView>? = nil,
+                                                                       background: CollectionElement<UICollectionReusableView>? = nil,
+                                                                       sectionInsets: UIEdgeInsets = .zero,
+                                                                       minimumLineSpacing: CGFloat = 0,
+                                                                       minimumInteritemSpacing: CGFloat = 0) {
+        self.sectionInsets = sectionInsets
+        self.minimumLineSpacing = minimumLineSpacing
+        self.minimumInteritemSpacing = minimumInteritemSpacing
+        super.init(section: section, prototype: prototype(), cellDequeueMethod: cellDequeueMethod, cellReuseIdentifier: cellReuseIdentifier,
+                   cellConfigurator: cellConfigurator, header: header, footer: footer, background: background)
     }
 
 }

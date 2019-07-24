@@ -20,10 +20,9 @@ open class TableSection: TableProvider {
         return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
     }()
 
-    public let dequeueMethod: DequeueMethod
+    public let dequeueMethod: DequeueMethod<UITableViewCell>
 
     private let prototypeProvider: () -> UITableViewCell
-
     public lazy private(set) var prototype: UITableViewCell = {
         return prototypeProvider()
     }()
@@ -33,14 +32,14 @@ open class TableSection: TableProvider {
 
     public init<Cell: UITableViewCell, Section: Composed.Section>(section: Section,
                                                                   prototype: @escaping @autoclosure () -> Cell,
-                                                                  cellDequeueMethod: DequeueMethod,
+                                                                  cellDequeueMethod: DequeueMethod<Cell>,
                                                                   cellReuseIdentifier: String? = nil,
-                                                                  cellConfigurator: @escaping (Cell, Int, Section, TableElement<UITableViewCell>.Context) -> Void,
+                                                                  cellConfigurator: @escaping (Cell, Int, Section, TableElement<Cell>.Context) -> Void,
                                                                   header: HeaderFooter = .none,
                                                                   footer: HeaderFooter = .none) {
         self.section = section
         self.prototypeProvider = prototype
-        self.dequeueMethod = cellDequeueMethod
+        self.dequeueMethod = cellDequeueMethod as! DequeueMethod<UITableViewCell>
 
         self.configureCell = { [weak section] c, index, context in
             guard let cell = c as? Cell else {
@@ -51,14 +50,14 @@ open class TableSection: TableProvider {
                 assertionFailure("Asked to configure cell after section has been deallocated")
                 return
             }
-            cellConfigurator(cell, index, section, context)
+            cellConfigurator(cell, index, section, context as! TableElement<Cell>.Context)
         }
 
         switch header {
         case .none:
             self.header = nil
         case let .title(text):
-            self.header = TableElement(prototype: .init(frame: .zero), dequeueMethod: .class, { view, indexPath, _ in
+            self.header = TableElement(prototype: .init(frame: .zero), dequeueMethod: .class(UITableViewHeaderFooterView.self), { view, indexPath, _ in
                 view.textLabel?.text = text
             })
         case let .element(element):
@@ -69,7 +68,7 @@ open class TableSection: TableProvider {
         case .none:
             self.footer = nil
         case let .title(text):
-            self.footer = TableElement(prototype: .init(frame: .zero), dequeueMethod: .class, { view, indexPath, _ in
+            self.footer = TableElement(prototype: .init(frame: .zero), dequeueMethod: .class(UITableViewHeaderFooterView.self), { view, indexPath, _ in
                 view.textLabel?.text = text
             })
         case let .element(element):

@@ -1,7 +1,7 @@
 import UIKit
 import Composed
 
-public final class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegate, SectionProviderMappingDelegate {
+open final class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegate, SectionProviderMappingDelegate {
 
     private let mapper: SectionProviderMapping
     private let tableView: UITableView
@@ -64,6 +64,8 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, UITableVie
             tableView.register(nib, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
         case .class:
             tableView.register(type, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
+        case .storyboard:
+            break
         }
 
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: header.reuseIdentifier) else { return nil }
@@ -81,6 +83,8 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, UITableVie
             tableView.register(nib, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
         case .class:
             tableView.register(type, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
+        case .storyboard:
+            break
         }
 
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footer.reuseIdentifier) else { return nil }
@@ -108,6 +112,8 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, UITableVie
             tableView.register(nib, forCellReuseIdentifier: configuration.reuseIdentifier)
         case .class:
             tableView.register(type, forCellReuseIdentifier: configuration.reuseIdentifier)
+        case .storyboard:
+            break
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: configuration.reuseIdentifier, for: indexPath)
@@ -116,7 +122,8 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, UITableVie
     }
 
     private func tableSection(for section: Int) -> TableProvider? {
-        return (mapper.provider.sections[section] as? TableSectionProvider)?.tableSection
+        let env = Environment(bounds: tableView.bounds, traitCollection: tableView.traitCollection)
+        return (mapper.provider.sections[section] as? TableSectionProvider)?.section(with: env)
     }
 
 }
