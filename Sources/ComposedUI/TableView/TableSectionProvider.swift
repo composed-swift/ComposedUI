@@ -7,7 +7,7 @@ public protocol TableProvider {
     var reuseIdentifier: String { get }
     var prototype: UITableViewCell { get }
     var dequeueMethod: DequeueMethod { get }
-    func configure(cell: UITableViewCell, at index: Int)
+    func configure(cell: UITableViewCell, at index: Int, context: TableElement<UITableViewCell>.Context)
 }
 
 public protocol TableSectionProvider {

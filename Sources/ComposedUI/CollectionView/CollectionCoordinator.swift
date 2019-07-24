@@ -13,9 +13,14 @@ public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, 
         super.init()
 
         collectionView.dataSource = self
+        collectionView.delegate = self
     }
 
     // MARK: - SectionProviderMappingDelegate
+
+    public func mappingsDidUpdate(_ mapping: SectionProviderMapping) {
+        collectionView.reloadData()
+    }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         collectionView.insertSections(sections)
@@ -72,12 +77,48 @@ public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, 
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: configuration.reuseIdentifier, for: indexPath)
-        configuration.configure(cell: cell, at: indexPath.row)
+        configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
         return cell
     }
 
     private func collectionSection(for section: Int) -> CollectionProvider? {
+        guard mapper.provider.sections.indices.contains(section) else { return nil }
         return (mapper.provider.sections[section] as? CollectionSectionProvider)?.collectionSection
+    }
+
+}
+
+extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // if the user had previously selected auto-sizing we don't want to do anything to interfere
+        if let layout = collectionViewLayout as? UICollectionViewFlowLayout, layout.estimatedItemSize == UICollectionViewFlowLayout.automaticSize {
+            return UICollectionViewFlowLayout.automaticSize
+        }
+
+        guard let configuration = collectionSection(for: indexPath.section) else {
+            fatalError("No configuration available for section \(indexPath.section)")
+        }
+
+        guard let cell = configuration.prototype as? UICollectionViewCell else {
+            fatalError("The configuration doesn't provide a cell. Expected: UICollectionViewCell, Got: \(type(of: configuration.prototype))")
+        }
+
+        configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
+        let target = CGSize(width: collectionView.bounds.width, height: 0)
+        return cell.contentView.systemLayoutSizeFitting(target, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
     }
 
 }

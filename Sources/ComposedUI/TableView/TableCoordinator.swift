@@ -18,6 +18,10 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, UITableVie
 
     // MARK: - SectionProviderMappingDelegate
 
+    public func mappingsDidUpdate(_ mapping: SectionProviderMapping) {
+        tableView.reloadData()
+    }
+
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         tableView.insertSections(sections, with: .automatic)
     }
@@ -107,7 +111,7 @@ public final class TableCoordinator: NSObject, UITableViewDataSource, UITableVie
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: configuration.reuseIdentifier, for: indexPath)
-        configuration.configure(cell: cell, at: indexPath.row)
+        configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
         return cell
     }
 

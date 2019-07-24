@@ -14,14 +14,10 @@ public final class CollectionElement {
     public let configure: (UICollectionReusableView, IndexPath, Context) -> Void
 
     private let prototypeProvider: () -> UICollectionReusableView
-    private var _prototypeView: UICollectionReusableView?
 
-    public var prototype: UICollectionReusableView {
-        if let view = _prototypeView { return view }
-        let view = prototypeProvider()
-        _prototypeView = view
-        return view
-    }
+    public private(set) lazy var prototype: UICollectionReusableView = {
+        return prototypeProvider()
+    }()
 
     public private(set) lazy var reuseIdentifier: String = {
         return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier

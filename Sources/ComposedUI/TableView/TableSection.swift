@@ -3,6 +3,12 @@ import Composed
 
 open class TableSection: TableProvider {
 
+    public enum HeaderFooter {
+        case none
+        case title(String)
+        case element(TableElement<UITableViewHeaderFooterView>)
+    }
+
     public let header: TableElement<UITableViewHeaderFooterView>?
     public let footer: TableElement<UITableViewHeaderFooterView>?
 
@@ -17,29 +23,26 @@ open class TableSection: TableProvider {
     public let dequeueMethod: DequeueMethod
 
     private let prototypeProvider: () -> UITableViewCell
-    private var _prototypeView: UITableViewCell?
 
-    public var prototype: UITableViewCell {
-        if let view = _prototypeView { return view }
-        let view = prototypeProvider()
-        _prototypeView = view
-        return view
-    }
+    public lazy private(set) var prototype: UITableViewCell = {
+        return prototypeProvider()
+    }()
 
     private weak var section: Section?
-    private let configureCell: (UITableViewCell, Int) -> Void
+    private let configureCell: (UITableViewCell, Int, TableElement<UITableViewCell>.Context) -> Void
 
     public init<Cell: UITableViewCell, Section: Composed.Section>(section: Section,
                                                                   prototype: @escaping @autoclosure () -> Cell,
                                                                   cellDequeueMethod: DequeueMethod,
                                                                   cellReuseIdentifier: String? = nil,
-                                                                  cellConfigurator: @escaping (Cell, Int, Section) -> Void,
-                                                                  header: String?,
-                                                                  footer: String?) {
+                                                                  cellConfigurator: @escaping (Cell, Int, Section, TableElement<UITableViewCell>.Context) -> Void,
+                                                                  header: HeaderFooter = .none,
+                                                                  footer: HeaderFooter = .none) {
         self.section = section
         self.prototypeProvider = prototype
         self.dequeueMethod = cellDequeueMethod
-        self.configureCell = { [weak section] c, index in
+
+        self.configureCell = { [weak section] c, index, context in
             guard let cell = c as? Cell else {
                 assertionFailure("Got an unknown cell. Expecting cell of type \(Cell.self), got \(c)")
                 return
@@ -48,53 +51,34 @@ open class TableSection: TableProvider {
                 assertionFailure("Asked to configure cell after section has been deallocated")
                 return
             }
-            cellConfigurator(cell, index, section)
+            cellConfigurator(cell, index, section, context)
         }
 
-        if let header = header {
-            self.header = TableElement<UITableViewHeaderFooterView>(prototype: UITableViewHeaderFooterView(frame: .zero), dequeueMethod: .class, { view, indexPath, _ in
-                view.textLabel?.text = header
-            })
-        } else {
+        switch header {
+        case .none:
             self.header = nil
-        }
-
-        if let footer = footer {
-            self.footer = TableElement<UITableViewHeaderFooterView>(prototype: UITableViewHeaderFooterView(frame: .zero), dequeueMethod: .class, { view, indexPath, _ in
-                view.textLabel?.text = footer
+        case let .title(text):
+            self.header = TableElement(prototype: .init(frame: .zero), dequeueMethod: .class, { view, indexPath, _ in
+                view.textLabel?.text = text
             })
-        } else {
+        case let .element(element):
+            self.header = element
+        }
+
+        switch footer {
+        case .none:
             self.footer = nil
+        case let .title(text):
+            self.footer = TableElement(prototype: .init(frame: .zero), dequeueMethod: .class, { view, indexPath, _ in
+                view.textLabel?.text = text
+            })
+        case let .element(element):
+            self.footer = element
         }
     }
 
-    public init<Cell: UITableViewCell, Section: Composed.Section>(section: Section,
-                                                                  prototype: @escaping @autoclosure () -> Cell,
-                                                                  cellDequeueMethod: DequeueMethod,
-                                                                  cellReuseIdentifier: String? = nil,
-                                                                  cellConfigurator: @escaping (Cell, Int, Section) -> Void,
-                                                                  header: TableElement<UITableViewHeaderFooterView>?,
-                                                                  footer: TableElement<UITableViewHeaderFooterView>?) {
-        self.section = section
-        self.prototypeProvider = prototype
-        self.dequeueMethod = cellDequeueMethod
-        self.configureCell = { [weak section] c, index in
-            guard let cell = c as? Cell else {
-                assertionFailure("Got an unknown cell. Expecting cell of type \(Cell.self), got \(c)")
-                return
-            }
-            guard let section = section else {
-                assertionFailure("Asked to configure cell after section has been deallocated")
-                return
-            }
-            cellConfigurator(cell, index, section)
-        }
-        self.header = header
-        self.footer = footer
-    }
-
-    public func configure(cell: UITableViewCell, at index: Int) {
-        configureCell(cell, index)
+    public func configure(cell: UITableViewCell, at index: Int, context: TableElement<UITableViewCell>.Context) {
+        configureCell(cell, index, context)
     }
 
 }

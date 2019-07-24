@@ -8,7 +8,7 @@ public protocol CollectionProvider {
     var reuseIdentifier: String { get }
     var prototype: UICollectionReusableView { get }
     var dequeueMethod: DequeueMethod { get }
-    func configure(cell: UICollectionViewCell, at index: Int)
+    func configure(cell: UICollectionViewCell, at index: Int, context: CollectionElement.Context)
 }
 
 public protocol CollectionSectionProvider {

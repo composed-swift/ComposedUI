@@ -12,36 +12,32 @@ open class CollectionSection: CollectionProvider {
     }
 
     public private(set) lazy var reuseIdentifier: String = {
-        return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
+        let identifier = prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
+        return identifier.isEmpty ? type(of: prototype).reuseIdentifier : identifier
     }()
 
     public let dequeueMethod: DequeueMethod
 
     private let prototypeProvider: () -> UICollectionReusableView
-    private var _prototypeView: UICollectionReusableView?
-
-    public var prototype: UICollectionReusableView {
-        if let view = _prototypeView { return view }
-        let view = prototypeProvider()
-        _prototypeView = view
-        return view
-    }
+    public private(set) lazy var prototype: UICollectionReusableView = {
+        return prototypeProvider()
+    }()
 
     private weak var section: Section?
-    private let configureCell: (UICollectionViewCell, Int) -> Void
+    private let configureCell: (UICollectionViewCell, Int, CollectionElement.Context) -> Void
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
                                                                        prototype: @escaping @autoclosure () -> Cell,
                                                                        cellDequeueMethod: DequeueMethod,
                                                                        cellReuseIdentifier: String? = nil,
-                                                                       cellConfigurator: @escaping (Cell, Int, Section) -> Void,
+                                                                       cellConfigurator: @escaping (Cell, Int, Section, CollectionElement.Context) -> Void,
                                                                        header: CollectionElement? = nil,
                                                                        footer: CollectionElement? = nil,
                                                                        background: CollectionElement? = nil) {
         self.section = section
         self.prototypeProvider = prototype
         self.dequeueMethod = cellDequeueMethod
-        self.configureCell = { [weak section] c, index in
+        self.configureCell = { [weak section] c, index, context in
             guard let cell = c as? Cell else {
                 assertionFailure("Got an unknown cell. Expecting cell of type \(Cell.self), got \(c)")
                 return
@@ -50,15 +46,19 @@ open class CollectionSection: CollectionProvider {
                 assertionFailure("Asked to configure cell after section has been deallocated")
                 return
             }
-            cellConfigurator(cell, index, section)
+            cellConfigurator(cell, index, section, context)
         }
         self.header = header
         self.footer = footer
         self.background = background
+
+        if let reuseIdentifier = cellReuseIdentifier {
+            self.reuseIdentifier = reuseIdentifier
+        }
     }
 
-    public func configure(cell: UICollectionViewCell, at index: Int) {
-        configureCell(cell, index)
+    public func configure(cell: UICollectionViewCell, at index: Int, context: CollectionElement.Context) {
+        configureCell(cell, index, context)
     }
 
 }
