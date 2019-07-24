@@ -15,7 +15,7 @@ open class CollectionSection: CollectionProvider {
         return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
     }()
 
-    public let dequeueMethod: CollectionElement.DequeueMethod
+    public let dequeueMethod: DequeueMethod
 
     private let prototypeProvider: () -> UICollectionReusableView
     private var _prototypeView: UICollectionReusableView?
@@ -32,7 +32,7 @@ open class CollectionSection: CollectionProvider {
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
                                                                        prototype: @escaping @autoclosure () -> Cell,
-                                                                       cellDequeueMethod: CollectionElement.DequeueMethod,
+                                                                       cellDequeueMethod: DequeueMethod,
                                                                        cellReuseIdentifier: String? = nil,
                                                                        cellConfigurator: @escaping (Cell, Int, Section) -> Void,
                                                                        header: CollectionElement? = nil,

@@ -54,11 +54,11 @@ public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, 
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sectionInfo(for: section)?.numberOfElements ?? 0
+        return collectionSection(for: section)?.numberOfElements ?? 0
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let configuration = sectionInfo(for: indexPath.section) else {
+        guard let configuration = collectionSection(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
@@ -76,7 +76,7 @@ public final class CollectionCoordinator: NSObject, UICollectionViewDataSource, 
         return cell
     }
 
-    private func sectionInfo(for section: Int) -> CollectionProvider? {
+    private func collectionSection(for section: Int) -> CollectionProvider? {
         return (mapper.provider.sections[section] as? CollectionSectionProvider)?.collectionSection
     }
 

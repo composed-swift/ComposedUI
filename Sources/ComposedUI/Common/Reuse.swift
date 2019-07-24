@@ -1,10 +1,11 @@
 import UIKit
 
-internal protocol ReusableView: class {
+public protocol ReusableView: class {
     static var reuseIdentifier: String { get }
+    var reuseIdentifier: String? { get }
 }
 
-internal extension ReusableView {
+public extension ReusableView {
     static var reuseIdentifier: String { return String(describing: self) }
 }
 
