@@ -6,6 +6,8 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
     private let mapper: SectionProviderMapping
     private let collectionView: UICollectionView
 
+    private var cachedProviders: [CollectionProvider] = []
+
     public var sections: [Section] {
         return mapper.provider.sections
     }
@@ -18,32 +20,63 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
         collectionView.dataSource = self
         collectionView.delegate = self
+
+        prepareSections()
+    }
+
+    private func prepareSections() {
+        cachedProviders.removeAll()
+
+        let env = Environment(bounds: collectionView.bounds, traitCollection: collectionView.traitCollection)
+
+        for index in 0..<mapper.numberOfSections {
+            guard let section = (mapper.provider.sections[index] as? CollectionSectionProvider)?.section(with: env) else {
+                fatalError("No provider available for section: \(index), or it does not conform to CollectionSectionProvider")
+            }
+
+            cachedProviders.append(section)
+
+            let type = section.prototypeType
+            switch section.dequeueMethod {
+            case .nib:
+                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                collectionView.register(nib, forCellWithReuseIdentifier: section.reuseIdentifier)
+            case .class:
+                collectionView.register(type, forCellWithReuseIdentifier: section.reuseIdentifier)
+            case .storyboard:
+                break
+            }
+        }
     }
 
     // MARK: - SectionProviderMappingDelegate
 
     public func mappingsDidUpdate(_ mapping: SectionProviderMapping) {
         collectionView.reloadData()
+        prepareSections()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
+        prepareSections()
         collectionView.insertSections(sections)
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
+        prepareSections()
+        collectionView.deleteSections(sections)
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
+        prepareSections()
+        collectionView.reloadSections(sections)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         collectionView.insertItems(at: indexPaths)
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
-        collectionView.deleteSections(sections)
-    }
-
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         collectionView.deleteItems(at: indexPaths)
-    }
-
-    public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
-        collectionView.reloadSections(sections)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -67,30 +100,18 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let configuration = collectionSection(for: indexPath.section) else {
+        guard let section = collectionSection(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
-        let type = configuration.prototypeType
-        switch configuration.dequeueMethod {
-        case .nib:
-            let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-            collectionView.register(nib, forCellWithReuseIdentifier: configuration.reuseIdentifier)
-        case .class:
-            collectionView.register(type, forCellWithReuseIdentifier: configuration.reuseIdentifier)
-        case .storyboard:
-            break
-        }
-
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: configuration.reuseIdentifier, for: indexPath)
-        configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.reuseIdentifier, for: indexPath)
+        section.configure(cell: cell, at: indexPath.row, context: .presentation)
         return cell
     }
 
     private func collectionSection(for section: Int) -> CollectionProvider? {
-        guard mapper.provider.sections.indices.contains(section) else { return nil }
-        let env = Environment(bounds: collectionView.bounds, traitCollection: collectionView.traitCollection)
-        return (mapper.provider.sections[section] as? CollectionSectionProvider)?.section(with: env)
+        guard cachedProviders.indices.contains(section) else { return nil }
+        return cachedProviders[section]
     }
 
 }
@@ -98,8 +119,8 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout,
-            let strategy = configuration.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
+        guard let section = collectionSection(for: section) as? CollectionSectionFlowLayout,
+            let strategy = section.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
             return (collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset ?? .zero
         }
         
@@ -107,8 +128,8 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     }
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout,
-            let strategy = configuration.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
+        guard let section = collectionSection(for: section) as? CollectionSectionFlowLayout,
+            let strategy = section.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
                 return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing ?? 0
         }
 
@@ -116,8 +137,8 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     }
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout,
-            let strategy = configuration.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
+        guard let section = collectionSection(for: section) as? CollectionSectionFlowLayout,
+            let strategy = section.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
                 return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing ?? 0
         }
 
@@ -127,15 +148,15 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
 
-        guard let configuration = collectionSection(for: indexPath.section), let cell = configuration.prototype else {
+        guard let section = collectionSection(for: indexPath.section), let cell = section.prototype else {
             // if the configuration doesn't provide a prototype, we can't auto-size so we fall back to the layout size
             return layout.itemSize
         }
 
-        configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
-        
+        section.configure(cell: cell, at: indexPath.row, context: .sizing)
+
         let context = CollectionSizingContext(index: indexPath.row, layoutSize: collectionView.bounds.size, prototype: cell)
-        return configuration.sizingStrategy.size(forElementAt: indexPath.row, context: context)
+        return section.sizingStrategy.size(forElementAt: indexPath.row, context: context)
     }
 
 }
