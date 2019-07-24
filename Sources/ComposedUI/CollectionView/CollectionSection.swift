@@ -21,18 +21,21 @@ open class CollectionSection: CollectionProvider {
         return prototypeProvider()
     }()
 
+    public let sizingStrategy: CollectionSizingStrategy
     public let prototypeType: UICollectionViewCell.Type
 
     private weak var section: Section?
     private let configureCell: (UICollectionViewCell, Int, CollectionElement<UICollectionViewCell>.Context) -> Void
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
+                                                                       sizingStrategy: CollectionSizingStrategy,
                                                                        cellDequeueMethod: DequeueMethod<Cell>,
                                                                        cellReuseIdentifier: String? = nil,
                                                                        cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<Cell>.Context) -> Void,
                                                                        background: CollectionElement<UICollectionReusableView>? = nil) {
         self.prototypeType = Cell.self
         self.section = section
+        self.sizingStrategy = sizingStrategy
 
         self.prototypeProvider = {
             switch cellDequeueMethod {
@@ -80,40 +83,6 @@ open class CollectionSection: CollectionProvider {
 
     public func configure(cell: UICollectionViewCell, at index: Int, context: CollectionElement<UICollectionViewCell>.Context) {
         configureCell(cell, index, context)
-    }
-
-}
-
-open class CollectionSectionFlowLayout: CollectionSection {
-
-    public let header: CollectionElement<UICollectionReusableView>?
-    public let footer: CollectionElement<UICollectionReusableView>?
-
-    public let sectionInsets: UIEdgeInsets?
-    public let minimumLineSpacing: CGFloat?
-    public let minimumInteritemSpacing: CGFloat?
-
-    public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
-                                                                       cellDequeueMethod: DequeueMethod<Cell>,
-                                                                       cellReuseIdentifier: String? = nil,
-                                                                       cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<Cell>.Context) -> Void,
-                                                                       background: CollectionElement<UICollectionReusableView>? = nil,
-                                                                       header: CollectionElement<UICollectionReusableView>? = nil,
-                                                                       footer: CollectionElement<UICollectionReusableView>? = nil,
-                                                                       sectionInsets: UIEdgeInsets? = nil,
-                                                                       minimumLineSpacing: CGFloat? = nil,
-                                                                       minimumInteritemSpacing: CGFloat? = nil) {
-        self.sectionInsets = sectionInsets
-        self.minimumLineSpacing = minimumLineSpacing
-        self.minimumInteritemSpacing = minimumInteritemSpacing
-        self.header = header
-        self.footer = footer
-
-        super.init(section: section,
-                   cellDequeueMethod: cellDequeueMethod,
-                   cellReuseIdentifier: cellReuseIdentifier,
-                   cellConfigurator: cellConfigurator,
-                   background: background)
     }
 
 }

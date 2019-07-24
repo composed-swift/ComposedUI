@@ -98,35 +98,34 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout, let insets = configuration.sectionInsets else {
+        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout,
+            let strategy = configuration.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
             return (collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset ?? .zero
         }
         
-        return insets
+        return strategy.metrics.sectionInsets
     }
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout, let spacing = configuration.minimumInteritemSpacing else {
-            return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing ?? 0
+        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout,
+            let strategy = configuration.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
+                return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing ?? 0
         }
 
-        return spacing
+        return strategy.metrics.minimumInteritemSpacing
     }
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout, let spacing = configuration.minimumLineSpacing else {
-            return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing ?? 0
+        guard let configuration = collectionSection(for: section) as? CollectionSectionFlowLayout,
+            let strategy = configuration.sizingStrategy as? CollectionSizingStrategyFlowLayout else {
+                return (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing ?? 0
         }
 
-        return spacing
+        return strategy.metrics.minimumLineSpacing
     }
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
-
-        if layout.estimatedItemSize != .zero {
-            return layout.itemSize
-        }
 
         guard let configuration = collectionSection(for: indexPath.section), let cell = configuration.prototype else {
             // if the configuration doesn't provide a prototype, we can't auto-size so we fall back to the layout size
@@ -134,8 +133,9 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         }
 
         configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
-        let target = CGSize(width: collectionView.bounds.width, height: 0)
-        return cell.contentView.systemLayoutSizeFitting(target, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+        
+        let context = CollectionSizingContext(index: indexPath.row, layoutSize: collectionView.bounds.size, prototype: cell)
+        return configuration.sizingStrategy.size(forElementAt: indexPath.row, context: context)
     }
 
 }
