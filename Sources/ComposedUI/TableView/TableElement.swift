@@ -13,6 +13,7 @@ public final class TableElement<View: UIView & ReusableView> {
     public let dequeueMethod: DequeueMethod<View>
     public let configure: (View, IndexPath, Context) -> Void
 
+    internal let prototypeType: View.Type
     private let prototypeProvider: () -> View
     private var _prototypeView: View?
 
@@ -28,7 +29,7 @@ public final class TableElement<View: UIView & ReusableView> {
     }()
 
     public init(prototype: @escaping @autoclosure () -> View, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, _ configure: @escaping (View, IndexPath, Context) -> Void) {
-
+        self.prototypeType = View.self
         self.prototypeProvider = prototype
         self.dequeueMethod = dequeueMethod
         self.configure = { view, indexPath, context in

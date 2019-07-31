@@ -1,10 +1,12 @@
 import UIKit
 import Composed
 
-open class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegate, SectionProviderMappingDelegate {
+open class TableCoordinator: NSObject, UITableViewDataSource, SectionProviderMappingDelegate {
 
     private let mapper: SectionProviderMapping
     private let tableView: UITableView
+
+    private var cachedProviders: [TableProvider] = []
 
     public init(tableView: UITableView, sectionProvider: SectionProvider) {
         self.tableView = tableView
@@ -14,32 +16,91 @@ open class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegat
 
         tableView.dataSource = self
         tableView.delegate = self
+
+        prepareSections()
+    }
+
+    private func prepareSections() {
+        cachedProviders.removeAll()
+
+        let env = Environment(bounds: tableView.bounds, traitCollection: tableView.traitCollection)
+
+        for index in 0..<mapper.numberOfSections {
+            guard let section = (mapper.provider.sections[index] as? TableSectionProvider)?.section(with: env) else {
+                fatalError("No provider available for section: \(index), or it does not conform to CollectionSectionProvider")
+            }
+
+            if let header = section.header {
+                let type = header.prototypeType
+
+                switch header.dequeueMethod {
+                case .nib:
+                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                    tableView.register(nib, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
+                case .class:
+                    tableView.register(type, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
+                case .storyboard:
+                    break
+                }
+            }
+
+            if let footer = section.footer {
+                let type = footer.prototypeType
+
+                switch footer.dequeueMethod {
+                case .nib:
+                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                    tableView.register(nib, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
+                case .class:
+                    tableView.register(type, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
+                case .storyboard:
+                    break
+                }
+            }
+
+            let type = section.prototypeType
+            switch section.dequeueMethod {
+            case .nib:
+                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                tableView.register(nib, forCellReuseIdentifier: section.reuseIdentifier)
+            case .class:
+                tableView.register(type, forCellReuseIdentifier: section.reuseIdentifier)
+            case .storyboard:
+                break
+            }
+
+            cachedProviders.append(section)
+        }
     }
 
     // MARK: - SectionProviderMappingDelegate
 
     public func mappingsDidUpdate(_ mapping: SectionProviderMapping) {
+        prepareSections()
         tableView.reloadData()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
+        prepareSections()
         tableView.insertSections(sections, with: .automatic)
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
+        prepareSections()
+        tableView.deleteSections(sections, with: .automatic)
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
+        prepareSections()
+        tableView.reloadSections(sections, with: .automatic)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         tableView.insertRows(at: indexPaths, with: .automatic)
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
-        tableView.deleteSections(sections, with: .automatic)
-    }
-
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         tableView.deleteRows(at: indexPaths, with: .automatic)
-    }
-
-    public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
-        tableView.reloadSections(sections, with: .automatic)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -56,18 +117,6 @@ open class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegat
 
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableSection(for: section)?.header else { return nil }
-
-        let type = Swift.type(of: header.prototype)
-        switch header.dequeueMethod {
-        case .nib:
-            let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-            tableView.register(nib, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
-        case .class:
-            tableView.register(type, forHeaderFooterViewReuseIdentifier: header.reuseIdentifier)
-        case .storyboard:
-            break
-        }
-
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: header.reuseIdentifier) else { return nil }
         header.configure(view, IndexPath(row: 0, section: section), .sizing)
         return view
@@ -75,18 +124,6 @@ open class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegat
 
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard let footer = tableSection(for: section)?.footer else { return nil }
-
-        let type = Swift.type(of: footer.prototype)
-        switch footer.dequeueMethod {
-        case .nib:
-            let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-            tableView.register(nib, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
-        case .class:
-            tableView.register(type, forHeaderFooterViewReuseIdentifier: footer.reuseIdentifier)
-        case .storyboard:
-            break
-        }
-
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footer.reuseIdentifier) else { return nil }
         footer.configure(view, IndexPath(row: 0, section: section), .sizing)
         return view
@@ -101,35 +138,31 @@ open class TableCoordinator: NSObject, UITableViewDataSource, UITableViewDelegat
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let configuration = tableSection(for: indexPath.section) else {
+        guard let section = tableSection(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
-        switch configuration.dequeueMethod {
-        case .storyboard:
-            // if we're loading from storyboard we don't need to register anything
-            break
-        default:
-            let type = configuration.prototypeType
-            switch configuration.dequeueMethod {
-            case .nib:
-                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-                tableView.register(nib, forCellReuseIdentifier: configuration.reuseIdentifier)
-            case .class:
-                tableView.register(type, forCellReuseIdentifier: configuration.reuseIdentifier)
-            case .storyboard:
-                break
-            }
-        }
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: configuration.reuseIdentifier, for: indexPath)
-        configuration.configure(cell: cell, at: indexPath.row, context: .presentation)
+        let cell = tableView.dequeueReusableCell(withIdentifier: section.reuseIdentifier, for: indexPath)
+        section.configure(cell: cell, at: indexPath.row, context: .presentation)
         return cell
     }
 
     private func tableSection(for section: Int) -> TableProvider? {
-        let env = Environment(bounds: tableView.bounds, traitCollection: tableView.traitCollection)
-        return (mapper.provider.sections[section] as? TableSectionProvider)?.section(with: env)
+        guard cachedProviders.indices.contains(section) else { return nil }
+        return cachedProviders[section]
     }
+
+}
+
+extension TableCoordinator: UITableViewDelegate {
+
+//    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        guard let section = tableSection(for: indexPath.section), let cell = section.prototype else { return 0 }
+//
+//        section.configure(cell: cell, at: indexPath.row, context: .sizing)
+//
+//        let target = CGSize(width: tableView.bounds.width, height: 0)
+//        return cell.contentView.systemLayoutSizeFitting(target, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
+//    }
 
 }

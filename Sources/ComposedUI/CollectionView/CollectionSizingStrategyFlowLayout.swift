@@ -1,6 +1,22 @@
 import UIKit
 
-public protocol CollectionSizingStrategyFlowLayout:CollectionSizingStrategy {
+public struct CollectionSectionMetrics {
+
+    public let sectionInsets: UIEdgeInsets
+    public let minimumLineSpacing: CGFloat
+    public let minimumInteritemSpacing: CGFloat
+
+    public init(sectionInsets: UIEdgeInsets, minimumInteritemSpacing: CGFloat, minimumLineSpacing: CGFloat) {
+        self.sectionInsets = sectionInsets
+        self.minimumInteritemSpacing = minimumInteritemSpacing
+        self.minimumLineSpacing = minimumLineSpacing
+    }
+
+    public static let zero = CollectionSectionMetrics(sectionInsets: .zero, minimumInteritemSpacing: 0, minimumLineSpacing: 0)
+
+}
+
+public protocol CollectionSizingStrategyFlowLayout: CollectionSizingStrategy {
     var metrics: CollectionSectionMetrics { get }
 }
 
@@ -39,7 +55,9 @@ open class ColumnCollectionSizingStrategy: CollectionSizingStrategyFlowLayout {
 
         var width: CGFloat {
             let interitemSpacing = CGFloat(columnCount - 1) * metrics.minimumInteritemSpacing
-            let availableWidth = context.layoutSize.width - metrics.sectionInsets.left - metrics.sectionInsets.right - interitemSpacing
+            let availableWidth = context.layoutSize.width
+                - metrics.sectionInsets.left - metrics.sectionInsets.right
+                - interitemSpacing
             return (availableWidth / CGFloat(columnCount)).rounded(.down)
         }
 

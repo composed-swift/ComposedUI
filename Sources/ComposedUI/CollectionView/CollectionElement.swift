@@ -13,6 +13,7 @@ public final class CollectionElement<View: UICollectionReusableView> {
     public let dequeueMethod: DequeueMethod<View>
     public let configure: (UICollectionReusableView, IndexPath, Context) -> Void
 
+    internal let prototypeType: View.Type
     private let prototypeProvider: () -> UICollectionReusableView
 
     public private(set) lazy var prototype: UICollectionReusableView = {
@@ -24,7 +25,7 @@ public final class CollectionElement<View: UICollectionReusableView> {
     }()
 
     public init(prototype: @escaping @autoclosure () -> View, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, _ configure: @escaping (View, IndexPath, Context) -> Void) {
-
+        self.prototypeType = View.self
         self.prototypeProvider = prototype
         self.dequeueMethod = dequeueMethod
         self.configure = { view, indexPath, context in
