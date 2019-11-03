@@ -38,7 +38,21 @@ open class ColumnCollectionSizingStrategy: CollectionSizingStrategyFlowLayout {
         self.metrics = metrics
     }
 
+    private var cachedSizes: [Int: CGSize] = [:]
+    private func cachedSize(forElementAt index: Int) -> CGSize? {
+        switch sizingMode {
+        case .aspect:
+            return cachedSizes[index]
+        case .fixed:
+            return cachedSizes.values.first
+        case let .automatic(isUniform):
+            return isUniform ? cachedSizes.values.first : cachedSizes[index]
+        }
+    }
+
     open func size(forElementAt index: Int, context: CollectionSizingContext) -> CGSize {
+        if let size = cachedSize(forElementAt: index) { return size }
+
         var width: CGFloat {
             let interitemSpacing = CGFloat(columnCount - 1) * metrics.minimumInteritemSpacing
             let availableWidth = context.layoutSize.width
@@ -49,9 +63,13 @@ open class ColumnCollectionSizingStrategy: CollectionSizingStrategyFlowLayout {
 
         switch sizingMode {
         case let .aspect(ratio):
-            return CGSize(width: width, height: width * ratio)
+            let size = CGSize(width: width, height: width * ratio)
+            cachedSizes[index] = size
+            return size
         case let .fixed(height):
-            return CGSize(width: width, height: height)
+            let size = CGSize(width: width, height: height)
+            cachedSizes[index] = size
+            return size
         case .automatic:
             let targetView: UIView
             let targetSize = CGSize(width: width, height: 0)
@@ -67,6 +85,7 @@ open class ColumnCollectionSizingStrategy: CollectionSizingStrategyFlowLayout {
                 withHorizontalFittingPriority: .required,
                 verticalFittingPriority: .fittingSizeLevel)
 
+            cachedSizes[index] = size
             return size
         }
     }

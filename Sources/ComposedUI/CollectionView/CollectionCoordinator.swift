@@ -8,10 +8,12 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
     private var cachedProviders: [Int: CollectionProvider] = [:]
     private var flowLayoutSizeObserver: NSKeyValueObservation?
+    private var layoutObserver: NSKeyValueObservation?
 
 
     deinit {
         flowLayoutSizeObserver?.invalidate()
+        flowLayoutSizeObserver = nil
     }
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
@@ -24,18 +26,19 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         collectionView.delegate = self
 
         prepareSections()
-        flowLayoutSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] _, change in
-            if change.newValue?.width != change.oldValue?.width {
-                self?.invalidateSizing()
+
+        layoutObserver = collectionView.observe(\.collectionViewLayout, options: [.initial, .new]) { [weak self] collectionView, change in
+            guard change.oldValue != change.newValue else { return }
+
+            if collectionView.collectionViewLayout is UICollectionViewFlowLayout {
+                self?.flowLayoutSizeObserver = collectionView.observe(\.contentSize, options: [.new, .old]) { _, change in
+                    guard change.oldValue?.width != change.newValue?.width else { return }
+                    self?.invalidateSizing()
+                }
+            } else {
+                self?.flowLayoutSizeObserver?.invalidate()
+                self?.flowLayoutSizeObserver = nil
             }
-        }
-    }
-
-    private func invalidateSizing() {
-        guard collectionView.window != nil else { return }
-
-        for index in 0..<mapper.numberOfSections {
-            (mapper.provider.sections[index] as? CollectionSectionProvider)?.invalidate()
         }
     }
 
@@ -132,6 +135,13 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 }
 
 extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
+
+    private func invalidateSizing() {
+        guard collectionView.window != nil else { return }
+        for index in 0..<mapper.numberOfSections {
+            (mapper.provider.sections[index] as? CollectionSectionProvider)?.invalidate()
+        }
+    }
 
     private func flowLayoutStrategy(for section: Int) -> CollectionSizingStrategyFlowLayout? {
         let env = Environment(bounds: collectionView.bounds, traitCollection: collectionView.traitCollection)
