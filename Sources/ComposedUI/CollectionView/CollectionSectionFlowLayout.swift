@@ -7,7 +7,7 @@ open class CollectionSectionFlowLayout: CollectionSection {
     public let footer: CollectionElement<UICollectionReusableView>?
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
-                                                                       sizingStrategy: CollectionSizingStrategyFlowLayout,
+//                                                                       sizingStrategy: CollectionSizingStrategyFlowLayout,
                                                                        cellDequeueMethod: DequeueMethod<Cell>,
                                                                        cellReuseIdentifier: String? = nil,
                                                                        cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<Cell>.Context) -> Void,
@@ -18,7 +18,7 @@ open class CollectionSectionFlowLayout: CollectionSection {
         self.footer = footer
 
         super.init(section: section,
-                   sizingStrategy: sizingStrategy,
+//                   sizingStrategy: sizingStrategy,
                    cellDequeueMethod: cellDequeueMethod,
                    cellReuseIdentifier: cellReuseIdentifier,
                    cellConfigurator: cellConfigurator,

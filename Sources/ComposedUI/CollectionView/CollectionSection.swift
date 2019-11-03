@@ -21,21 +21,18 @@ open class CollectionSection: CollectionProvider {
         return prototypeProvider()
     }()
 
-    public let sizingStrategy: CollectionSizingStrategy
     public let prototypeType: UICollectionViewCell.Type
 
     private weak var section: Section?
     private let configureCell: (UICollectionViewCell, Int, CollectionElement<UICollectionViewCell>.Context) -> Void
 
     public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
-                                                                       sizingStrategy: CollectionSizingStrategy,
                                                                        cellDequeueMethod: DequeueMethod<Cell>,
                                                                        cellReuseIdentifier: String? = nil,
                                                                        cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<Cell>.Context) -> Void,
                                                                        background: CollectionElement<UICollectionReusableView>? = nil) {
         self.prototypeType = Cell.self
         self.section = section
-        self.sizingStrategy = sizingStrategy
 
         self.prototypeProvider = {
             switch cellDequeueMethod {
