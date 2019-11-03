@@ -3,83 +3,30 @@ import Composed
 
 open class CollectionSection: CollectionProvider {
 
+    public let cell: CollectionElement<UICollectionViewCell>
     public let background: CollectionElement<UICollectionReusableView>?
 
     open var numberOfElements: Int {
         return section?.numberOfElements ?? 0
     }
 
-    public private(set) lazy var reuseIdentifier: String = {
-        let identifier = prototype?.reuseIdentifier ?? prototypeType.reuseIdentifier
-        return identifier.isEmpty ? prototypeType.reuseIdentifier : identifier
-    }()
-
-    public let dequeueMethod: DequeueMethod<UICollectionViewCell>
-
-    private let prototypeProvider: () -> UICollectionViewCell?
-    public private(set) lazy var prototype: UICollectionViewCell? = {
-        return prototypeProvider()
-    }()
-
-    public let prototypeType: UICollectionViewCell.Type
-
     private weak var section: Section?
-    private let configureCell: (UICollectionViewCell, Int, CollectionElement<UICollectionViewCell>.Context) -> Void
 
-    public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
-                                                                       cellDequeueMethod: DequeueMethod<Cell>,
-                                                                       cellReuseIdentifier: String? = nil,
-                                                                       cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<Cell>.Context) -> Void,
-                                                                       background: CollectionElement<UICollectionReusableView>? = nil) {
-        self.prototypeType = Cell.self
-        self.section = section
+    public init<Section, Cell, Background>(section: Section,
+                                           cell: CollectionElement<Cell>,
+                                           background: CollectionElement<Background>? = nil)
+        where Cell: UICollectionViewCell, Background: UICollectionReusableView, Section: Composed.Section {
+            self.section = section
 
-        self.prototypeProvider = {
-            switch cellDequeueMethod {
-            case let .class(type):
-                return type.init(frame: .zero)
-            case let .nib(type):
-                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-                return nib.instantiate(withOwner: nil, options: nil).first as? UICollectionViewCell
-            case .storyboard:
-                return nil
-            }
-        }
-
-        switch cellDequeueMethod {
-        case let .class(type): self.dequeueMethod = .class(type)
-        case let .nib(type): self.dequeueMethod = .nib(type)
-        case let .storyboard(type): self.dequeueMethod = .storyboard(type)
-        }
-
-        self.configureCell = { [weak section] c, index, context in
-            guard let cell = c as? Cell else {
-                assertionFailure("Got an unknown cell. Expecting cell of type \(Cell.self), got \(c)")
-                return
-            }
-            guard let section = section else {
-                assertionFailure("Asked to configure cell after section has been deallocated")
-                return
+            let cellDequeueMethod: DequeueMethod<UICollectionViewCell>
+            switch cell.dequeueMethod {
+            case .class: cellDequeueMethod = .class(Cell.self)
+            case .nib: cellDequeueMethod = .nib(Cell.self)
+            case .storyboard: cellDequeueMethod = .storyboard(Cell.self)
             }
 
-            let cellContext: CollectionElement<Cell>.Context
-            switch context {
-            case .sizing: cellContext = .sizing
-            case .presentation: cellContext = .presentation
-            }
-
-            cellConfigurator(cell, index, section, cellContext)
-        }
-
-        self.background = background
-
-        if let reuseIdentifier = cellReuseIdentifier {
-            self.reuseIdentifier = reuseIdentifier
-        }
-    }
-
-    public func configure(cell: UICollectionViewCell, at index: Int, context: CollectionElement<UICollectionViewCell>.Context) {
-        configureCell(cell, index, context)
+            self.cell = CollectionElement(section: section, dequeueMethod: cellDequeueMethod, reuseIdentifier: cell.reuseIdentifier, cell.configure)
+            self.background = background as? CollectionElement<UICollectionReusableView>
     }
 
 }

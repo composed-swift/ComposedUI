@@ -41,13 +41,12 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
             cachedProviders[index] = section
 
-            let type = section.prototypeType
-            switch section.dequeueMethod {
-            case .nib:
+            switch section.cell.dequeueMethod {
+            case let .nib(type):
                 let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-                collectionView.register(nib, forCellWithReuseIdentifier: section.reuseIdentifier)
-            case .class:
-                collectionView.register(type, forCellWithReuseIdentifier: section.reuseIdentifier)
+                collectionView.register(nib, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
+            case let .class(type):
+                collectionView.register(type, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
             case .storyboard:
                 break
             }
@@ -109,8 +108,9 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.reuseIdentifier, for: indexPath)
-        section.configure(cell: cell, at: indexPath.row, context: .presentation)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.cell.reuseIdentifier, for: indexPath)
+        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+
         return cell
     }
 
@@ -158,12 +158,12 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
         guard let strategy = flowLayoutStrategy(for: indexPath.section),
             let section = collectionProvider(for: indexPath.section),
-            let cell = section.prototype else {
+            let cell = section.cell.prototype else {
                 // if the configuration doesn't provide a prototype, we can't auto-size so we fall back to the layout size
                 return layout.itemSize
         }
 
-        section.configure(cell: cell, at: indexPath.row, context: .sizing)
+        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: true))
 
         var layoutSize = collectionView.bounds.size
 

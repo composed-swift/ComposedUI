@@ -1,13 +1,10 @@
 import UIKit
+import Composed
 
 public protocol CollectionProvider {
+    var cell: CollectionElement<UICollectionViewCell> { get }
     var background: CollectionElement<UICollectionReusableView>? { get }
     var numberOfElements: Int { get }
-    var reuseIdentifier: String { get }
-    var prototype: UICollectionViewCell? { get }
-    var prototypeType: UICollectionViewCell.Type { get }
-    var dequeueMethod: DequeueMethod<UICollectionViewCell> { get }
-    func configure(cell: UICollectionViewCell, at index: Int, context: CollectionElement<UICollectionViewCell>.Context)
 }
 
 public protocol CollectionSectionProvider {

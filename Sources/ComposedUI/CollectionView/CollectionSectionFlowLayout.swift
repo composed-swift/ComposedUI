@@ -6,21 +6,17 @@ open class CollectionSectionFlowLayout: CollectionSection {
     public let header: CollectionElement<UICollectionReusableView>?
     public let footer: CollectionElement<UICollectionReusableView>?
 
-    public init<Cell: UICollectionViewCell, Section: Composed.Section>(section: Section,
-                                                                       cellDequeueMethod: DequeueMethod<Cell>,
-                                                                       cellReuseIdentifier: String? = nil,
-                                                                       cellConfigurator: @escaping (Cell, Int, Section, CollectionElement<Cell>.Context) -> Void,
-                                                                       background: CollectionElement<UICollectionReusableView>? = nil,
-                                                                       header: CollectionElement<UICollectionReusableView>? = nil,
-                                                                       footer: CollectionElement<UICollectionReusableView>? = nil) {
-        self.header = header
-        self.footer = footer
+    public init<Section, Header, Footer, Cell>(section: Section,
+                                               cell: CollectionElement<Cell>,
+                                               header: CollectionElement<Header>? = nil,
+                                               footer: CollectionElement<Footer>? = nil,
+                                               background: CollectionElement<UICollectionReusableView>? = nil)
+        where Header: UICollectionReusableView, Footer: UICollectionReusableView, Cell: UICollectionViewCell, Section: Composed.Section {
 
-        super.init(section: section,
-                   cellDequeueMethod: cellDequeueMethod,
-                   cellReuseIdentifier: cellReuseIdentifier,
-                   cellConfigurator: cellConfigurator,
-                   background: background)
+            self.header = header as? CollectionElement<UICollectionReusableView>
+            self.footer = footer as? CollectionElement<UICollectionReusableView>
+
+            super.init(section: section, cell: cell, background: background)
     }
 
 }

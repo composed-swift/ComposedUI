@@ -1,36 +1,53 @@
 import UIKit
+import Composed
+
+public struct CollectionElementContext {
+    public let isSizing: Bool
+
+    internal init(isSizing: Bool) {
+        self.isSizing = isSizing
+    }
+}
 
 /// Defines a provider for a view, prototype and configuration handler. Cells, headers and footers can all be configured with this provider
-public final class CollectionElement<View: UICollectionReusableView> {
-
-    public enum Context {
-        case sizing
-        case presentation
-    }
+public final class CollectionElement<View> where View: UICollectionReusableView {
 
     public typealias ViewType = UICollectionReusableView
 
     public let dequeueMethod: DequeueMethod<View>
-    public let configure: (UICollectionReusableView, IndexPath, Context) -> Void
+    public let configure: (UICollectionReusableView, Int, Section, CollectionElementContext) -> Void
 
     internal let prototypeType: View.Type
-    private let prototypeProvider: () -> UICollectionReusableView
+    private let prototypeProvider: () -> UICollectionReusableView?
 
-    public private(set) lazy var prototype: UICollectionReusableView = {
+    public private(set) lazy var prototype: UICollectionReusableView? = {
         return prototypeProvider()
     }()
 
     public private(set) lazy var reuseIdentifier: String = {
-        return prototype.reuseIdentifier ?? type(of: prototype).reuseIdentifier
+        let identifier = prototype?.reuseIdentifier ?? prototypeType.reuseIdentifier
+        return identifier.isEmpty ? prototypeType.reuseIdentifier : identifier
     }()
 
-    public init(prototype: @escaping @autoclosure () -> View, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, _ configure: @escaping (View, IndexPath, Context) -> Void) {
+    public init<Section>(section: Section, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, _ configure: @escaping (View, Int, Section, CollectionElementContext) -> Void) where Section: Composed.Section {
         self.prototypeType = View.self
-        self.prototypeProvider = prototype
         self.dequeueMethod = dequeueMethod
-        self.configure = { view, indexPath, context in
+
+        self.prototypeProvider = {
+            switch dequeueMethod {
+            case let .class(type):
+                return type.init(frame: .zero)
+            case let .nib(type):
+                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                return nib.instantiate(withOwner: nil, options: nil).first as? View
+            case .storyboard:
+                return nil
+            }
+        }
+
+        self.configure = { view, index, section, context in
             // swiftlint:disable force_cast
-            configure(view as! View, indexPath, context)
+            configure(view as! View, index, section as! Section, context)
         }
 
         if let reuseIdentifier = reuseIdentifier {
