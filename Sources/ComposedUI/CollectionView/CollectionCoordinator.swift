@@ -50,6 +50,42 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
             case .storyboard:
                 break
             }
+
+            if let header = section.header {
+                switch header.dequeueMethod {
+                case let .nib(type):
+                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                    collectionView.register(nib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: header.reuseIdentifier)
+                case let .class(type):
+                    collectionView.register(type, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: header.reuseIdentifier)
+                case .storyboard:
+                    break
+                }
+            }
+
+            if let footer = section.footer {
+                switch footer.dequeueMethod {
+                case let .nib(type):
+                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                    collectionView.register(nib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footer.reuseIdentifier)
+                case let .class(type):
+                    collectionView.register(type, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footer.reuseIdentifier)
+                case .storyboard:
+                    break
+                }
+            }
+
+            if let background = section.background {
+                switch background.dequeueMethod {
+                case let .nib(type):
+                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                    collectionView.register(nib, forSupplementaryViewOfKind: type.kind, withReuseIdentifier: background.reuseIdentifier)
+                case let .class(type):
+                    collectionView.register(type, forSupplementaryViewOfKind: type.kind, withReuseIdentifier: background.reuseIdentifier)
+                case .storyboard:
+                    break
+                }
+            }
         }
     }
 
@@ -122,6 +158,30 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
 extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
+    private var layoutSize: CGSize {
+        let sectionInsetReference = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInsetReference ?? .fromContentInset
+        var layoutSize = collectionView.bounds.size
+
+        switch sectionInsetReference {
+        case .fromContentInset:
+            layoutSize.width = collectionView.bounds.width
+                - collectionView.adjustedContentInset.left
+                - collectionView.adjustedContentInset.right
+        case .fromSafeArea:
+            layoutSize.width = collectionView.bounds.width
+                - collectionView.safeAreaInsets.left
+                - collectionView.safeAreaInsets.right
+        case .fromLayoutMargins:
+            layoutSize.width = collectionView.bounds.width
+                - collectionView.layoutMargins.left
+                - collectionView.layoutMargins.right
+        default:
+            layoutSize.width = collectionView.bounds.width
+        }
+
+        return layoutSize
+    }
+
     public func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
         guard collectionView.window != nil else { return }
 
@@ -165,27 +225,51 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
         section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: true))
 
-        var layoutSize = collectionView.bounds.size
-
-        switch layout.sectionInsetReference {
-        case .fromContentInset:
-            layoutSize.width = collectionView.bounds.width
-                - collectionView.adjustedContentInset.left
-                - collectionView.adjustedContentInset.right
-        case .fromSafeArea:
-            layoutSize.width = collectionView.bounds.width
-                - collectionView.safeAreaInsets.left
-                - collectionView.safeAreaInsets.right
-        case .fromLayoutMargins:
-            layoutSize.width = collectionView.bounds.width
-                - collectionView.layoutMargins.left
-                - collectionView.layoutMargins.right
-        default:
-            layoutSize.width = collectionView.bounds.width
-        }
-
         let context = CollectionSizingContext(index: indexPath.row, layoutSize: layoutSize, adjustedContentInset: collectionView.adjustedContentInset, prototype: cell)
         return strategy.size(forElementAt: indexPath.row, context: context)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+        guard let sec = collectionProvider(for: section),
+            let view = sec.header?.prototype else {
+                return layout.headerReferenceSize
+        }
+
+        sec.header?.configure(view, section, mapper.provider.sections[section], CollectionElementContext(isSizing: true))
+        return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+        guard let sec = collectionProvider(for: section),
+            let view = sec.footer?.prototype else {
+                return layout.footerReferenceSize
+        }
+
+        sec.footer?.configure(view, section, mapper.provider.sections[section], CollectionElementContext(isSizing: true))
+        return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let section = collectionProvider(for: indexPath.section) else {
+            fatalError("No UI configuration available for section \(indexPath.section)")
+        }
+
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = section.header else { fatalError("Missing header element for section: \(indexPath.section)") }
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: header.reuseIdentifier, for: indexPath)
+            header.configure(view, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+            return view
+        case UICollectionView.elementKindSectionFooter:
+            guard let footer = section.footer else { fatalError("Missing footer element for section: \(indexPath.section)") }
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footer.reuseIdentifier, for: indexPath)
+            footer.configure(view, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+            return view
+        default:
+            fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")
+        }
     }
 
 }
