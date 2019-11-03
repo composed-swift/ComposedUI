@@ -1,7 +1,7 @@
 import UIKit
 
 /// Defines a provider for a view, prototype and configuration handler. Cells, headers and footers can all be configured with this provider
-public final class TableElement<View: UIView & ReusableView> {
+public final class TableElement<View: UIView & ReuseableView> {
     
     public enum Context {
         case sizing

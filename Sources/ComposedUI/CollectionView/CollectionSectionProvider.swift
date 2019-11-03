@@ -13,4 +13,5 @@ public protocol CollectionProvider {
 
 public protocol CollectionSectionProvider {
     func section(with environment: Environment) -> CollectionSection
+    func invalidate()
 }

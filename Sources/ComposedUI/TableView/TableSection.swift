@@ -45,7 +45,7 @@ open class TableSection: TableProvider {
         self.prototypeProvider = {
             switch cellDequeueMethod {
             case let .class(type):
-                return type.init()
+                return type.init(frame: .zero)
             case let .nib(type):
                 let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
                 return nib.instantiate(withOwner: nil, options: nil).first as? UITableViewCell
