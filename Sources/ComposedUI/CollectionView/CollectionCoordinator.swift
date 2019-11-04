@@ -8,14 +8,6 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
     private var cachedProviders: [Int: CollectionProvider] = [:]
     private var cachedStrategies: [Int: CollectionSizingStrategy] = [:]
-    private var flowLayoutSizeObserver: NSKeyValueObservation?
-    private var layoutObserver: NSKeyValueObservation?
-
-
-    deinit {
-        layoutObserver?.invalidate()
-        flowLayoutSizeObserver?.invalidate()
-    }
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
