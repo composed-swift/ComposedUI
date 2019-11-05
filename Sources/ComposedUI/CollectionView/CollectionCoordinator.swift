@@ -191,6 +191,8 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
         guard collectionView.window != nil else { return }
 
+        guard collectionView.collectionViewLayout is UICollectionViewFlowLayout else { return }
+        
         prepareSections()
         collectionView.reloadData()
         cachedStrategies.removeAll()
