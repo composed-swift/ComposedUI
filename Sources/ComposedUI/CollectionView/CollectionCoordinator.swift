@@ -3,10 +3,10 @@ import Composed
 
 open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionProviderMappingDelegate {
 
-    private let mapper: SectionProviderMapping
+    private var mapper: SectionProviderMapping
     private let collectionView: UICollectionView
 
-    private var cachedProviders: [Int: CollectionProvider] = [:]
+    private var cachedProviders: [Int: CollectionElementsProvider] = [:]
     private var cachedStrategies: [Int: CollectionSizingStrategy] = [:]
     private var flowLayoutSizeObserver: NSKeyValueObservation?
     private var layoutObserver: NSKeyValueObservation?
@@ -29,10 +29,16 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         prepareSections()
     }
 
+    open func replace(sectionProvider: SectionProvider) {
+        mapper = SectionProviderMapping(provider: sectionProvider)
+        invalidateLayout()
+    }
+
     private func prepareSections() {
         cachedProviders.removeAll()
 
-        let env = Environment(bounds: collectionView.bounds, traitCollection: collectionView.traitCollection)
+        let container = Environment.LayoutContainer(contentSize: collectionView.bounds.size, effectiveContentSize: contentSize)
+        let env = Environment(container: container, traitCollection: collectionView.traitCollection)
 
         for index in 0..<mapper.numberOfSections {
             guard let section = (mapper.provider.sections[index] as? CollectionSectionProvider)?.section(with: env) else {
@@ -150,7 +156,7 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         return cell
     }
 
-    private func collectionProvider(for section: Int) -> CollectionProvider? {
+    private func collectionProvider(for section: Int) -> CollectionElementsProvider? {
         return cachedProviders[section]
     }
 
@@ -158,33 +164,35 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
 extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
-    private var layoutSize: CGSize {
+    private var contentSize: CGSize {
         let sectionInsetReference = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInsetReference ?? .fromContentInset
-        var layoutSize = collectionView.bounds.size
+        var contentSize = collectionView.bounds.size
 
         switch sectionInsetReference {
         case .fromContentInset:
-            layoutSize.width = collectionView.bounds.width
+            contentSize.width = collectionView.bounds.width
                 - collectionView.adjustedContentInset.left
                 - collectionView.adjustedContentInset.right
         case .fromSafeArea:
-            layoutSize.width = collectionView.bounds.width
+            contentSize.width = collectionView.bounds.width
                 - collectionView.safeAreaInsets.left
                 - collectionView.safeAreaInsets.right
         case .fromLayoutMargins:
-            layoutSize.width = collectionView.bounds.width
+            contentSize.width = collectionView.bounds.width
                 - collectionView.layoutMargins.left
                 - collectionView.layoutMargins.right
         default:
-            layoutSize.width = collectionView.bounds.width
+            contentSize.width = collectionView.bounds.width
         }
 
-        return layoutSize
+        return contentSize
     }
 
-    public func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
+    open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
         guard collectionView.window != nil else { return }
 
+        prepareSections()
+        collectionView.reloadData()
         cachedStrategies.removeAll()
 
         if let context = context {
@@ -196,7 +204,8 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
     private func flowLayoutStrategy(for section: Int) -> CollectionSizingStrategyFlowLayout? {
         if let strategy = cachedStrategies[section] as? CollectionSizingStrategyFlowLayout { return strategy }
-        let env = Environment(bounds: collectionView.bounds, traitCollection: collectionView.traitCollection)
+        let container = Environment.LayoutContainer(contentSize: collectionView.bounds.size, effectiveContentSize: contentSize)
+        let env = Environment(container: container, traitCollection: collectionView.traitCollection)
         cachedStrategies[section] = (mapper.provider.sections[section] as? CollectionSectionProvider)?.sizingStrategy(with: env) as? CollectionSizingStrategyFlowLayout
         return cachedStrategies[section] as? CollectionSizingStrategyFlowLayout
     }
@@ -225,11 +234,11 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
         section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: true))
 
-        let context = CollectionSizingContext(index: indexPath.row, layoutSize: layoutSize, adjustedContentInset: collectionView.adjustedContentInset, prototype: cell)
+        let context = CollectionSizingContext(index: indexPath.row, layoutSize: contentSize, adjustedContentInset: collectionView.adjustedContentInset, prototype: cell)
         return strategy.size(forElementAt: indexPath.row, context: context)
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
         guard let sec = collectionProvider(for: section),
             let view = sec.header?.prototype else {
@@ -240,7 +249,7 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
         guard let sec = collectionProvider(for: section),
             let view = sec.footer?.prototype else {
@@ -251,7 +260,7 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
     }
 
-    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let section = collectionProvider(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }

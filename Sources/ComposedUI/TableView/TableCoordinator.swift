@@ -23,7 +23,8 @@ open class TableCoordinator: NSObject, UITableViewDataSource, SectionProviderMap
     private func prepareSections() {
         cachedProviders.removeAll()
 
-        let env = Environment(bounds: tableView.bounds, traitCollection: tableView.traitCollection)
+        let container = Environment.LayoutContainer(contentSize: tableView.bounds.size, effectiveContentSize: tableView.bounds.size)
+        let env = Environment(container: container, traitCollection: tableView.traitCollection)
 
         for index in 0..<mapper.numberOfSections {
             guard let section = (mapper.provider.sections[index] as? TableSectionProvider)?.section(with: env) else {

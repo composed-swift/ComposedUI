@@ -1,6 +1,14 @@
 import UIKit
 import Composed
 
+public protocol CollectionElementsProvider {
+    var cell: CollectionElement<UICollectionViewCell> { get }
+    var header: CollectionElement<UICollectionReusableView>? { get }
+    var footer: CollectionElement<UICollectionReusableView>? { get }
+    var background: CollectionElement<UICollectionReusableView>? { get }
+    var numberOfElements: Int { get }
+}
+
 public struct CollectionElementContext {
     public let isSizing: Bool
 
