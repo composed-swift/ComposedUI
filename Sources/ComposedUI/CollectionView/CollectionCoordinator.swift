@@ -8,14 +8,6 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
     private var cachedProviders: [Int: CollectionElementsProvider] = [:]
     private var cachedStrategies: [Int: CollectionSizingStrategy] = [:]
-    private var flowLayoutSizeObserver: NSKeyValueObservation?
-    private var layoutObserver: NSKeyValueObservation?
-
-
-    deinit {
-        layoutObserver?.invalidate()
-        flowLayoutSizeObserver?.invalidate()
-    }
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
@@ -271,12 +263,12 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         case UICollectionView.elementKindSectionHeader:
             guard let header = section.header else { fatalError("Missing header element for section: \(indexPath.section)") }
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: header.reuseIdentifier, for: indexPath)
-            header.configure(view, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+            header.configure(view, indexPath.section, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
             return view
         case UICollectionView.elementKindSectionFooter:
             guard let footer = section.footer else { fatalError("Missing footer element for section: \(indexPath.section)") }
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footer.reuseIdentifier, for: indexPath)
-            footer.configure(view, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+            footer.configure(view, indexPath.section, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
             return view
         default:
             fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")
