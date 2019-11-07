@@ -210,55 +210,55 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         return cachedFlowLayoutStrategies[section] as? CollectionSizingStrategyFlowLayout
     }
 
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return flowLayoutStrategy(for: section)?.metrics.sectionInsets ?? .zero
-    }
+//    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return flowLayoutStrategy(for: section)?.metrics.sectionInsets ?? .zero
+//    }
+//
+//    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return flowLayoutStrategy(for: section)?.metrics.minimumInteritemSpacing ?? 0
+//    }
+//
+//    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return flowLayoutStrategy(for: section)?.metrics.minimumLineSpacing ?? 0
+//    }
 
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return flowLayoutStrategy(for: section)?.metrics.minimumInteritemSpacing ?? 0
-    }
+//    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+//
+//        guard let strategy = flowLayoutStrategy(for: indexPath.section),
+//            let section = collectionProvider(for: indexPath.section),
+//            let cell = section.cell.prototype else {
+//                // if the configuration doesn't provide a prototype, we can't auto-size so we fall back to the layout size
+//                return layout.itemSize
+//        }
+//
+//        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: true))
+//
+//        let context = CollectionFlowLayoutSizingContext(index: indexPath.row, layoutSize: contentSize, adjustedContentInset: collectionView.adjustedContentInset, prototype: cell)
+//        return strategy.size(forElementAt: indexPath.row, context: context)
+//    }
 
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return flowLayoutStrategy(for: section)?.metrics.minimumLineSpacing ?? 0
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
-
-        guard let strategy = flowLayoutStrategy(for: indexPath.section),
-            let section = collectionProvider(for: indexPath.section),
-            let cell = section.cell.prototype else {
-                // if the configuration doesn't provide a prototype, we can't auto-size so we fall back to the layout size
-                return layout.itemSize
-        }
-
-        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: true))
-
-        let context = CollectionFlowLayoutSizingContext(index: indexPath.row, layoutSize: contentSize, adjustedContentInset: collectionView.adjustedContentInset, prototype: cell)
-        return strategy.size(forElementAt: indexPath.row, context: context)
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
-        guard let sec = collectionProvider(for: section),
-            let view = sec.header?.prototype else {
-                return layout.headerReferenceSize
-        }
-
-        sec.header?.configure(view, section, mapper.provider.sections[section], CollectionElementContext(isSizing: true))
-        return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
-        guard let sec = collectionProvider(for: section),
-            let view = sec.footer?.prototype else {
-                return layout.footerReferenceSize
-        }
-
-        sec.footer?.configure(view, section, mapper.provider.sections[section], CollectionElementContext(isSizing: true))
-        return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
-    }
+//    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+//        guard let sec = collectionProvider(for: section),
+//            let view = sec.header?.prototype else {
+//                return layout.headerReferenceSize
+//        }
+//
+//        sec.header?.configure(view, section, mapper.provider.sections[section], CollectionElementContext(isSizing: true))
+//        return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
+//    }
+//
+//    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+//        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+//        guard let sec = collectionProvider(for: section),
+//            let view = sec.footer?.prototype else {
+//                return layout.footerReferenceSize
+//        }
+//
+//        sec.footer?.configure(view, section, mapper.provider.sections[section], CollectionElementContext(isSizing: true))
+//        return view.systemLayoutSizeFitting(collectionView.bounds.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
+//    }
 
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let section = collectionProvider(for: indexPath.section) else {
