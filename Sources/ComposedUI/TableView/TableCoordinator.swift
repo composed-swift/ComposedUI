@@ -21,6 +21,7 @@ open class TableCoordinator: NSObject, UITableViewDataSource, SectionProviderMap
     }
 
     private func prepareSections() {
+        mapper.delegate = self
         cachedProviders.removeAll()
 
         let container = Environment.LayoutContainer(contentSize: tableView.bounds.size, effectiveContentSize: tableView.bounds.size)

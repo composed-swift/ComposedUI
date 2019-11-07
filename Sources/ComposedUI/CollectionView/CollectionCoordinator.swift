@@ -3,6 +3,10 @@ import Composed
 
 open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionProviderMappingDelegate {
 
+    public var sectionProvider: SectionProvider {
+        return mapper.provider
+    }
+
     private var mapper: SectionProviderMapping
     private let collectionView: UICollectionView
 
@@ -27,6 +31,7 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
     }
 
     private func prepareSections() {
+        mapper.delegate = self
         cachedProviders.removeAll()
 
         let container = Environment.LayoutContainer(contentSize: collectionView.bounds.size, effectiveContentSize: contentSize)
