@@ -16,7 +16,7 @@ public struct CollectionSectionMetrics {
 
 }
 
-public protocol CollectionSizingStrategyFlowLayout: CollectionSizingStrategy {
+public protocol CollectionSizingStrategyFlowLayout: CollectionFlowLayoutSizingStrategy {
     var metrics: CollectionSectionMetrics { get }
 }
 
@@ -50,7 +50,7 @@ open class ColumnCollectionSizingStrategy: CollectionSizingStrategyFlowLayout {
         }
     }
 
-    open func size(forElementAt index: Int, context: CollectionSizingContext) -> CGSize {
+    open func size(forElementAt index: Int, context: CollectionFlowLayoutSizingContext) -> CGSize {
         if let size = cachedSize(forElementAt: index) { return size }
 
         var width: CGFloat {

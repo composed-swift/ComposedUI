@@ -11,7 +11,7 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
     private let collectionView: UICollectionView
 
     private var cachedProviders: [Int: CollectionElementsProvider] = [:]
-    private var cachedStrategies: [Int: CollectionSizingStrategy] = [:]
+    private var cachedFlowLayoutStrategies: [Int: CollectionFlowLayoutSizingStrategy] = [:]
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
@@ -192,7 +192,7 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         
         prepareSections()
         collectionView.reloadData()
-        cachedStrategies.removeAll()
+        cachedFlowLayoutStrategies.removeAll()
 
         if let context = context {
             collectionView.collectionViewLayout.invalidateLayout(with: context)
@@ -202,11 +202,12 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     }
 
     private func flowLayoutStrategy(for section: Int) -> CollectionSizingStrategyFlowLayout? {
-        if let strategy = cachedStrategies[section] as? CollectionSizingStrategyFlowLayout { return strategy }
+        if let strategy = cachedFlowLayoutStrategies[section] as? CollectionSizingStrategyFlowLayout { return strategy }
         let container = Environment.LayoutContainer(contentSize: collectionView.bounds.size, effectiveContentSize: contentSize)
         let env = Environment(container: container, traitCollection: collectionView.traitCollection)
-        cachedStrategies[section] = (mapper.provider.sections[section] as? CollectionSectionProvider)?.sizingStrategy(with: env) as? CollectionSizingStrategyFlowLayout
-        return cachedStrategies[section] as? CollectionSizingStrategyFlowLayout
+        cachedFlowLayoutStrategies[section] = (mapper.provider.sections[section] as? CollectionSectionProviderFlowLayout)?
+            .sizingStrategy(with: env) as? CollectionSizingStrategyFlowLayout
+        return cachedFlowLayoutStrategies[section] as? CollectionSizingStrategyFlowLayout
     }
 
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -233,7 +234,7 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
         section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: true))
 
-        let context = CollectionSizingContext(index: indexPath.row, layoutSize: contentSize, adjustedContentInset: collectionView.adjustedContentInset, prototype: cell)
+        let context = CollectionFlowLayoutSizingContext(index: indexPath.row, layoutSize: contentSize, adjustedContentInset: collectionView.adjustedContentInset, prototype: cell)
         return strategy.size(forElementAt: indexPath.row, context: context)
     }
 

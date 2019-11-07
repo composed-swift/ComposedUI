@@ -12,11 +12,6 @@ open class TextSection: SingleElementSection<String>, CollectionSectionProvider 
         super.init(element: text)
     }
 
-    open func sizingStrategy(with environment: Environment) -> CollectionSizingStrategy? {
-        let metrics = CollectionSectionMetrics(sectionInsets: insets, minimumInteritemSpacing: 0, minimumLineSpacing: 0)
-        return ColumnCollectionSizingStrategy(columnCount: 1, sizingMode: .automatic(isUniform: false), metrics: metrics)
-    }
-
     open func section(with environment: Environment) -> CollectionSection {
         let cell = CollectionElement(section: self, dequeueMethod: .class(TextCell.self)) { [unowned self] cell, _, section, _ in
             cell.label.text = section.element
