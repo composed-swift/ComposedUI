@@ -151,14 +151,41 @@ open class ComposedLayout: UICollectionViewFlowLayout {
     open override func prepare() {
         if delegate == nil {
             delegate = ComposedLayoutDelegate(layout: self)
+            estimatedItemSize = CGSize(width: 1, height: 1)
         }
 
         super.prepare()
     }
 
+    private func environment(for collectionView: UICollectionView, additionalInsets: UIEdgeInsets) -> ComposedLayoutEnvironment {
+        let insets = UIEdgeInsets(top: collectionView.contentInset.top + additionalInsets.top,
+                                  left: collectionView.contentInset.left + additionalInsets.left,
+                                  bottom: collectionView.contentInset.bottom + additionalInsets.bottom,
+                                  right: collectionView.contentInset.right + additionalInsets.right)
+        let container = LayoutContainer(contentSize: collectionView.bounds.size, contentInsets: insets)
+        return LayoutEnvironment(container: container, traitCollection: collectionView.traitCollection)
+    }
+
+    private func layoutSection(in index: Int, collectionView: UICollectionView) -> ComposedLayoutSection? {
+        if let section = section { return section }
+        return sectionProvider?(index, environment(for: collectionView, additionalInsets: .zero))
+    }
+
     open override func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
-        let should = super.shouldInvalidateLayout(forPreferredLayoutAttributes: preferredAttributes, withOriginalAttributes: originalAttributes)
-        return should
+//        let should = super.shouldInvalidateLayout(forPreferredLayoutAttributes: preferredAttributes, withOriginalAttributes: originalAttributes)
+        guard let section = layoutSection(in: preferredAttributes.indexPath.section, collectionView: collectionView!) else { return false }
+
+        if case .automatic = section.item.layoutSize.height {
+            let preferredWidth = collectionView!.bounds.width - 10 - 10 - 10
+            if originalAttributes.size.height == preferredAttributes.size.height { return false }
+
+            let attributes = preferredAttributes.copy() as! UICollectionViewLayoutAttributes
+            attributes.size.width = preferredWidth
+
+            return super.shouldInvalidateLayout(forPreferredLayoutAttributes: attributes, withOriginalAttributes: originalAttributes)
+        }
+
+        return false
     }
 
     open override func invalidationContext(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
@@ -269,7 +296,8 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegateF
 
         switch item.layoutSize.width {
         case .automatic:
-            width = UICollectionViewFlowLayout.automaticSize.width
+            width = environment(for: collectionView, additionalInsets: section.contentInsets)
+                .container.effectiveContentSize.width
         case let .absolute(dimension):
             width = dimension
         case let .fractionalWidth(fraction):
@@ -282,7 +310,7 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegateF
 
         switch item.layoutSize.height {
         case .automatic:
-            height = 50
+            height = 1
         case let .absolute(dimension):
             height = dimension
         case let .fractionalWidth(fraction):
