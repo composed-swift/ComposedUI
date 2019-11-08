@@ -98,7 +98,6 @@ public class ComposedLayoutDecorationItem: ComposedLayoutItem {
 
 public struct ComposedLayoutConfiguration {
     public var scrollDirection: UICollectionView.ScrollDirection = .vertical
-    public var interSectionSpacing: CGFloat = 0
     public var globalHeaderItem: ComposedLayoutSupplementaryItem?
     public var globalFooterItem: ComposedLayoutSupplementaryItem?
     public init() { }
@@ -183,19 +182,22 @@ internal struct LayoutEnvironment: ComposedLayoutEnvironment {
     let traitCollection: UITraitCollection
 }
 
-internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegate {
+internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegateFlowLayout {
 
     private let layout: ComposedLayout
     private weak var originalDelegate: UICollectionViewDelegate?
 
-    private var collectionView: UICollectionView { return layout.collectionView! }
+    private var observer: NSKeyValueObservation?
 
     init(layout: ComposedLayout) {
         self.layout = layout
         super.init()
-        self.originalDelegate = collectionView.delegate
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        collectionView.delegate = self
+
+        observer = layout.observe(\.collectionView, options: [.initial, .new]) { [unowned self] layout, _ in
+            self.originalDelegate = layout.collectionView!.delegate
+            layout.collectionView!.delegate = self
+        }
     }
 
     override func responds(to aSelector: Selector!) -> Bool {
@@ -218,23 +220,23 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegate 
         return originalDelegate
     }
 
-    private var environment: ComposedLayoutEnvironment {
+    private func environment(for collectionView: UICollectionView) -> ComposedLayoutEnvironment {
         let container = LayoutContainer(contentSize: collectionView.bounds.size, contentInsets: collectionView.contentInset)
         return LayoutEnvironment(container: container, traitCollection: collectionView.traitCollection)
     }
 
-    private func layoutSection(for section: Int) -> ComposedLayoutSection? {
+    private func layoutSection(for collectionView: UICollectionView, in section: Int) -> ComposedLayoutSection? {
         if let section = layout.section { return section }
-        return layout.sectionProvider?(section, environment)
+        return layout.sectionProvider?(section, environment(for: collectionView))
     }
 
     @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        guard let section = layoutSection(for: section) else { return .zero }
+        guard let section = layoutSection(for: collectionView, in: section) else { return .zero }
         return section.contentInsets
     }
 
     @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        guard let section = layoutSection(for: section) else { return 0 }
+        guard let section = layoutSection(for: collectionView, in: section) else { return 0 }
         switch layout.scrollDirection {
         case .horizontal: return section.yAxisSpacing
         case .vertical: return section.xAxisSpacing
@@ -243,7 +245,7 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegate 
     }
 
     @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        guard let section = layoutSection(for: section) else { return 0 }
+        guard let section = layoutSection(for: collectionView, in: section) else { return 0 }
         switch layout.scrollDirection {
         case .horizontal: return section.xAxisSpacing
         case .vertical: return section.yAxisSpacing
@@ -251,24 +253,24 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegate 
         }
     }
 
-    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLaryout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSizCe {
-        guard let section = layoutSection(for: indexPath.section) else { return .zero }
-        return size(for: section.item, in: section)
+    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLaryout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let section = layoutSection(for: collectionView, in: indexPath.section) else { return .zero }
+        return size(for: section.item, in: section, collectionView: collectionView)
     }
 
     @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        guard let section = layoutSection(for: section) else { return .zero }
+        guard let section = layoutSection(for: collectionView, in: section) else { return .zero }
         guard let item = section.boundarySupplementaryItems.first(where: { $0.elementKind == UICollectionView.elementKindSectionHeader }) else { return .zero }
-        return size(for: item, in: section)
+        return size(for: item, in: section, collectionView: collectionView)
     }
 
     @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        guard let section = layoutSection(for: section) else { return .zero }
+        guard let section = layoutSection(for: collectionView, in: section) else { return .zero }
         guard let item = section.boundarySupplementaryItems.first(where: { $0.elementKind == UICollectionView.elementKindSectionFooter }) else { return .zero }
-        return size(for: item, in: section)
+        return size(for: item, in: section, collectionView: collectionView)
     }
 
-    private func size(for item: ComposedLayoutItem, in section: ComposedLayoutSection) -> CGSize {
+    private func size(for item: ComposedLayoutItem, in section: ComposedLayoutSection, collectionView: UICollectionView) -> CGSize {
         let width: CGFloat
         let height: CGFloat
 
@@ -278,9 +280,9 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegate 
         case let .absolute(dimension):
             width = dimension
         case let .fractionalWidth(fraction):
-            width = environment.container.effectiveContentSize.width * fraction
+            width = environment(for: collectionView).container.effectiveContentSize.width * fraction
         case let .fractionalHeight(fraction):
-            width = environment.container.effectiveContentSize.height * fraction
+            width = environment(for: collectionView).container.effectiveContentSize.height * fraction
         }
 
         switch item.layoutSize.height {
@@ -289,9 +291,9 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegate 
         case let .absolute(dimension):
             height = dimension
         case let .fractionalWidth(fraction):
-            height = environment.container.effectiveContentSize.width * fraction
+            height = environment(for: collectionView).container.effectiveContentSize.width * fraction
         case let .fractionalHeight(fraction):
-            height = environment.container.effectiveContentSize.height * fraction
+            height = environment(for: collectionView).container.effectiveContentSize.height * fraction
         }
 
         return CGSize(width: width, height: height)
