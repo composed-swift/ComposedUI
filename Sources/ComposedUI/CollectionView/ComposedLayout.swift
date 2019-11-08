@@ -156,6 +156,16 @@ open class ComposedLayout: UICollectionViewFlowLayout {
         super.prepare()
     }
 
+    open override func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
+        let should = super.shouldInvalidateLayout(forPreferredLayoutAttributes: preferredAttributes, withOriginalAttributes: originalAttributes)
+        return should
+    }
+
+    open override func invalidationContext(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
+        let context = super.invalidationContext(forPreferredLayoutAttributes: preferredAttributes, withOriginalAttributes: originalAttributes)
+        return context
+    }
+
 }
 
 public protocol ComposedLayoutContainer {
@@ -192,7 +202,6 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegateF
     init(layout: ComposedLayout) {
         self.layout = layout
         super.init()
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
 
         observer = layout.observe(\.collectionView, options: [.initial, .new]) { [unowned self] layout, _ in
             self.originalDelegate = layout.collectionView!.delegate
@@ -200,34 +209,18 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegateF
         }
     }
 
-    override func responds(to aSelector: Selector!) -> Bool {
-        if super.responds(to: aSelector) {
-            return true
-        }
-
-        if originalDelegate?.responds(to: aSelector) ?? false {
-            return true
-        }
-
-        return false
-    }
-
-    override func forwardingTarget(for aSelector: Selector!) -> Any? {
-        if super.responds(to: aSelector) {
-            return self
-        }
-
-        return originalDelegate
-    }
-
-    private func environment(for collectionView: UICollectionView) -> ComposedLayoutEnvironment {
-        let container = LayoutContainer(contentSize: collectionView.bounds.size, contentInsets: collectionView.contentInset)
+    private func environment(for collectionView: UICollectionView, additionalInsets: UIEdgeInsets) -> ComposedLayoutEnvironment {
+        let insets = UIEdgeInsets(top: collectionView.contentInset.top + additionalInsets.top,
+                                  left: collectionView.contentInset.left + additionalInsets.left,
+                                  bottom: collectionView.contentInset.bottom + additionalInsets.bottom,
+                                  right: collectionView.contentInset.right + additionalInsets.right)
+        let container = LayoutContainer(contentSize: collectionView.bounds.size, contentInsets: insets)
         return LayoutEnvironment(container: container, traitCollection: collectionView.traitCollection)
     }
 
     private func layoutSection(for collectionView: UICollectionView, in section: Int) -> ComposedLayoutSection? {
         if let section = layout.section { return section }
-        return layout.sectionProvider?(section, environment(for: collectionView))
+        return layout.sectionProvider?(section, environment(for: collectionView, additionalInsets: .zero))
     }
 
     @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -253,7 +246,7 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegateF
         }
     }
 
-    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLaryout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let section = layoutSection(for: collectionView, in: indexPath.section) else { return .zero }
         return size(for: section.item, in: section, collectionView: collectionView)
     }
@@ -280,23 +273,40 @@ internal final class ComposedLayoutDelegate: NSObject, UICollectionViewDelegateF
         case let .absolute(dimension):
             width = dimension
         case let .fractionalWidth(fraction):
-            width = environment(for: collectionView).container.effectiveContentSize.width * fraction
+            width = environment(for: collectionView, additionalInsets: section.contentInsets)
+                .container.effectiveContentSize.width * fraction - 10
         case let .fractionalHeight(fraction):
-            width = environment(for: collectionView).container.effectiveContentSize.height * fraction
+            width = environment(for: collectionView, additionalInsets: section.contentInsets)
+                .container.effectiveContentSize.height * fraction
         }
 
         switch item.layoutSize.height {
         case .automatic:
-            height = UICollectionViewFlowLayout.automaticSize.height
+            height = 50
         case let .absolute(dimension):
             height = dimension
         case let .fractionalWidth(fraction):
-            height = environment(for: collectionView).container.effectiveContentSize.width * fraction
+            height = environment(for: collectionView, additionalInsets: section.contentInsets)
+                .container.effectiveContentSize.width * fraction
         case let .fractionalHeight(fraction):
-            height = environment(for: collectionView).container.effectiveContentSize.height * fraction
+            height = environment(for: collectionView, additionalInsets: section.contentInsets)
+                .container.effectiveContentSize.height * fraction
         }
 
         return CGSize(width: width, height: height)
+    }
+
+    // MARK: - Delegate forwarding
+
+    override func responds(to aSelector: Selector!) -> Bool {
+        if super.responds(to: aSelector) { return true }
+        if originalDelegate?.responds(to: aSelector) ?? false { return true }
+        return false
+    }
+
+    override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        if super.responds(to: aSelector) { return self }
+        return originalDelegate
     }
 
 }
