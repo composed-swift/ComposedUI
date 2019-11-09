@@ -145,7 +145,7 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.cell.reuseIdentifier, for: indexPath)
-        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section])
 
         return cell
     }
@@ -207,12 +207,12 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
         case UICollectionView.elementKindSectionHeader:
             guard let header = section.header else { fatalError("Missing header element for section: \(indexPath.section)") }
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: header.reuseIdentifier, for: indexPath)
-            header.configure(view, indexPath.section, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+            header.configure(view, indexPath.section, mapper.provider.sections[indexPath.section])
             return view
         case UICollectionView.elementKindSectionFooter:
             guard let footer = section.footer else { fatalError("Missing footer element for section: \(indexPath.section)") }
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footer.reuseIdentifier, for: indexPath)
-            footer.configure(view, indexPath.section, mapper.provider.sections[indexPath.section], CollectionElementContext(isSizing: false))
+            footer.configure(view, indexPath.section, mapper.provider.sections[indexPath.section])
             return view
         default:
             fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")

@@ -11,7 +11,7 @@ open class TextSection: SingleElementSection<String>, CollectionSectionProvider 
     }
 
     public func section(with traitCollection: UITraitCollection) -> CollectionSection {
-        let cell = CollectionElement(section: self, dequeueMethod: .class(TextCell.self)) { [unowned self] cell, _, section, _ in
+        let cell = CollectionElement(section: self, dequeueMethod: .class(TextCell.self)) { [unowned self] cell, _, section in
             cell.label.text = section.element
             self.configurationBlock?(cell.label)
         }
