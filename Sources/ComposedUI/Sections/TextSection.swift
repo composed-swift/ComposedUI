@@ -4,15 +4,13 @@ import Composed
 open class TextSection: SingleElementSection<String>, CollectionSectionProvider {
 
     public let configurationBlock: ((UILabel) -> Void)?
-    public let insets: UIEdgeInsets
 
-    public init(text: String, insets: UIEdgeInsets = .zero, configurationBlock: ((UILabel) -> Void)? = nil) {
-        self.insets = insets
+    public init(text: String, configurationBlock: ((UILabel) -> Void)? = nil) {
         self.configurationBlock = configurationBlock
         super.init(element: text)
     }
 
-    open func section(with environment: Environment) -> CollectionSection {
+    public func section(with traitCollection: UITraitCollection) -> CollectionSection {
         let cell = CollectionElement(section: self, dequeueMethod: .class(TextCell.self)) { [unowned self] cell, _, section, _ in
             cell.label.text = section.element
             self.configurationBlock?(cell.label)
@@ -43,10 +41,10 @@ private final class TextCell: UICollectionViewCell {
         contentView.addSubview(label)
 
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            label.topAnchor.constraint(equalTo: contentView.topAnchor),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            label.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            label.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            label.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
         ])
     }
 

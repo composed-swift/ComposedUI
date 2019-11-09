@@ -24,11 +24,8 @@ open class TableCoordinator: NSObject, UITableViewDataSource, SectionProviderMap
         mapper.delegate = self
         cachedProviders.removeAll()
 
-        let container = Environment.LayoutContainer(contentSize: tableView.bounds.size, effectiveContentSize: tableView.bounds.size)
-        let env = Environment(container: container, traitCollection: tableView.traitCollection)
-
         for index in 0..<mapper.numberOfSections {
-            guard let section = (mapper.provider.sections[index] as? TableSectionProvider)?.section(with: env) else {
+            guard let section = (mapper.provider.sections[index] as? TableSectionProvider)?.section(with: tableView.traitCollection) else {
                 fatalError("No provider available for section: \(index), or it does not conform to CollectionSectionProvider")
             }
 

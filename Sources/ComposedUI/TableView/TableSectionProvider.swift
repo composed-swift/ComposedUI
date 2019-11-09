@@ -12,6 +12,5 @@ public protocol TableProvider {
 }
 
 public protocol TableSectionProvider {
-    func section(with environment: Environment) -> TableSection
+    func section(with traitCollection: UITraitCollection) -> TableSection
 }
-
