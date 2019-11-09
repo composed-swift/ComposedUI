@@ -3,9 +3,9 @@ import Composed
 
 open class TextSection: SingleElementSection<String>, CollectionSectionProvider {
 
-    public let configurationBlock: ((UILabel) -> Void)?
+    public let configurationBlock: ((UILabel, UITraitCollection) -> Void)?
 
-    public init(text: String, configurationBlock: ((UILabel) -> Void)? = nil) {
+    public init(text: String, configurationBlock: ((UILabel, UITraitCollection) -> Void)? = nil) {
         self.configurationBlock = configurationBlock
         super.init(element: text)
     }
@@ -13,7 +13,7 @@ open class TextSection: SingleElementSection<String>, CollectionSectionProvider 
     public func section(with traitCollection: UITraitCollection) -> CollectionSection {
         let cell = CollectionElement(section: self, dequeueMethod: .class(TextCell.self)) { [unowned self] cell, _, section in
             cell.label.text = section.element
-            self.configurationBlock?(cell.label)
+            self.configurationBlock?(cell.label, traitCollection)
         }
         return CollectionSection(section: self, cell: cell)
     }

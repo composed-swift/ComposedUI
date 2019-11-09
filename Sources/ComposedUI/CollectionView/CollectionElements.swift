@@ -5,8 +5,11 @@ public protocol CollectionElementsProvider {
     var cell: CollectionElement<UICollectionViewCell> { get }
     var header: CollectionElement<UICollectionReusableView>? { get }
     var footer: CollectionElement<UICollectionReusableView>? { get }
-    var background: CollectionElement<UICollectionReusableView>? { get }
     var numberOfElements: Int { get }
+}
+
+public extension CollectionElementsProvider {
+    var isEmpty: Bool { return numberOfElements == 0 }
 }
 
 /// Defines a provider for a view, prototype and configuration handler. Cells, headers and footers can all be configured with this provider

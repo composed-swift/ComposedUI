@@ -6,7 +6,6 @@ open class CollectionSection: CollectionElementsProvider {
     public let cell: CollectionElement<UICollectionViewCell>
     public let header: CollectionElement<UICollectionReusableView>?
     public let footer: CollectionElement<UICollectionReusableView>?
-    public let background: CollectionElement<UICollectionReusableView>?
 
     open var numberOfElements: Int {
         return section?.numberOfElements ?? 0
@@ -14,11 +13,10 @@ open class CollectionSection: CollectionElementsProvider {
 
     private weak var section: Section?
 
-    public init<Section, Cell, Header, Footer, Background>(section: Section,
-                                                           cell: CollectionElement<Cell>,
-                                                           header: CollectionElement<Header>? = nil,
-                                                           footer: CollectionElement<Footer>? = nil,
-                                                           background: CollectionElement<Background>? = nil)
+    public init<Section, Cell, Header, Footer>(section: Section,
+                                               cell: CollectionElement<Cell>,
+                                               header: CollectionElement<Header>? = nil,
+                                               footer: CollectionElement<Footer>? = nil)
         where Header: UICollectionReusableView, Footer: UICollectionReusableView, Cell: UICollectionViewCell, Section: Composed.Section {
             self.section = section
             
@@ -55,19 +53,6 @@ open class CollectionSection: CollectionElementsProvider {
                 self.footer = CollectionElement(section: section, dequeueMethod: dequeueMethod, reuseIdentifier: footer.reuseIdentifier, footer.configure)
             } else {
                 self.footer = nil
-            }
-
-            if let background = background {
-                let dequeueMethod: DequeueMethod<UICollectionReusableView>
-                switch background.dequeueMethod {
-                case .class: dequeueMethod = .class(Background.self)
-                case .nib: dequeueMethod = .nib(Background.self)
-                case .storyboard: dequeueMethod = .storyboard(Background.self)
-                }
-
-                self.background = CollectionElement(section: section, dequeueMethod: dequeueMethod, reuseIdentifier: background.reuseIdentifier, background.configure)
-            } else {
-                self.background = nil
             }
     }
 

@@ -74,18 +74,6 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
                     break
                 }
             }
-
-            if let background = section.background {
-                switch background.dequeueMethod {
-                case let .nib(type):
-                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-                    collectionView.register(nib, forSupplementaryViewOfKind: type.kind, withReuseIdentifier: background.reuseIdentifier)
-                case let .class(type):
-                    collectionView.register(type, forSupplementaryViewOfKind: type.kind, withReuseIdentifier: background.reuseIdentifier)
-                case .storyboard:
-                    break
-                }
-            }
         }
     }
 
