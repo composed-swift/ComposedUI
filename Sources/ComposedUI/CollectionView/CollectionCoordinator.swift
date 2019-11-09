@@ -11,7 +11,6 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
     private let collectionView: UICollectionView
 
     private var cachedProviders: [Int: CollectionElementsProvider] = [:]
-    private var cachedFlowLayoutStrategies: [Int: CollectionFlowLayoutSizingStrategy] = [:]
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
@@ -27,12 +26,13 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
 
     open func replace(sectionProvider: SectionProvider) {
         mapper = SectionProviderMapping(provider: sectionProvider)
-        invalidateLayout()
+        prepareSections()
+        collectionView.reloadData()
     }
 
     private func prepareSections() {
-        mapper.delegate = self
         cachedProviders.removeAll()
+        mapper.delegate = self
 
         for index in 0..<mapper.numberOfSections {
             guard let section = (mapper.provider.sections[index] as? CollectionSectionProvider)?.section(with: collectionView.traitCollection) else {
@@ -173,11 +173,7 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
         guard collectionView.window != nil else { return }
 
-        guard collectionView.collectionViewLayout is UICollectionViewFlowLayout else { return }
-        
-        prepareSections()
         collectionView.reloadData()
-        cachedFlowLayoutStrategies.removeAll()
 
         if let context = context {
             collectionView.collectionViewLayout.invalidateLayout(with: context)
