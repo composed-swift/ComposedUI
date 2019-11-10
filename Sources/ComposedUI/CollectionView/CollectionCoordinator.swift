@@ -1,7 +1,13 @@
 import UIKit
 import Composed
 
+public protocol CollectionCoordinatorDelegate: class {
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
+}
+
 open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionProviderMappingDelegate {
+
+    public weak var delegate: CollectionCoordinatorDelegate?
 
     public var sectionProvider: SectionProvider {
         return mapper.provider
@@ -10,18 +16,27 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
     private var mapper: SectionProviderMapping
     private let collectionView: UICollectionView
 
+    private weak var originalDelegate: UICollectionViewDelegate?
+    private var observer: NSKeyValueObservation?
+
     private var cachedProviders: [Int: CollectionElementsProvider] = [:]
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
         mapper = SectionProviderMapping(provider: sectionProvider)
+        originalDelegate = collectionView.delegate
 
         super.init()
 
         collectionView.dataSource = self
-        collectionView.delegate = self
 
         prepareSections()
+
+        observer = collectionView.observe(\.delegate, options: [.initial, .new]) { [weak self] collectionView, _ in
+            guard collectionView.delegate !== self else { return }
+            self?.originalDelegate = collectionView.delegate
+            collectionView.delegate = self
+        }
     }
 
     open func replace(sectionProvider: SectionProvider) {
@@ -49,30 +64,6 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
                 collectionView.register(type, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
             case .storyboard:
                 break
-            }
-
-            if let header = section.header {
-                switch header.dequeueMethod {
-                case let .nib(type):
-                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-                    collectionView.register(nib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: header.reuseIdentifier)
-                case let .class(type):
-                    collectionView.register(type, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: header.reuseIdentifier)
-                case .storyboard:
-                    break
-                }
-            }
-
-            if let footer = section.footer {
-                switch footer.dequeueMethod {
-                case let .nib(type):
-                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-                    collectionView.register(nib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footer.reuseIdentifier)
-                case let .class(type):
-                    collectionView.register(type, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footer.reuseIdentifier)
-                case .storyboard:
-                    break
-                }
             }
         }
     }
@@ -183,23 +174,26 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
     }
 
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let section = collectionProvider(for: indexPath.section) else {
+        guard let provider = collectionProvider(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            guard let header = section.header else { fatalError("Missing header element for section: \(indexPath.section)") }
-            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: header.reuseIdentifier, for: indexPath)
-            header.configure(view, indexPath.section, mapper.provider.sections[indexPath.section])
+        let section = mapper.provider.sections[indexPath.section]
+
+        if let header = provider.header, header.kind?.rawValue == kind {
+            let view = header.supplementaryViewProvider(collectionView, kind, indexPath)
+            header.configure(view, indexPath.section, section)
             return view
-        case UICollectionView.elementKindSectionFooter:
-            guard let footer = section.footer else { fatalError("Missing footer element for section: \(indexPath.section)") }
-            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footer.reuseIdentifier, for: indexPath)
-            footer.configure(view, indexPath.section, mapper.provider.sections[indexPath.section])
+        } else if let footer = provider.footer, footer.kind?.rawValue == kind {
+            let view = footer.supplementaryViewProvider(collectionView, kind, indexPath)
+            footer.configure(view, indexPath.section, section)
             return view
-        default:
-            fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")
+        } else {
+            guard let view = delegate?.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
+                fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")
+            }
+
+            return view
         }
     }
 

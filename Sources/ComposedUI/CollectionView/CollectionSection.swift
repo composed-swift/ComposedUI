@@ -27,7 +27,10 @@ open class CollectionSection: CollectionElementsProvider {
             case .storyboard: dequeueMethod = .storyboard(Cell.self)
             }
 
-            self.cell = CollectionElement(section: section, dequeueMethod: dequeueMethod, reuseIdentifier: cell.reuseIdentifier, cell.configure)
+            self.cell = CollectionElement(section: section,
+                                          cellDequeueMethod: dequeueMethod,
+                                          reuseIdentifier: cell.reuseIdentifier,
+                                          configure: cell.configure)
 
             if let header = header {
                 let dequeueMethod: DequeueMethod<UICollectionReusableView>
@@ -37,7 +40,12 @@ open class CollectionSection: CollectionElementsProvider {
                 case .storyboard: dequeueMethod = .storyboard(Header.self)
                 }
 
-                self.header = CollectionElement(section: section, dequeueMethod: dequeueMethod, reuseIdentifier: header.reuseIdentifier, header.configure)
+                self.header = CollectionElement(section: section,
+                                                dequeueMethod: dequeueMethod,
+                                                reuseIdentifier: header.reuseIdentifier,
+                                                kind: header.kind!,
+                                                supplementaryViewProvider: header.supplementaryViewProvider,
+                                                configure: header.configure)
             } else {
                 self.header = nil
             }
@@ -50,7 +58,12 @@ open class CollectionSection: CollectionElementsProvider {
                 case .storyboard: dequeueMethod = .storyboard(Footer.self)
                 }
 
-                self.footer = CollectionElement(section: section, dequeueMethod: dequeueMethod, reuseIdentifier: footer.reuseIdentifier, footer.configure)
+                self.footer = CollectionElement(section: section,
+                                                dequeueMethod: dequeueMethod,
+                                                reuseIdentifier: footer.reuseIdentifier,
+                                                kind: footer.kind!,
+                                                supplementaryViewProvider: footer.supplementaryViewProvider,
+                                                configure: footer.configure)
             } else {
                 self.footer = nil
             }
