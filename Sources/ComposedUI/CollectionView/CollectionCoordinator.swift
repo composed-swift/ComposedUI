@@ -14,6 +14,7 @@ open class CollectionCoordinator: NSObject {
     }
 
     private var mapper: SectionProviderMapping
+    private var updateOperation: BlockOperation?
     private let collectionView: UICollectionView
 
     private weak var originalDelegate: UICollectionViewDelegate?
@@ -100,46 +101,77 @@ open class CollectionCoordinator: NSObject {
 
 extension CollectionCoordinator: SectionProviderMappingDelegate {
 
-    public func mappingsDidUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingDidReload(_ mapping: SectionProviderMapping) {
         prepareSections()
         collectionView.reloadData()
     }
 
+    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
+        updateOperation = BlockOperation()
+    }
+
+    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+        collectionView.performBatchUpdates({
+            prepareSections()
+            updateOperation?.start()
+        }, completion: nil)
+    }
+
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
-        prepareSections()
-        collectionView.insertSections(sections)
+        let block = { [unowned self] in
+            self.prepareSections()
+            self.collectionView.insertSections(sections)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
-        prepareSections()
-        collectionView.deleteSections(sections)
+        let block = { [unowned self] in
+            self.prepareSections()
+            self.collectionView.deleteSections(sections)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
-        prepareSections()
-        collectionView.reloadSections(sections)
+        let block = { [unowned self] in
+            self.prepareSections()
+            self.collectionView.reloadSections(sections)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
-        collectionView.insertItems(at: indexPaths)
+        let block = { [unowned self] in
+            self.collectionView.insertItems(at: indexPaths)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
-        collectionView.deleteItems(at: indexPaths)
+        let block = { [unowned self] in
+            self.collectionView.deleteItems(at: indexPaths)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
-        collectionView.reloadItems(at: indexPaths)
+        let block = { [unowned self] in
+            self.collectionView.reloadItems(at: indexPaths)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
-        moves.forEach {
-            collectionView.moveItem(at: $0.0, to: $0.1)
+        let block = { [unowned self] in
+            moves.forEach {
+                self.collectionView.moveItem(at: $0.0, to: $0.1)
+            }
         }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
-    public func
-        mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
+    public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
         let indexPaths = collectionView.indexPathsForSelectedItems ?? []
         return indexPaths.filter { $0.section == section }.map { $0.item }
     }

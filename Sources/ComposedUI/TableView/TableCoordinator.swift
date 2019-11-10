@@ -12,6 +12,7 @@ open class TableCoordinator: NSObject {
     public weak var delegate: TableCoordinatorDelegate?
 
     private var mapper: SectionProviderMapping
+    private var updateOperation: BlockOperation?
     private let tableView: UITableView
 
     private weak var originalDelegate: UITableViewDelegate?
@@ -86,42 +87,74 @@ open class TableCoordinator: NSObject {
 
 extension TableCoordinator: SectionProviderMappingDelegate {
 
-    public func mappingsDidUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingDidReload(_ mapping: SectionProviderMapping) {
         prepareSections()
         tableView.reloadData()
     }
 
+    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
+        updateOperation = BlockOperation()
+    }
+
+    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+        tableView.performBatchUpdates({
+            prepareSections()
+            updateOperation?.start()
+        }, completion: nil)
+    }
+
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
-        prepareSections()
-        tableView.insertSections(sections, with: .automatic)
+        let block = { [unowned self] in
+            self.prepareSections()
+            self.tableView.insertSections(sections, with: .automatic)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
-        prepareSections()
-        tableView.deleteSections(sections, with: .automatic)
+        let block = { [unowned self] in
+            self.prepareSections()
+            self.tableView.deleteSections(sections, with: .automatic)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
-        prepareSections()
-        tableView.reloadSections(sections, with: .automatic)
+        let block = { [unowned self] in
+            self.prepareSections()
+            self.tableView.reloadSections(sections, with: .automatic)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
-        tableView.insertRows(at: indexPaths, with: .automatic)
+        let block = { [unowned self] in
+            self.tableView.insertRows(at: indexPaths, with: .automatic)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
-        tableView.deleteRows(at: indexPaths, with: .automatic)
+        let block = { [unowned self] in
+            self.tableView.deleteRows(at: indexPaths, with: .automatic)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
-        tableView.reloadRows(at: indexPaths, with: .automatic)
+        let block = { [unowned self] in
+            self.tableView.reloadRows(at: indexPaths, with: .automatic)
+        }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
-        moves.forEach {
-            tableView.moveRow(at: $0.0, to: $0.1)
+        let block = { [unowned self] in
+            moves.forEach {
+                self.tableView.moveRow(at: $0.0, to: $0.1)
+            }
         }
+        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
