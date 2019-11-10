@@ -200,7 +200,13 @@ extension TableCoordinator: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
         provider.didDeselect(at: indexPath.item)
-        guard tableView.allowsMultipleSelection else { return }
+
+        guard tableView.allowsMultipleSelection, !provider.allowsMultipleSelection else { return }
+
+        let indexPaths = mapping(mapper, selectedIndexesIn: indexPath.section)
+            .map { IndexPath(item: $0, section: indexPath.section ) }
+            .filter { $0 != indexPath }
+        indexPaths.forEach { tableView.deselectRow(at: $0, animated: true) }
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
