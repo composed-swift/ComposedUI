@@ -101,6 +101,11 @@ open class CollectionCoordinator: NSObject {
 
 extension CollectionCoordinator: SectionProviderMappingDelegate {
 
+    private func dispatchIfNecessary(_ block: @escaping () -> Void) {
+        if Thread.isMainThread { block() }
+        else { DispatchQueue.main.async(execute: block) }
+    }
+
     public func mappingDidReload(_ mapping: SectionProviderMapping) {
         prepareSections()
         collectionView.reloadData()
@@ -119,53 +124,67 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         let block = { [unowned self] in
-            self.prepareSections()
-            self.collectionView.insertSections(sections)
+            self.self.dispatchIfNecessary {
+                self.prepareSections()
+                self.collectionView.insertSections(sections)
+            }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
         let block = { [unowned self] in
-            self.prepareSections()
-            self.collectionView.deleteSections(sections)
+            self.dispatchIfNecessary {
+                self.prepareSections()
+                self.collectionView.deleteSections(sections)
+            }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
         let block = { [unowned self] in
-            self.prepareSections()
-            self.collectionView.reloadSections(sections)
+            self.dispatchIfNecessary {
+                self.prepareSections()
+                self.collectionView.reloadSections(sections)
+            }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         let block = { [unowned self] in
-            self.collectionView.insertItems(at: indexPaths)
+            self.dispatchIfNecessary {
+                self.collectionView.insertItems(at: indexPaths)
+            }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         let block = { [unowned self] in
-            self.collectionView.deleteItems(at: indexPaths)
+            self.dispatchIfNecessary {
+                self.collectionView.deleteItems(at: indexPaths)
+            }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
         let block = { [unowned self] in
-            self.collectionView.reloadItems(at: indexPaths)
+            self.dispatchIfNecessary {
+                self.collectionView.reloadItems(at: indexPaths)
+            }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
         let block = { [unowned self] in
-            moves.forEach {
-                self.collectionView.moveItem(at: $0.0, to: $0.1)
+            self.dispatchIfNecessary {
+                moves.forEach {
+                    self.collectionView.moveItem(at: $0.0, to: $0.1)
+                }
             }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
