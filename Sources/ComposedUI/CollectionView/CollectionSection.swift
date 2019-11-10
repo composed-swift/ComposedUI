@@ -4,8 +4,8 @@ import Composed
 open class CollectionSection: CollectionElementsProvider {
 
     public let cell: CollectionElement<UICollectionViewCell>
-    public let header: CollectionElement<UICollectionReusableView>?
-    public let footer: CollectionElement<UICollectionReusableView>?
+    public let header: CollectionSupplementaryElement<UICollectionReusableView>?
+    public let footer: CollectionSupplementaryElement<UICollectionReusableView>?
 
     open var numberOfElements: Int {
         return section?.numberOfElements ?? 0
@@ -15,20 +15,22 @@ open class CollectionSection: CollectionElementsProvider {
 
     public init<Section, Cell, Header, Footer>(section: Section,
                                                cell: CollectionElement<Cell>,
-                                               header: CollectionElement<Header>? = nil,
-                                               footer: CollectionElement<Footer>? = nil)
+                                               header: CollectionSupplementaryElement<Header>? = nil,
+                                               footer: CollectionSupplementaryElement<Footer>? = nil)
         where Header: UICollectionReusableView, Footer: UICollectionReusableView, Cell: UICollectionViewCell, Section: Composed.Section {
             self.section = section
+
+            // The code below copies the relevent elements to erase type-safety
             
-            let dequeueMethod: DequeueMethod<UICollectionViewCell>
+            let cellDequeueMethod: DequeueMethod<UICollectionViewCell>
             switch cell.dequeueMethod {
-            case .class: dequeueMethod = .class(Cell.self)
-            case .nib: dequeueMethod = .nib(Cell.self)
-            case .storyboard: dequeueMethod = .storyboard(Cell.self)
+            case .class: cellDequeueMethod = .class(Cell.self)
+            case .nib: cellDequeueMethod = .nib(Cell.self)
+            case .storyboard: cellDequeueMethod = .storyboard(Cell.self)
             }
 
             self.cell = CollectionElement(section: section,
-                                          cellDequeueMethod: dequeueMethod,
+                                          cellDequeueMethod: cellDequeueMethod,
                                           reuseIdentifier: cell.reuseIdentifier,
                                           configure: cell.configure)
 
@@ -40,12 +42,18 @@ open class CollectionSection: CollectionElementsProvider {
                 case .storyboard: dequeueMethod = .storyboard(Header.self)
                 }
 
-                self.header = CollectionElement(section: section,
-                                                dequeueMethod: dequeueMethod,
-                                                reuseIdentifier: header.reuseIdentifier,
-                                                kind: header.kind!,
-                                                supplementaryViewProvider: header.supplementaryViewProvider,
-                                                configure: header.configure)
+                let kind: CollectionElementKind
+                if case .automatic = header.kind {
+                    kind = .custom(kind: UICollectionView.elementKindSectionHeader)
+                } else {
+                    kind = header.kind
+                }
+
+                self.header = CollectionSupplementaryElement(section: section,
+                                                             dequeueMethod: dequeueMethod,
+                                                             reuseIdentifier: header.reuseIdentifier,
+                                                             kind: kind,
+                                                             configure: header.configure)
             } else {
                 self.header = nil
             }
@@ -58,12 +66,18 @@ open class CollectionSection: CollectionElementsProvider {
                 case .storyboard: dequeueMethod = .storyboard(Footer.self)
                 }
 
-                self.footer = CollectionElement(section: section,
-                                                dequeueMethod: dequeueMethod,
-                                                reuseIdentifier: footer.reuseIdentifier,
-                                                kind: footer.kind!,
-                                                supplementaryViewProvider: footer.supplementaryViewProvider,
-                                                configure: footer.configure)
+                let kind: CollectionElementKind
+                if case .automatic = footer.kind {
+                    kind = .custom(kind: UICollectionView.elementKindSectionFooter)
+                } else {
+                    kind = footer.kind
+                }
+                
+                self.footer = CollectionSupplementaryElement(section: section,
+                                                             dequeueMethod: dequeueMethod,
+                                                             reuseIdentifier: footer.reuseIdentifier,
+                                                             kind: kind,
+                                                             configure: footer.configure)
             } else {
                 self.footer = nil
             }

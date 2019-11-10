@@ -2,7 +2,7 @@ import UIKit
 import Composed
 
 public protocol CollectionCoordinatorDelegate: class {
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
+    func coordinator(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
 }
 
 open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionProviderMappingDelegate {
@@ -64,6 +64,18 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
                 collectionView.register(type, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
             case .storyboard:
                 break
+            }
+
+            [section.header, section.footer].compactMap { $0 }.forEach {
+                switch $0.dequeueMethod {
+                case let .nib(type):
+                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                    collectionView.register(nib, forSupplementaryViewOfKind: $0.kind.rawValue, withReuseIdentifier: $0.reuseIdentifier)
+                case let .class(type):
+                    collectionView.register(type, forSupplementaryViewOfKind: $0.kind.rawValue, withReuseIdentifier: $0.reuseIdentifier)
+                case .storyboard:
+                    break
+                }
             }
         }
     }
@@ -180,16 +192,16 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
         let section = mapper.provider.sections[indexPath.section]
 
-        if let header = provider.header, header.kind?.rawValue == kind {
-            let view = header.supplementaryViewProvider(collectionView, kind, indexPath)
+        if let header = provider.header, header.kind.rawValue == kind {
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: header.reuseIdentifier, for: indexPath)
             header.configure(view, indexPath.section, section)
             return view
-        } else if let footer = provider.footer, footer.kind?.rawValue == kind {
-            let view = footer.supplementaryViewProvider(collectionView, kind, indexPath)
+        } else if let footer = provider.footer, footer.kind.rawValue == kind {
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footer.reuseIdentifier, for: indexPath)
             footer.configure(view, indexPath.section, section)
             return view
         } else {
-            guard let view = delegate?.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
+            guard let view = delegate?.coordinator(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
                 fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")
             }
 
