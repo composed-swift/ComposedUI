@@ -169,7 +169,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         return cell
     }
 
-    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let provider = cachedProviders[indexPath.section] else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
@@ -199,17 +199,17 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
 extension CollectionCoordinator: UICollectionViewDelegate {
 
-    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+    open func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
         return provider.shouldHighlight(at: indexPath.item)
     }
 
-    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    open func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
         return provider.shouldSelect(at: indexPath.item)
     }
 
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
         provider.didSelect(at: indexPath.item)
 
@@ -221,12 +221,12 @@ extension CollectionCoordinator: UICollectionViewDelegate {
         indexPaths.forEach { collectionView.deselectItem(at: $0, animated: true) }
     }
 
-    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+    open func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
         return provider.shouldDeselect(at: indexPath.item)
     }
 
-    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
         provider.didDeselect(at: indexPath.item)
         guard collectionView.allowsMultipleSelection else { return }
