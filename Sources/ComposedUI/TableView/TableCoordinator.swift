@@ -74,6 +74,10 @@ open class TableCoordinator: NSObject {
 
             cachedProviders.append(section)
         }
+
+        tableView.allowsMultipleSelection = mapper.provider.sections
+            .compactMap { $0 as? SelectionProvider }
+            .contains { $0.allowsMultipleSelection }
     }
 
 }
@@ -118,6 +122,11 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         moves.forEach {
             tableView.moveRow(at: $0.0, to: $0.1)
         }
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
+        let indexPaths = tableView.indexPathsForSelectedRows ?? []
+        return indexPaths.filter { $0.section == section }.map { $0.item }
     }
 
 }
@@ -179,7 +188,8 @@ extension TableCoordinator: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
-        return provider.didSelect(at: indexPath.item)
+        provider.didSelect(at: indexPath.item)
+        guard tableView.allowsMultipleSelection else { return }
     }
 
     public func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -189,7 +199,8 @@ extension TableCoordinator: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
-        return provider.didDeselect(at: indexPath.item)
+        provider.didDeselect(at: indexPath.item)
+        guard tableView.allowsMultipleSelection else { return }
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

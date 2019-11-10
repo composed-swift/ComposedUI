@@ -1,7 +1,7 @@
 import UIKit
 import Composed
 
-open class CollectionSection: CollectionElementsProvider {
+open class CollectionSection: CollectionSectionElementsProvider {
 
     public let cell: CollectionElement<UICollectionViewCell>
     public let header: CollectionSupplementaryElement<UICollectionReusableView>?

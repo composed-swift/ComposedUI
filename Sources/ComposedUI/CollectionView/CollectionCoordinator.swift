@@ -19,7 +19,7 @@ open class CollectionCoordinator: NSObject {
     private weak var originalDelegate: UICollectionViewDelegate?
     private var observer: NSKeyValueObservation?
 
-    private var cachedProviders: [Int: CollectionElementsProvider] = [:]
+    private var cachedProviders: [Int: CollectionSectionElementsProvider] = [:]
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
@@ -88,6 +88,10 @@ open class CollectionCoordinator: NSObject {
                 }
             }
         }
+
+        collectionView.allowsMultipleSelection = mapper.provider.sections
+            .compactMap { $0 as? SelectionProvider }
+            .contains { $0.allowsMultipleSelection }
     }
 
 }
@@ -132,6 +136,12 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         moves.forEach {
             collectionView.moveItem(at: $0.0, to: $0.1)
         }
+    }
+
+    public func
+        mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
+        let indexPaths = collectionView.indexPathsForSelectedItems ?? []
+        return indexPaths.filter { $0.section == section }.map { $0.item }
     }
 
 }
@@ -201,7 +211,14 @@ extension CollectionCoordinator: UICollectionViewDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
-        return provider.didSelect(at: indexPath.item)
+        provider.didSelect(at: indexPath.item)
+
+        guard collectionView.allowsMultipleSelection, !provider.allowsMultipleSelection else { return }
+
+        let indexPaths = mapping(mapper, selectedIndexesIn: indexPath.section)
+            .map { IndexPath(item: $0, section: indexPath.section ) }
+            .filter { $0 != indexPath }
+        indexPaths.forEach { collectionView.deselectItem(at: $0, animated: true) }
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
@@ -211,7 +228,8 @@ extension CollectionCoordinator: UICollectionViewDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
-        return provider.didDeselect(at: indexPath.item)
+        provider.didDeselect(at: indexPath.item)
+        guard collectionView.allowsMultipleSelection else { return }
     }
 
     // MARK: - Forwarding
