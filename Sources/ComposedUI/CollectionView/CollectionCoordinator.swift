@@ -189,6 +189,11 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
 extension CollectionCoordinator: UICollectionViewDelegate {
 
+    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        return provider.shouldHighlight(at: indexPath.item)
+    }
+
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
         return provider.shouldSelect(at: indexPath.item)
@@ -207,11 +212,6 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
         return provider.didDeselect(at: indexPath.item)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
-        return provider.shouldHighlight(at: indexPath.item)
     }
 
     // MARK: - Forwarding

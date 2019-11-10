@@ -2,6 +2,8 @@ import UIKit
 import Composed
 
 public protocol TableCoordinatorDelegate: class {
+    func coordinator(tableView: UITableView, heightForHeaderIn section: Int) -> CGFloat
+    func coordinator(tableView: UITableView, heightForFooterIn section: Int) -> CGFloat
     func coordinator(tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
 }
 
@@ -165,9 +167,57 @@ extension TableCoordinator: UITableViewDataSource {
 
 extension TableCoordinator: UITableViewDelegate {
 
+    public func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        return provider.shouldHighlight(at: indexPath.item)
+    }
+
+    public func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return nil }
+        return provider.shouldSelect(at: indexPath.item) ? indexPath : nil
+    }
+
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
+        return provider.didSelect(at: indexPath.item)
+    }
+
+    public func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return nil }
+        return provider.shouldDeselect(at: indexPath.item) ? indexPath : nil
+    }
+
+    public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
+        return provider.didDeselect(at: indexPath.item)
+    }
+
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard let delegate = delegate else { return UITableView.automaticDimension }
+        return delegate.coordinator(tableView: tableView, heightForHeaderIn: section)
+    }
+
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        guard let delegate = delegate else { return UITableView.automaticDimension }
+        return delegate.coordinator(tableView: tableView, heightForFooterIn: section)
+    }
+
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let delegate = delegate else { return UITableView.automaticDimension }
         return delegate.coordinator(tableView: tableView, heightForRowAt: indexPath)
+    }
+
+    // MARK: - Forwarding
+
+    open override func responds(to aSelector: Selector!) -> Bool {
+        if super.responds(to: aSelector) { return true }
+        if originalDelegate?.responds(to: aSelector) ?? false { return true }
+        return false
+    }
+
+    open override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        if super.responds(to: aSelector) { return self }
+        return originalDelegate
     }
 
 }
