@@ -5,7 +5,7 @@ public protocol CollectionCoordinatorDelegate: class {
     func coordinator(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
 }
 
-open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionProviderMappingDelegate {
+open class CollectionCoordinator: NSObject {
 
     public weak var delegate: CollectionCoordinatorDelegate?
 
@@ -45,6 +45,19 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         collectionView.reloadData()
     }
 
+    open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
+        guard collectionView.window != nil else { return }
+
+        collectionView.reloadData()
+
+        if let context = context {
+            collectionView.collectionViewLayout.invalidateLayout(with: context)
+        } else {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+
+
     private func prepareSections() {
         cachedProviders.removeAll()
         mapper.delegate = self
@@ -80,7 +93,11 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         }
     }
 
-    // MARK: - SectionProviderMappingDelegate
+}
+
+// MARK: - SectionProviderMappingDelegate
+
+extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mappingsDidUpdate(_ mapping: SectionProviderMapping) {
         prepareSections()
@@ -120,18 +137,22 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         }
     }
 
-    // MARK: - UICollectionViewDataSource
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension CollectionCoordinator: UICollectionViewDataSource {
 
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return mapper.numberOfSections
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionProvider(for: section)?.numberOfElements ?? 0
+        return cachedProviders[section]?.numberOfElements ?? 0
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let section = collectionProvider(for: indexPath.section) else {
+        guard let section = cachedProviders[indexPath.section] else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
@@ -141,52 +162,8 @@ open class CollectionCoordinator: NSObject, UICollectionViewDataSource, SectionP
         return cell
     }
 
-    private func collectionProvider(for section: Int) -> CollectionElementsProvider? {
-        return cachedProviders[section]
-    }
-
-}
-
-extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
-
-    private var contentSize: CGSize {
-        let sectionInsetReference = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInsetReference ?? .fromContentInset
-        var contentSize = collectionView.bounds.size
-
-        switch sectionInsetReference {
-        case .fromContentInset:
-            contentSize.width = collectionView.bounds.width
-                - collectionView.adjustedContentInset.left
-                - collectionView.adjustedContentInset.right
-        case .fromSafeArea:
-            contentSize.width = collectionView.bounds.width
-                - collectionView.safeAreaInsets.left
-                - collectionView.safeAreaInsets.right
-        case .fromLayoutMargins:
-            contentSize.width = collectionView.bounds.width
-                - collectionView.layoutMargins.left
-                - collectionView.layoutMargins.right
-        default:
-            contentSize.width = collectionView.bounds.width
-        }
-
-        return contentSize
-    }
-
-    open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
-        guard collectionView.window != nil else { return }
-
-        collectionView.reloadData()
-
-        if let context = context {
-            collectionView.collectionViewLayout.invalidateLayout(with: context)
-        } else {
-            collectionView.collectionViewLayout.invalidateLayout()
-        }
-    }
-
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let provider = collectionProvider(for: indexPath.section) else {
+        guard let provider = cachedProviders[indexPath.section] else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
@@ -207,6 +184,25 @@ extension CollectionCoordinator: UICollectionViewDelegateFlowLayout {
 
             return view
         }
+    }
+
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension CollectionCoordinator: UICollectionViewDelegate {
+
+    // MARK: - Forwarding
+
+    open override func responds(to aSelector: Selector!) -> Bool {
+        if super.responds(to: aSelector) { return true }
+        if originalDelegate?.responds(to: aSelector) ?? false { return true }
+        return false
+    }
+
+    open override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        if super.responds(to: aSelector) { return self }
+        return originalDelegate
     }
 
 }
