@@ -29,7 +29,6 @@ open class CollectionCoordinator: NSObject {
         super.init()
 
         collectionView.dataSource = self
-
         prepareSections()
 
         observer = collectionView.observe(\.delegate, options: [.initial, .new]) { [weak self] collectionView, _ in
@@ -47,8 +46,6 @@ open class CollectionCoordinator: NSObject {
 
     open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
         guard collectionView.window != nil else { return }
-
-        collectionView.reloadData()
 
         if let context = context {
             collectionView.collectionViewLayout.invalidateLayout(with: context)
@@ -191,6 +188,31 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension CollectionCoordinator: UICollectionViewDelegate {
+
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        return provider.shouldSelect(at: indexPath.item)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
+        return provider.didSelect(at: indexPath.item)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        return provider.shouldDeselect(at: indexPath.item)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
+        return provider.didDeselect(at: indexPath.item)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        return provider.shouldHighlight(at: indexPath.item)
+    }
 
     // MARK: - Forwarding
 
