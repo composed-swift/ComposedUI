@@ -173,7 +173,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
         let block = { [unowned self] in
             self.dispatchIfNecessary {
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
                 self.collectionView.reloadItems(at: indexPaths)
+                CATransaction.setDisableActions(false)
+                CATransaction.commit()
             }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
@@ -215,7 +219,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.cell.reuseIdentifier, for: indexPath)
-        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section])
+        section.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
 
         return cell
     }
