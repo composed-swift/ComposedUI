@@ -1,13 +1,24 @@
 import UIKit
 import Composed
 
-public protocol CollectionCoordinatorDelegate: class {
+public protocol CollectionCoordinatorDataSource: class {
     func coordinator(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
+}
+
+public protocol CollectionCoordinatorDelegate: class {
+    func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
+}
+
+public extension CollectionCoordinatorDelegate {
+    func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView? { return nil }
 }
 
 open class CollectionCoordinator: NSObject {
 
-    public weak var delegate: CollectionCoordinatorDelegate?
+    public weak var dataSource: CollectionCoordinatorDataSource?
+    public weak var delegate: CollectionCoordinatorDelegate? {
+        didSet { collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView) }
+    }
 
     public var sectionProvider: SectionProvider {
         return mapper.provider
@@ -55,7 +66,6 @@ open class CollectionCoordinator: NSObject {
         }
     }
 
-
     private func prepareSections() {
         cachedProviders.removeAll()
         mapper.delegate = self
@@ -93,6 +103,8 @@ open class CollectionCoordinator: NSObject {
         collectionView.allowsMultipleSelection = mapper.provider.sections
             .compactMap { $0 as? SelectionProvider }
             .contains { $0.allowsMultipleSelection }
+
+        collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView)
     }
 
 }
@@ -240,7 +252,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             footer.configure(view, indexPath.section, section)
             return view
         } else {
-            guard let view = delegate?.coordinator(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
+            guard let view = dataSource?.coordinator(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
                 fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")
             }
 
