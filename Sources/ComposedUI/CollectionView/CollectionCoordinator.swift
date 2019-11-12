@@ -90,6 +90,9 @@ open class CollectionCoordinator: NSObject {
             }
         }
 
+        (mapper.provider.sections as? [CollectionSectionProvider])?
+            .forEach { $0.queryDelegate = self }
+
         collectionView.allowsMultipleSelection = mapper.provider.sections
             .compactMap { $0 as? SelectionProvider }
             .contains { $0.allowsMultipleSelection }
@@ -197,6 +200,23 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
         let indexPaths = collectionView.indexPathsForSelectedItems ?? []
         return indexPaths.filter { $0.section == section }.map { $0.item }
+    }
+
+}
+
+// MARK: - CollectionQueryDelegate
+
+extension CollectionCoordinator: CollectionQueryDelegate {
+
+    public func section(_ section: Section, indexFor location: CGPoint) -> Int? {
+        let section = mapper.sectionOffset(of: section)
+        guard let indexPath = collectionView.indexPathForItem(at: location), indexPath.section == section else { return nil }
+        return indexPath.item
+    }
+
+    public func section(_ section: Section, cellFor index: Int) -> UICollectionViewCell? {
+        guard let section = mapper.sectionOffset(of: section) else { return nil }
+        return collectionView.cellForItem(at: IndexPath(item: index, section: section))
     }
 
 }

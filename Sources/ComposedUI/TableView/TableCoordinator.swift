@@ -161,7 +161,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         let indexPaths = tableView.indexPathsForSelectedRows ?? []
         return indexPaths.filter { $0.section == section }.map { $0.item }
     }
-
+    
 }
 
 // MARK: - UITableViewDataSource
