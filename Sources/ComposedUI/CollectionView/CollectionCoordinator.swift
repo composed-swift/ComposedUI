@@ -211,6 +211,14 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         return indexPaths.filter { $0.section == section }.map { $0.item }
     }
 
+    public func mapping(_ mapping: SectionProviderMapping, select indexPath: IndexPath) {
+        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+
 }
 
 // MARK: - UICollectionViewDataSource

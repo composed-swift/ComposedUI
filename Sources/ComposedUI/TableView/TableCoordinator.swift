@@ -161,6 +161,14 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         let indexPaths = tableView.indexPathsForSelectedRows ?? []
         return indexPaths.filter { $0.section == section }.map { $0.item }
     }
+
+    public func mapping(_ mapping: SectionProviderMapping, select indexPath: IndexPath) {
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
 }
 
