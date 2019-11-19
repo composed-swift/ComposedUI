@@ -10,7 +10,7 @@ public final class TableElement<View> where View: UIView & ReusableCell {
 
     internal let reuseIdentifier: String
 
-    internal init<Section>(section: Section, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, configure: @escaping (View, Int, Section) -> Void) where Section: Composed.Section {
+    public init<Section>(section: Section, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, configure: @escaping (View, Int, Section) -> Void) where Section: Composed.Section {
         self.reuseIdentifier = reuseIdentifier ?? View.reuseIdentifier
         self.dequeueMethod = dequeueMethod
 
