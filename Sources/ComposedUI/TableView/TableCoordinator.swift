@@ -77,7 +77,7 @@ open class TableCoordinator: NSObject {
         }
 
         tableView.allowsMultipleSelection = mapper.provider.sections
-            .compactMap { $0 as? SelectionProvider }
+            .compactMap { $0 as? SelectionHandler }
             .contains { $0.allowsMultipleSelection }
     }
 
@@ -218,29 +218,18 @@ extension TableCoordinator: UITableViewDataSource {
 extension TableCoordinator: UITableViewDelegate {
 
     open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return true }
         return provider.shouldHighlight(at: indexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return nil }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return nil }
         return provider.shouldSelect(at: indexPath.item) ? indexPath : nil
     }
 
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
         provider.didSelect(at: indexPath.item)
-        guard tableView.allowsMultipleSelection else { return }
-    }
-
-    open func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return nil }
-        return provider.shouldDeselect(at: indexPath.item) ? indexPath : nil
-    }
-
-    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
-        provider.didDeselect(at: indexPath.item)
 
         guard tableView.allowsMultipleSelection, !provider.allowsMultipleSelection else { return }
 
@@ -248,6 +237,21 @@ extension TableCoordinator: UITableViewDelegate {
             .map { IndexPath(item: $0, section: indexPath.section ) }
             .filter { $0 != indexPath }
         indexPaths.forEach { tableView.deselectRow(at: $0, animated: true) }
+    }
+
+    public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        guard let provider = mapper.provider.sections[indexPath.section] as? TableAccessoryHandler else { return }
+        provider.didSelectAccessory(at: indexPath.item)
+    }
+
+    open func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return nil }
+        return provider.shouldDeselect(at: indexPath.item) ? indexPath : nil
+    }
+
+    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
+        provider.didDeselect(at: indexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

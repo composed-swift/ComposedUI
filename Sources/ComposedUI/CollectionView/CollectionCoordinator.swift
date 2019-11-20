@@ -101,7 +101,7 @@ open class CollectionCoordinator: NSObject {
         }
 
         collectionView.allowsMultipleSelection = mapper.provider.sections
-            .compactMap { $0 as? SelectionProvider }
+            .compactMap { $0 as? SelectionHandler }
             .contains { $0.allowsMultipleSelection }
 
         collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView)
@@ -323,17 +323,17 @@ extension CollectionCoordinator {
 extension CollectionCoordinator: UICollectionViewDelegate {
 
     open func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return true }
         return provider.shouldHighlight(at: indexPath.item)
     }
 
     open func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return true }
         return provider.shouldSelect(at: indexPath.item)
     }
 
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
         provider.didSelect(at: indexPath.item)
 
         guard collectionView.allowsMultipleSelection, !provider.allowsMultipleSelection else { return }
@@ -345,14 +345,13 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     }
 
     open func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return true }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return true }
         return provider.shouldDeselect(at: indexPath.item)
     }
 
     open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionProvider else { return }
+        guard let provider = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
         provider.didDeselect(at: indexPath.item)
-        guard collectionView.allowsMultipleSelection else { return }
     }
 
     // MARK: - Forwarding
