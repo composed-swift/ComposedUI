@@ -274,18 +274,6 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
 }
 
-private extension IndexPath {
-    init?(string: String) {
-        let components = string.components(separatedBy: ".").compactMap { Int($0) }
-        guard components.count == 2 else { return nil }
-        self.init(item: components[1], section: components[0])
-    }
-
-    var string: NSString {
-        return "\(section).\(item)" as NSString
-    }
-}
-
 // MARK: - Context Menus
 
 @available(iOS 13.0, *)
@@ -293,7 +281,7 @@ extension CollectionCoordinator {
 
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let cell = collectionView.cellForItem(at: indexPath),
-            let provider = mapper.provider.sections[indexPath.section] as? CollectionSectionContextMenuProvider else { return nil }
+            let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
         let preview = provider.contextMenu(previewForItemAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
             return provider.contextMenu(forItemAt: indexPath.item, suggestedActions: suggestedElements)
@@ -303,20 +291,20 @@ extension CollectionCoordinator {
     public func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = collectionView.cellForItem(at: indexPath),
-            let provider = mapper.provider.sections[indexPath.section] as? CollectionSectionContextMenuProvider else { return nil }
+            let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
         return provider.contextMenu(previewForHighlightingItemAt: indexPath.item, cell: cell)
     }
 
     public func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = collectionView.cellForItem(at: indexPath),
-            let provider = mapper.provider.sections[indexPath.section] as? CollectionSectionContextMenuProvider else { return nil }
+            let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
         return provider.contextMenu(previewForDismissingItemAt: indexPath.item, cell: cell)
     }
 
     public func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
-        guard let provider = mapper.provider.sections[indexPath.section] as? CollectionSectionContextMenuProvider else { return }
+        guard let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return }
         provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, animator: animator)
     }
 

@@ -1,7 +1,7 @@
 import UIKit
 import Composed
 
-public protocol CollectionSelectionHandler: SelectionHandler {
+public protocol CollectionSelectionHandler: SelectionHandler, CollectionSectionProvider {
     func didSelect(at index: Int, cell: UICollectionViewCell)
     func didDeselect(at index: Int, cell: UICollectionViewCell)
 }
