@@ -3,7 +3,7 @@ import Composed
 
 open class CollectionSection: CollectionSectionElementsProvider {
 
-    public let cell: CollectionElement<UICollectionViewCell>
+    public let cell: CollectionCellElement<UICollectionViewCell>
     public let header: CollectionSupplementaryElement<UICollectionReusableView>?
     public let footer: CollectionSupplementaryElement<UICollectionReusableView>?
 
@@ -14,7 +14,7 @@ open class CollectionSection: CollectionSectionElementsProvider {
     private weak var section: Section?
 
     public init<Section, Cell, Header, Footer>(section: Section,
-                                               cell: CollectionElement<Cell>,
+                                               cell: CollectionCellElement<Cell>,
                                                header: CollectionSupplementaryElement<Header>? = nil,
                                                footer: CollectionSupplementaryElement<Footer>? = nil)
         where Header: UICollectionReusableView, Footer: UICollectionReusableView, Cell: UICollectionViewCell, Section: Composed.Section {
@@ -22,17 +22,17 @@ open class CollectionSection: CollectionSectionElementsProvider {
 
             // The code below copies the relevent elements to erase type-safety
             
-            let cellDequeueMethod: DequeueMethod<UICollectionViewCell>
+            let dequeueMethod: DequeueMethod<UICollectionViewCell>
             switch cell.dequeueMethod {
-            case .class: cellDequeueMethod = .class(Cell.self)
-            case .nib: cellDequeueMethod = .nib(Cell.self)
-            case .storyboard: cellDequeueMethod = .storyboard(Cell.self)
+            case .class: dequeueMethod = .class(Cell.self)
+            case .nib: dequeueMethod = .nib(Cell.self)
+            case .storyboard: dequeueMethod = .storyboard(Cell.self)
             }
 
-            self.cell = CollectionElement(section: section,
-                                          cellDequeueMethod: cellDequeueMethod,
-                                          reuseIdentifier: cell.reuseIdentifier,
-                                          configure: cell.configure)
+            self.cell = CollectionCellElement(section: section,
+                                              dequeueMethod: dequeueMethod,
+                                              reuseIdentifier: cell.reuseIdentifier,
+                                              configure: cell.configure)
 
             if let header = header {
                 let dequeueMethod: DequeueMethod<UICollectionReusableView>

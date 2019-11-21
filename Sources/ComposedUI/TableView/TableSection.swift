@@ -26,15 +26,15 @@ open class TableSection: TableElementsProvider {
         where Section: Composed.Section, Cell: UITableViewCell, Header: UITableViewHeaderFooterView, Footer: UITableViewHeaderFooterView {
             self.section = section
 
-            let cellDequeueMethod: DequeueMethod<UITableViewCell>
+            let dequeueMethod: DequeueMethod<UITableViewCell>
             switch cell.dequeueMethod {
-            case .class: cellDequeueMethod = .class(Cell.self)
-            case .nib: cellDequeueMethod = .nib(Cell.self)
-            case .storyboard: cellDequeueMethod = .storyboard(Cell.self)
+            case .class: dequeueMethod = .class(Cell.self)
+            case .nib: dequeueMethod = .nib(Cell.self)
+            case .storyboard: dequeueMethod = .storyboard(Cell.self)
             }
 
             self.cell = TableElement(section: section,
-                                     dequeueMethod: cellDequeueMethod,
+                                     dequeueMethod: dequeueMethod,
                                      reuseIdentifier: cell.reuseIdentifier,
                                      configure: cell.configure)
 
