@@ -219,6 +219,10 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 
+    public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool {
+        return collectionView.isEditing
+    }
+
 }
 
 // MARK: - UICollectionViewDataSource

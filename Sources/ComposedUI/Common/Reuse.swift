@@ -107,6 +107,12 @@ public extension UITableView {
 
 public extension UICollectionView {
 
+    // Editing
+
+    var isEditing: Bool {
+        return owningViewController?.isEditing ?? false
+    }
+
     // Cells
 
     func register<C>(cell: C.Type) where C: UICollectionViewCell {
@@ -147,6 +153,22 @@ public extension UICollectionViewLayout {
 
     func register<C>(class cellClass: C.Type, bundle: Bundle? = nil, ofKind kind: String) where C: UICollectionReusableView {
         register(cellClass, forDecorationViewOfKind: kind)
+    }
+
+}
+
+private extension UIView {
+
+    @objc var owningViewController: UIViewController? {
+        var responder: UIResponder? = self
+
+        while !(responder is UIViewController) && superview != nil {
+            if let next = responder?.next {
+                responder = next
+            }
+        }
+
+        return responder as? UIViewController
     }
 
 }

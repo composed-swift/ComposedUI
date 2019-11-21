@@ -35,6 +35,11 @@ public class CollectionElement<View> where View: UICollectionReusableView {
 
 }
 
+public final class CollectionCellElement<View> where View: UICollectionViewCell {
+
+
+}
+
 public final class CollectionSupplementaryElement<View>: CollectionElement<View> where View: UICollectionReusableView {
 
     internal let kind: CollectionElementKind
