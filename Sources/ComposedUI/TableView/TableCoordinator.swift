@@ -294,7 +294,7 @@ extension TableCoordinator: UITableViewDelegate {
 
     open func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return true }
-        return handler.shouldIndentWhileEditing(at: indexPath.item)
+        return handler.editingStyle(at: indexPath.item) == .none ? false : handler.shouldIndentWhileEditing(at: indexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -315,6 +315,11 @@ extension TableCoordinator: UITableViewDelegate {
     }
 
     // MARK: - Selection
+
+    public func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return nil }
+        return handler.titleForDeleteConfirmation(at: indexPath.item)
+    }
 
     open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         if tableView.isEditing,
@@ -366,6 +371,16 @@ extension TableCoordinator: UITableViewDelegate {
         } else {
             handler.didDeselect(at: indexPath.item)
         }
+    }
+
+    public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableActionsHandler else { return nil }
+        return handler.leadingSwipeActions(at: indexPath.item)
+    }
+
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableActionsHandler else { return nil }
+        return handler.trailingSwipeActions(at: indexPath.item)
     }
 
     // MARK: - Metrics

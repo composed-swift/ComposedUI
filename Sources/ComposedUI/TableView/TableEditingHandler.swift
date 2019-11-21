@@ -11,6 +11,8 @@ public protocol TableEditingHandler: TableSectionProvider {
 
     func willBeginEditing(at index: Int)
     func didEndEditing(at index: Int)
+
+    func titleForDeleteConfirmation(at index: Int) -> String?
 }
 
 public extension TableEditingHandler {
@@ -23,4 +25,6 @@ public extension TableEditingHandler {
 
     func willBeginEditing(at index: Int) { }
     func didEndEditing(at index: Int) { }
+
+    func titleForDeleteConfirmation(at index: Int) -> String? { return nil }
 }
