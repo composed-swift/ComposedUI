@@ -373,6 +373,8 @@ extension TableCoordinator: UITableViewDelegate {
         }
     }
 
+    // MARK: - Actions
+
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let handler = mapper.provider.sections[indexPath.section] as? TableActionsHandler else { return nil }
         return handler.leadingSwipeActions(at: indexPath.item)

@@ -176,7 +176,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         let block = { [unowned self] in
             self.dispatchIfNecessary {
-                self.collectionView.deleteItems(at: indexPaths)
+                if self.collectionView.numberOfItems(inSection: indexPaths.first!.section) == 1 {
+                    self.collectionView.reloadData()
+                } else {
+                    self.collectionView.deleteItems(at: indexPaths)
+                }
             }
         }
         updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
