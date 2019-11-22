@@ -316,11 +316,6 @@ extension TableCoordinator: UITableViewDelegate {
 
     // MARK: - Selection
 
-    public func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return nil }
-        return handler.titleForDeleteConfirmation(at: indexPath.item)
-    }
-
     open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         if tableView.isEditing,
             let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler,
