@@ -2,7 +2,6 @@ import UIKit
 import Composed
 
 public enum TableHeaderFooter<View: UITableViewHeaderFooterView> {
-    case none
     case title(String)
     case element(TableElement<View>)
 }
@@ -21,8 +20,8 @@ open class TableSection: TableElementsProvider {
 
     public init<Section, Cell, Header, Footer>(section: Section,
                                                cell: TableElement<Cell>,
-                                               header: TableHeaderFooter<Header> = .none,
-                                               footer: TableHeaderFooter<Footer> = .none)
+                                               header: TableHeaderFooter<Header>? = nil,
+                                               footer: TableHeaderFooter<Footer>? = nil)
         where Section: Composed.Section, Cell: UITableViewCell, Header: UITableViewHeaderFooterView, Footer: UITableViewHeaderFooterView {
             self.section = section
 
