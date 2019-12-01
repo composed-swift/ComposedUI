@@ -278,10 +278,10 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
 }
 
-// MARK: - Context Menus
-
 @available(iOS 13.0, *)
 extension CollectionCoordinator {
+
+    // MARK: - Context Menus
 
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let cell = collectionView.cellForItem(at: indexPath),
@@ -314,9 +314,9 @@ extension CollectionCoordinator {
 
 }
 
-// MARK: - UICollectionViewDelegate
-
 extension CollectionCoordinator: UICollectionViewDelegate {
+
+    // MARK: - Selection
 
     open func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return true }
@@ -324,7 +324,7 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     }
 
     open func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return true }
+        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return false }
         return handler.shouldSelect(at: indexPath.item)
     }
 
