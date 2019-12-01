@@ -31,7 +31,7 @@ open class CollectionCoordinator: NSObject {
     private weak var originalDelegate: UICollectionViewDelegate?
     private var observer: NSKeyValueObservation?
 
-    private var cachedProviders: [Int: CollectionSectionElementsProvider] = [:]
+    private var cachedProviders: [CollectionSectionElementsProvider] = []
 
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
@@ -75,8 +75,6 @@ open class CollectionCoordinator: NSObject {
                 fatalError("No provider available for section: \(index), or it does not conform to CollectionSectionProvider")
             }
 
-            cachedProviders[index] = section
-
             switch section.cell.dequeueMethod {
             case let .nib(type):
                 let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
@@ -98,6 +96,8 @@ open class CollectionCoordinator: NSObject {
                     break
                 }
             }
+
+            cachedProviders.append(section)
         }
 
         collectionView.allowsMultipleSelection = mapper.provider.sections
@@ -238,11 +238,11 @@ extension CollectionCoordinator: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cachedProviders[section]?.numberOfElements ?? 0
+        return collectionSection(for: section)?.numberOfElements ?? 0
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let section = cachedProviders[indexPath.section] else {
+        guard let section = collectionSection(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
@@ -253,7 +253,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let provider = cachedProviders[indexPath.section] else {
+        guard let provider = collectionSection(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
 
@@ -274,6 +274,11 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
             return view
         }
+    }
+
+    private func collectionSection(for section: Int) -> CollectionSectionElementsProvider? {
+        guard cachedProviders.indices.contains(section) else { return nil }
+        return cachedProviders[section]
     }
 
 }

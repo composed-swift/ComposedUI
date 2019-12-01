@@ -323,7 +323,7 @@ extension TableCoordinator: UITableViewDelegate {
             return false
         }
 
-        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return true }
+        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return false }
         return handler.shouldHighlight(at: indexPath.item)
     }
 
