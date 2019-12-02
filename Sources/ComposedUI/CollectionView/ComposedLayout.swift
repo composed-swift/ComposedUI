@@ -1,58 +1,58 @@
 import UIKit
 
-public enum ComposedLayoutDimension {
+internal enum ComposedLayoutDimension {
     case automatic
     case fractionalWidth(CGFloat)
     case fractionalHeight(CGFloat)
     case absolute(CGFloat)
 }
 
-public final class ComposedLayoutSize {
+internal final class ComposedLayoutSize {
     internal let width: ComposedLayoutDimension
     internal let height: ComposedLayoutDimension
 
-    public init(widthDimension width: ComposedLayoutDimension, heightDimension height: ComposedLayoutDimension) {
+    internal init(widthDimension width: ComposedLayoutDimension, heightDimension height: ComposedLayoutDimension) {
         self.width = width
         self.height = height
     }
 }
 
-public class ComposedLayoutItem {
+internal class ComposedLayoutItem {
     internal let layoutSize: ComposedLayoutSize
     internal let supplementaryItems: [ComposedLayoutSupplementaryItem]
 
-    public init(layoutSize: ComposedLayoutSize, supplementaryItems: [ComposedLayoutSupplementaryItem] = []) {
+    internal init(layoutSize: ComposedLayoutSize, supplementaryItems: [ComposedLayoutSupplementaryItem] = []) {
         self.layoutSize = layoutSize
         self.supplementaryItems = supplementaryItems
     }
 }
 
-public final class ComposedLayoutSection {
-    public var contentInsets: UIEdgeInsets = .zero
-    public var xAxisSpacing: CGFloat = 0
-    public var yAxisSpacing: CGFloat = 0
-    public var boundarySupplementaryItems: [ComposedLayoutBoundarySupplementaryItem] = []
-    public var decorationItems: [ComposedLayoutDecorationItem] = []
+internal final class ComposedLayoutSection {
+    internal var contentInsets: UIEdgeInsets = .zero
+    internal var xAxisSpacing: CGFloat = 0
+    internal var yAxisSpacing: CGFloat = 0
+    internal var boundarySupplementaryItems: [ComposedLayoutBoundarySupplementaryItem] = []
+    internal var decorationItems: [ComposedLayoutDecorationItem] = []
 
     internal var item: ComposedLayoutItem
 
-    public init(item: ComposedLayoutItem) {
+    internal init(item: ComposedLayoutItem) {
         self.item = item
     }
 }
 
-public enum ComposedLayoutAnchor {
+internal enum ComposedLayoutAnchor {
     case absolute(UIRectEdge, CGPoint)
     case fractional(UIRectEdge, CGPoint)
 }
 
-public class ComposedLayoutSupplementaryItem: ComposedLayoutItem {
-    public let elementKind: String
-    public let containerAnchor: ComposedLayoutAnchor
-    public let itemAnchor: ComposedLayoutAnchor?
-    public let zIndex: Int = 1
+internal class ComposedLayoutSupplementaryItem: ComposedLayoutItem {
+    internal let elementKind: String
+    internal let containerAnchor: ComposedLayoutAnchor
+    internal let itemAnchor: ComposedLayoutAnchor?
+    internal let zIndex: Int = 1
 
-    public init(layoutSize: ComposedLayoutSize, elementKind: String, containerAnchor: ComposedLayoutAnchor, itemAnchor: ComposedLayoutAnchor? = nil) {
+    internal init(layoutSize: ComposedLayoutSize, elementKind: String, containerAnchor: ComposedLayoutAnchor, itemAnchor: ComposedLayoutAnchor? = nil) {
         self.elementKind = elementKind
         self.containerAnchor = containerAnchor
         self.itemAnchor = itemAnchor
@@ -60,30 +60,30 @@ public class ComposedLayoutSupplementaryItem: ComposedLayoutItem {
     }
 }
 
-public class ComposedLayoutBoundarySupplementaryItem: ComposedLayoutSupplementaryItem {
-    public var pinsToVisibleBounds: Bool = false
-    public let alignment: UIRectEdge
-    public let offset: CGPoint
+internal class ComposedLayoutBoundarySupplementaryItem: ComposedLayoutSupplementaryItem {
+    internal var pinsToVisibleBounds: Bool = false
+    internal let alignment: UIRectEdge
+    internal let offset: CGPoint
 
-    public init(layoutSize: ComposedLayoutSize, elementKind: String, alignment: UIRectEdge, absoluteOffset: CGPoint = .zero) {
+    internal init(layoutSize: ComposedLayoutSize, elementKind: String, alignment: UIRectEdge, absoluteOffset: CGPoint = .zero) {
         self.offset = absoluteOffset
         self.alignment = alignment
 
         super.init(layoutSize: layoutSize, elementKind: elementKind, containerAnchor: .absolute(alignment, absoluteOffset), itemAnchor: nil)
     }
 
-    public static func header(heightDimension height: ComposedLayoutDimension) -> ComposedLayoutBoundarySupplementaryItem {
+    internal static func header(heightDimension height: ComposedLayoutDimension) -> ComposedLayoutBoundarySupplementaryItem {
         return ComposedLayoutBoundarySupplementaryItem(layoutSize: ComposedLayoutSize(widthDimension: .automatic, heightDimension: height), elementKind: UICollectionView.elementKindSectionHeader, alignment: [])
     }
 
-    public static func footer(heightDimension height: ComposedLayoutDimension) -> ComposedLayoutBoundarySupplementaryItem {
+    internal static func footer(heightDimension height: ComposedLayoutDimension) -> ComposedLayoutBoundarySupplementaryItem {
         return ComposedLayoutBoundarySupplementaryItem(layoutSize: ComposedLayoutSize(widthDimension: .automatic, heightDimension: height), elementKind: UICollectionView.elementKindSectionFooter, alignment: [])
     }
 }
 
-public class ComposedLayoutDecorationItem: ComposedLayoutItem {
-    public let elementKind: String
-    public var zIndex: Int = -1
+internal class ComposedLayoutDecorationItem: ComposedLayoutItem {
+    internal let elementKind: String
+    internal var zIndex: Int = -1
 
     internal init(backgroundElementKind elementKind: String) {
         self.elementKind = elementKind
@@ -91,23 +91,23 @@ public class ComposedLayoutDecorationItem: ComposedLayoutItem {
         super.init(layoutSize: size, supplementaryItems: [])
     }
 
-    public static func background(elementKind: String) -> ComposedLayoutDecorationItem {
+    internal static func background(elementKind: String) -> ComposedLayoutDecorationItem {
         return ComposedLayoutDecorationItem(backgroundElementKind: elementKind)
     }
 }
 
-public struct ComposedLayoutConfiguration {
-    public var scrollDirection: UICollectionView.ScrollDirection = .vertical
-    public var globalHeaderItem: ComposedLayoutSupplementaryItem?
-    public var globalFooterItem: ComposedLayoutSupplementaryItem?
-    public init() { }
+internal struct ComposedLayoutConfiguration {
+    internal var scrollDirection: UICollectionView.ScrollDirection = .vertical
+    internal var globalHeaderItem: ComposedLayoutSupplementaryItem?
+    internal var globalFooterItem: ComposedLayoutSupplementaryItem?
+    internal init() { }
 }
 
-open class ComposedLayout: UICollectionViewFlowLayout {
+internal class ComposedLayout: UICollectionViewFlowLayout {
 
-    public typealias ComposedLayoutSectionProvider = (Int, ComposedLayoutEnvironment) -> ComposedLayoutSection?
+    internal typealias ComposedLayoutSectionProvider = (Int, ComposedLayoutEnvironment) -> ComposedLayoutSection?
 
-    public var configuration: ComposedLayoutConfiguration {
+    internal var configuration: ComposedLayoutConfiguration {
         didSet { scrollDirection = configuration.scrollDirection }
     }
 
@@ -116,35 +116,35 @@ open class ComposedLayout: UICollectionViewFlowLayout {
 
     private var delegate: ComposedLayoutDelegate?
 
-    public init(section: ComposedLayoutSection) {
+    internal init(section: ComposedLayoutSection) {
         self.section = section
         self.sectionProvider = nil
         self.configuration = .init()
         super.init()
     }
 
-    public init(sectionProvider provider: @escaping ComposedLayoutSectionProvider) {
+    internal init(sectionProvider provider: @escaping ComposedLayoutSectionProvider) {
         self.sectionProvider = provider
         self.section = nil
         self.configuration = .init()
         super.init()
     }
 
-    public init(section: ComposedLayoutSection, configuration: ComposedLayoutConfiguration) {
+    internal init(section: ComposedLayoutSection, configuration: ComposedLayoutConfiguration) {
         self.section = section
         self.sectionProvider = nil
         self.configuration = configuration
         super.init()
     }
 
-    public init(sectionProvider provider: @escaping ComposedLayoutSectionProvider, configuration: ComposedLayoutConfiguration) {
+    internal init(sectionProvider provider: @escaping ComposedLayoutSectionProvider, configuration: ComposedLayoutConfiguration) {
         self.sectionProvider = provider
         self.section = nil
         self.configuration = configuration
         super.init()
     }
 
-    public required init?(coder: NSCoder) {
+     public required init?(coder: NSCoder) {
         fatalError("init(coder:) is not supported by ComposedLayout")
     }
 
@@ -195,13 +195,13 @@ open class ComposedLayout: UICollectionViewFlowLayout {
 
 }
 
-public protocol ComposedLayoutContainer {
+internal protocol ComposedLayoutContainer {
     var contentSize: CGSize { get }
     var effectiveContentSize: CGSize { get }
     var contentInsets: UIEdgeInsets { get }
 }
 
-public protocol ComposedLayoutEnvironment {
+internal protocol ComposedLayoutEnvironment {
     var container: ComposedLayoutContainer { get }
     var traitCollection: UITraitCollection { get }
 }

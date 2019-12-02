@@ -231,7 +231,7 @@ extension TableCoordinator {
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
         let preview = provider.contextMenu(previewForItemAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
-            return provider.contextMenu(forItemAt: indexPath.item, suggestedActions: suggestedElements)
+            return provider.contextMenu(forItemAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
         }
     }
 
