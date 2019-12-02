@@ -101,7 +101,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
     public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
         tableView.performBatchUpdates({
             prepareSections()
-            updateOperation?.start()
+            updateOperation.flatMap { OperationQueue.main.addOperation($0) }
         }, completion: nil)
     }
 

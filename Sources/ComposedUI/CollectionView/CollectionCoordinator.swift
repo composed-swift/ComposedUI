@@ -25,7 +25,15 @@ open class CollectionCoordinator: NSObject {
     }
 
     private var mapper: SectionProviderMapping
-    private var updateOperation: BlockOperation?
+
+    private var sectionRemoves: [() -> Void] = []
+    private var sectionInserts: [() -> Void] = []
+
+    private var removes: [() -> Void] = []
+    private var inserts: [() -> Void] = []
+    private var changes: [() -> Void] = []
+    private var moves: [() -> Void] = []
+
     private let collectionView: UICollectionView
 
     private weak var originalDelegate: UICollectionViewDelegate?
@@ -113,98 +121,124 @@ open class CollectionCoordinator: NSObject {
 
 extension CollectionCoordinator: SectionProviderMappingDelegate {
 
+    private func reset() {
+        removes.removeAll()
+        inserts.removeAll()
+        changes.removeAll()
+        moves.removeAll()
+        sectionInserts.removeAll()
+        sectionRemoves.removeAll()
+    }
+
     public func mappingDidReload(_ mapping: SectionProviderMapping) {
-        prepareSections()
-        collectionView.reloadData()
-    }
-
-    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
-        updateOperation = BlockOperation()
-    }
-
-    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+        assert(Thread.isMainThread)
+        reset()
         collectionView.performBatchUpdates({
             prepareSections()
-            updateOperation?.start()
+            collectionView.reloadData()
         }, completion: nil)
     }
 
+    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
+        reset()
+    }
+
+    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+        assert(Thread.isMainThread)
+        collectionView.performBatchUpdates({
+            prepareSections()
+            removes.forEach { $0() }
+            inserts.forEach { $0() }
+            changes.forEach { $0() }
+            moves.forEach { $0() }
+            sectionRemoves.forEach { $0() }
+            sectionInserts.forEach { $0() }
+        }, completion: { [unowned self] _ in
+            self.reset()
+        })
+    }
+
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
-        let block = { [unowned self] in
+        assert(Thread.isMainThread)
+        sectionInserts.append { [unowned self] in
             self.prepareSections()
             self.collectionView.insertSections(sections)
         }
-        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
-        let block = { [unowned self] in
+        assert(Thread.isMainThread)
+        sectionRemoves.append { [unowned self] in
             self.prepareSections()
             self.collectionView.deleteSections(sections)
         }
-        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
-        let block = { [unowned self] in
+        assert(Thread.isMainThread)
+        assert(Thread.isMainThread)
+        changes.append { [unowned self] in
             self.prepareSections()
             self.collectionView.reloadSections(sections)
         }
-        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
-        let block = { [unowned self] in
+        assert(Thread.isMainThread)
+        inserts.append { [unowned self] in
             self.collectionView.insertItems(at: indexPaths)
         }
-        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
-        let block = { [unowned self] in
+        assert(Thread.isMainThread)
+        removes.append { [unowned self] in
             if self.collectionView.numberOfItems(inSection: indexPaths.first!.section) == 1 {
                 self.collectionView.reloadData()
             } else {
                 self.collectionView.deleteItems(at: indexPaths)
             }
         }
-        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
-        let block = { [unowned self] in
+        assert(Thread.isMainThread)
+        changes.append { [unowned self] in
             CATransaction.begin()
             CATransaction.setDisableActions(true)
             self.collectionView.reloadItems(at: indexPaths)
             CATransaction.setDisableActions(false)
             CATransaction.commit()
         }
-        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
-        let block = { [unowned self] in
+        assert(Thread.isMainThread)
+        self.moves.append { [unowned self] in
             moves.forEach {
                 self.collectionView.moveItem(at: $0.0, to: $0.1)
             }
         }
-        updateOperation.flatMap { $0.addExecutionBlock(block) } ?? block()
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
+        assert(Thread.isMainThread)
         let indexPaths = collectionView.indexPathsForSelectedItems ?? []
         return indexPaths.filter { $0.section == section }.map { $0.item }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, select indexPath: IndexPath) {
+        assert(Thread.isMainThread)
         collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
     }
 
     public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) {
+        assert(Thread.isMainThread)
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool {
+        assert(Thread.isMainThread)
         return collectionView.isEditing
     }
 
