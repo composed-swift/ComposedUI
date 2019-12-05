@@ -133,10 +133,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mappingDidReload(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         reset()
-        collectionView.performBatchUpdates({
-            prepareSections()
-            collectionView.reloadData()
-        }, completion: nil)
+        prepareSections()
+        collectionView.reloadData()
     }
 
     public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
@@ -174,15 +172,6 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         }
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
-        assert(Thread.isMainThread)
-        assert(Thread.isMainThread)
-        changes.append { [unowned self] in
-            self.prepareSections()
-            self.collectionView.reloadSections(sections)
-        }
-    }
-
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
         inserts.append { [unowned self] in
@@ -193,11 +182,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
         removes.append { [unowned self] in
-            if self.collectionView.numberOfItems(inSection: indexPaths.first!.section) == 1 {
-                self.collectionView.reloadData()
-            } else {
-                self.collectionView.deleteItems(at: indexPaths)
-            }
+            self.collectionView.deleteItems(at: indexPaths)
         }
     }
 
@@ -215,9 +200,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
         assert(Thread.isMainThread)
         self.moves.append { [unowned self] in
-            moves.forEach {
-                self.collectionView.moveItem(at: $0.0, to: $0.1)
-            }
+            moves.forEach { self.collectionView.moveItem(at: $0.0, to: $0.1) }
         }
     }
 
