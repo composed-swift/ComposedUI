@@ -26,6 +26,7 @@ open class CollectionCoordinator: NSObject {
 
     private var mapper: SectionProviderMapping
 
+    private var defersUpdate: Bool = false
     private var sectionRemoves: [() -> Void] = []
     private var sectionInserts: [() -> Void] = []
 
@@ -139,12 +140,16 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
         reset()
+        defersUpdate = true
     }
 
     public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         collectionView.performBatchUpdates({
-            prepareSections()
+            if defersUpdate {
+                prepareSections()
+            }
+
             removes.forEach { $0() }
             inserts.forEach { $0() }
             changes.forEach { $0() }
@@ -153,13 +158,14 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             sectionInserts.forEach { $0() }
         }, completion: { [unowned self] _ in
             self.reset()
+            self.defersUpdate = false
         })
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         assert(Thread.isMainThread)
         sectionInserts.append { [unowned self] in
-            self.prepareSections()
+            if !self.defersUpdate { self.prepareSections() }
             self.collectionView.insertSections(sections)
         }
     }
@@ -167,7 +173,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
         assert(Thread.isMainThread)
         sectionRemoves.append { [unowned self] in
-            self.prepareSections()
+            if !self.defersUpdate { self.prepareSections() }
             self.collectionView.deleteSections(sections)
         }
     }
