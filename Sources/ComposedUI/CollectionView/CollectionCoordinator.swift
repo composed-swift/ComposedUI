@@ -6,10 +6,12 @@ public protocol CollectionCoordinatorDataSource: class {
 }
 
 public protocol CollectionCoordinatorDelegate: class {
+    func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView)
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
 }
 
 public extension CollectionCoordinatorDelegate {
+    func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView) { }
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView? { return nil }
 }
 
@@ -351,6 +353,10 @@ extension CollectionCoordinator: UICollectionViewDelegate {
             .map { IndexPath(item: $0, section: indexPath.section ) }
             .filter { $0 != indexPath }
         indexPaths.forEach { collectionView.deselectItem(at: $0, animated: true) }
+    }
+
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        delegate?.coordinator(self, didScroll: collectionView)
     }
 
     open func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {

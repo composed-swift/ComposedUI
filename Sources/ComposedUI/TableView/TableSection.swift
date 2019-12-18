@@ -1,7 +1,7 @@
 import UIKit
 import Composed
 
-public enum TableHeaderFooter<View: UITableViewHeaderFooterView> {
+public enum TableHeaderFooter<View> where View: UITableViewHeaderFooterView {
     case title(String)
     case element(TableElement<View>)
 }
@@ -41,7 +41,7 @@ open class TableSection: TableElementsProvider {
             case .none:
                 self.header = nil
             case let .title(title):
-                self.header = TableElement(section: section, dequeueMethod: .class(UITableViewHeaderFooterView.self)) { view, _, _ in
+                self.header = TableElement(section: section, dequeueMethod: .class(Header.self)) { view, _, _ in
                     view.textLabel?.text = title
                 }
             case let .element(element):
@@ -62,15 +62,15 @@ open class TableSection: TableElementsProvider {
             case .none:
                 self.footer = nil
             case let .title(title):
-                self.footer = TableElement(section: section, dequeueMethod: .class(UITableViewHeaderFooterView.self)) { view, _, _ in
+                self.footer = TableElement(section: section, dequeueMethod: .class(Footer.self)) { view, _, _ in
                     view.textLabel?.text = title
                 }
             case let .element(element):
                 let dequeueMethod: DequeueMethod<UITableViewHeaderFooterView>
                 switch element.dequeueMethod {
-                case .class: dequeueMethod = .class(Header.self)
-                case .nib: dequeueMethod = .nib(Header.self)
-                case .storyboard: dequeueMethod = .storyboard(Header.self)
+                case .class: dequeueMethod = .class(Footer.self)
+                case .nib: dequeueMethod = .nib(Footer.self)
+                case .storyboard: dequeueMethod = .storyboard(Footer.self)
                 }
 
                 self.footer = TableElement(section: section,
