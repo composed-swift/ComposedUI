@@ -8,11 +8,13 @@ public protocol CollectionCoordinatorDataSource: class {
 public protocol CollectionCoordinatorDelegate: class {
     func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView)
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
+    func coordinatorDidUpdate(_ coordinator: CollectionCoordinator)
 }
 
 public extension CollectionCoordinatorDelegate {
     func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView) { }
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView? { return nil }
+    func coordinatorDidUpdate(_ coordinator: CollectionCoordinator) { }
 }
 
 open class CollectionCoordinator: NSObject {
@@ -116,6 +118,7 @@ open class CollectionCoordinator: NSObject {
             .contains { $0.allowsMultipleSelection }
 
         collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView)
+        delegate?.coordinatorDidUpdate(self)
     }
 
 }
