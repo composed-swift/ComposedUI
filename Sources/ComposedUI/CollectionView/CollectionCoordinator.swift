@@ -9,12 +9,24 @@ public protocol CollectionCoordinatorDelegate: class {
     func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView)
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator)
+
+    func coordinator(_ coordinator: CollectionCoordinator, canHandleDropSession session: UIDropSession) -> Bool
+    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnter: UIDropSession)
+    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidExit session: UIDropSession)
+    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnd session: UIDropSession)
+    func coordinator(_ coordinator: CollectionCoordinator, performDropWith dropCoordinator: UICollectionViewDropCoordinator)
 }
 
 public extension CollectionCoordinatorDelegate {
     func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView) { }
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView? { return nil }
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator) { }
+
+    func coordinator(_ coordinator: CollectionCoordinator, canHandleDropSession session: UIDropSession) -> Bool { return false }
+    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnter: UIDropSession) { }
+    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidExit session: UIDropSession) { }
+    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnd session: UIDropSession) { }
+    func coordinator(_ coordinator: CollectionCoordinator, performDropWith dropCoordinator: UICollectionViewDropCoordinator) { }
 }
 
 open class CollectionCoordinator: NSObject {
@@ -54,6 +66,7 @@ open class CollectionCoordinator: NSObject {
         super.init()
 
         collectionView.dataSource = self
+        collectionView.dropDelegate = self
         prepareSections()
 
         observer = collectionView.observe(\.delegate, options: [.initial, .new]) { [weak self] collectionView, _ in
@@ -387,6 +400,34 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     open override func forwardingTarget(for aSelector: Selector!) -> Any? {
         if super.responds(to: aSelector) { return self }
         return originalDelegate
+    }
+
+}
+
+extension CollectionCoordinator: UICollectionViewDropDelegate {
+
+    public func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        return delegate?.coordinator(self, canHandleDropSession: session) ?? false
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
+        delegate?.coordinator(self, dropSessionDidEnter: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        delegate?.coordinator(self, performDropWith: coordinator)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
+        delegate?.coordinator(self, dropSessionDidExit: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
+        delegate?.coordinator(self, dropSessionDidEnd: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        return (sectionProvider.sections[indexPath.section] as? CollectionDropHandler)?.dropSesion(previewParametersForItemAt: indexPath.item)
     }
 
 }
