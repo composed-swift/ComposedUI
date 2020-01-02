@@ -213,9 +213,23 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
         changes.append { [unowned self] in
+            var indexPathsToReload: [IndexPath] = []
+            for indexPath in indexPaths {
+                guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateHandling,
+                    !section.allowsReload(forItemAt: indexPath.item),
+                    let cell = self.collectionView.cellForItem(at: indexPath) else {
+                        indexPathsToReload.append(indexPath)
+                        continue
+                }
+
+                self.cachedProviders[indexPath.section].cell.configure(cell, indexPath.item, self.mapper.provider.sections[indexPath.section])
+            }
+
+            guard !indexPathsToReload.isEmpty else { return }
+
             CATransaction.begin()
             CATransaction.setDisableActions(true)
-            self.collectionView.reloadItems(at: indexPaths)
+            self.collectionView.reloadItems(at: indexPathsToReload)
             CATransaction.setDisableActions(false)
             CATransaction.commit()
         }
