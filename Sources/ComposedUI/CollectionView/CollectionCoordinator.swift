@@ -305,7 +305,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             return view
         } else {
             guard let view = dataSource?.coordinator(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
-                fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath)")
+                fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath). Did you forget to register your header or footer?")
             }
 
             return view
