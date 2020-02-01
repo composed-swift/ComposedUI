@@ -56,7 +56,7 @@ open class TableCoordinator: NSObject {
 
         for index in 0..<mapper.numberOfSections {
             guard let section = (mapper.provider.sections[index] as? TableSectionProvider)?.section(with: tableView.traitCollection) else {
-                fatalError("No provider available for section: \(index), or it does not conform to CollectionSectionProvider")
+                fatalError("No provider available for section: \(index), or it does not conform to TableSectionProvider")
             }
 
             switch section.cell.dequeueMethod {
@@ -268,8 +268,9 @@ extension TableCoordinator {
 
     open func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
-        guard let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return }
-        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, animator: animator)
+        guard let cell = tableView.cellForRow(at: indexPath),
+            let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return }
+        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, cell: cell, animator: animator)
     }
 
 }

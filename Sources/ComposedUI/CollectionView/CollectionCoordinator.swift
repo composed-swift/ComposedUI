@@ -349,8 +349,9 @@ extension CollectionCoordinator {
 
     public func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
-        guard let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return }
-        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, animator: animator)
+        guard let cell = collectionView.cellForItem(at: indexPath),
+            let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return }
+        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, cell: cell, animator: animator)
     }
 
 }

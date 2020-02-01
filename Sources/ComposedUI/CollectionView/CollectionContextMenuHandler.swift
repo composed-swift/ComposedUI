@@ -7,7 +7,7 @@ public protocol CollectionContextMenuHandler: CollectionSectionProvider {
     func contextMenu(previewForItemAt index: Int, cell: UICollectionViewCell) -> UIContextMenuContentPreviewProvider?
     func contextMenu(previewForHighlightingItemAt index: Int, cell: UICollectionViewCell) -> UITargetedPreview?
     func contextMenu(previewForDismissingItemAt index: Int, cell: UICollectionViewCell) -> UITargetedPreview?
-    func contextMenu(willPerformPreviewActionForItemAt index: Int, animator: UIContextMenuInteractionCommitAnimating)
+    func contextMenu(willPerformPreviewActionForItemAt index: Int, cell: UICollectionViewCell, animator: UIContextMenuInteractionCommitAnimating)
 }
 
 @available(iOS 13.0, *)
@@ -16,5 +16,5 @@ public extension CollectionContextMenuHandler {
     func contextMenu(previewForItemAt index: Int, cell: UICollectionViewCell) -> UIContextMenuContentPreviewProvider? { return nil }
     func contextMenu(previewForHighlightingItemAt index: Int, cell: UICollectionViewCell) -> UITargetedPreview? { return nil }
     func contextMenu(previewForDismissingItemAt index: Int, cell: UICollectionViewCell) -> UITargetedPreview? { return nil }
-    func contextMenu(willPerformPreviewActionForItemAt index: Int, animator: UIContextMenuInteractionCommitAnimating) { }
+    func contextMenu(willPerformPreviewActionForItemAt index: Int, cell: UICollectionViewCell, animator: UIContextMenuInteractionCommitAnimating) { }
 }
