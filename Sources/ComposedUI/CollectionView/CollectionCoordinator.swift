@@ -174,7 +174,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             moves.forEach { $0() }
             sectionRemoves.forEach { $0() }
             sectionInserts.forEach { $0() }
-        }, completion: { [unowned self] _ in
+        }, completion: { [weak self] _ in
+            guard let self = self else { return }
             self.reset()
             self.defersUpdate = false
         })
@@ -182,7 +183,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         assert(Thread.isMainThread)
-        sectionInserts.append { [unowned self] in
+        sectionInserts.append { [weak self] in
+            guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
             self.collectionView.insertSections(sections)
         }
@@ -190,7 +192,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
         assert(Thread.isMainThread)
-        sectionRemoves.append { [unowned self] in
+        sectionRemoves.append { [weak self] in
+            guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
             self.collectionView.deleteSections(sections)
         }
@@ -198,21 +201,25 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
-        inserts.append { [unowned self] in
+        inserts.append { [weak self] in
+            guard let self = self else { return }
             self.collectionView.insertItems(at: indexPaths)
         }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
-        removes.append { [unowned self] in
+        removes.append { [weak self] in
+            guard let self = self else { return }
             self.collectionView.deleteItems(at: indexPaths)
         }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
-        changes.append { [unowned self] in
+        changes.append { [weak self] in
+            guard let self = self else { return }
+            
             var indexPathsToReload: [IndexPath] = []
             for indexPath in indexPaths {
                 guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateHandling,
@@ -237,7 +244,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
         assert(Thread.isMainThread)
-        self.moves.append { [unowned self] in
+        self.moves.append { [weak self] in
+            guard let self = self else { return }
             moves.forEach { self.collectionView.moveItem(at: $0.0, to: $0.1) }
         }
     }
