@@ -45,6 +45,7 @@ open class CollectionCoordinator: NSObject {
     private var defersUpdate: Bool = false
     private var sectionRemoves: [() -> Void] = []
     private var sectionInserts: [() -> Void] = []
+    private var sectionUpdates: [() -> Void] = []
 
     private var removes: [() -> Void] = []
     private var inserts: [() -> Void] = []
@@ -174,11 +175,21 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             moves.forEach { $0() }
             sectionRemoves.forEach { $0() }
             sectionInserts.forEach { $0() }
+            sectionUpdates.forEach { $0() }
         }, completion: { [weak self] _ in
             guard let self = self else { return }
             self.reset()
             self.defersUpdate = false
         })
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
+        assert(Thread.isMainThread)
+        sectionUpdates.append { [weak self] in
+            guard let self = self else { return }
+            if !self.defersUpdate { self.prepareSections() }
+            self.collectionView.reloadSections(sections)
+        }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -440,7 +451,7 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
     public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         delegate?.coordinator(self, performDropWith: coordinator)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
         delegate?.coordinator(self, dropSessionDidExit: session)
     }

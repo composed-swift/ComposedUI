@@ -40,6 +40,7 @@ open class TableCoordinator: NSObject {
     private var defersUpdate: Bool = false
     private var sectionRemoves: [() -> Void] = []
     private var sectionInserts: [() -> Void] = []
+    private var sectionUpdates: [() -> Void] = []
 
     private var removes: [() -> Void] = []
     private var inserts: [() -> Void] = []
@@ -150,18 +151,27 @@ extension TableCoordinator: SectionProviderMappingDelegate {
                 prepareSections()
             }
 
-            prepareSections()
             removes.forEach { $0() }
             inserts.forEach { $0() }
             changes.forEach { $0() }
             moves.forEach { $0() }
             sectionRemoves.forEach { $0() }
             sectionInserts.forEach { $0() }
+            sectionUpdates.forEach { $0() }
         }, completion: { [weak self] _ in
             guard let self = self else { return }
             self.reset()
             self.defersUpdate = false
         })
+    }
+
+    public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
+        assert(Thread.isMainThread)
+        sectionUpdates.append { [weak self] in
+            guard let self = self else { return }
+            if !self.defersUpdate { self.prepareSections() }
+            self.tableView.reloadSections(sections, with: .automatic)
+        }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
