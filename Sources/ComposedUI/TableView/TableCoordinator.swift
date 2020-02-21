@@ -2,17 +2,42 @@ import UIKit
 import Composed
 
 public protocol TableCoordinatorDelegate: class {
-    func coordinator(tableView: UITableView, heightForHeaderIn section: Int) -> CGFloat
-    func coordinator(tableView: UITableView, heightForFooterIn section: Int) -> CGFloat
-    func coordinator(tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    func coordinator(_ coordinator: TableCoordinator, didScroll tableView: UITableView)
+    func coordinator(_ coordinator: TableCoordinator, backgroundViewInTableView tableView: UITableView) -> UIView?
+    func coordinatorDidUpdate(_ coordinator: TableCoordinator)
+
+    func coordinator(_ coordinator: TableCoordinator, canHandleDropSession session: UIDropSession) -> Bool
+    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnter: UIDropSession)
+    func coordinator(_ coordinator: TableCoordinator, dropSessionDidExit session: UIDropSession)
+    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnd session: UIDropSession)
+    func coordinator(_ coordinator: TableCoordinator, performDropWith dropCoordinator: UITableViewDropCoordinator)
+}
+
+public extension TableCoordinatorDelegate {
+    func coordinator(_ coordinator: TableCoordinator, didScroll tableView: UITableView) { }
+    func coordinator(_ coordinator: TableCoordinator, backgroundViewInCollectionView tableView: UITableView) -> UIView? { return nil }
+    func coordinatorDidUpdate(_ coordinator: TableCoordinator) { }
+
+    func coordinator(_ coordinator: TableCoordinator, canHandleDropSession session: UIDropSession) -> Bool { return false }
+    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnter: UIDropSession) { }
+    func coordinator(_ coordinator: TableCoordinator, dropSessionDidExit session: UIDropSession) { }
+    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnd session: UIDropSession) { }
+    func coordinator(_ coordinator: TableCoordinator, performDropWith dropCoordinator: UITableViewDropCoordinator) { }
 }
 
 open class TableCoordinator: NSObject {
 
-    public weak var delegate: TableCoordinatorDelegate?
+    public weak var delegate: TableCoordinatorDelegate? {
+        didSet { tableView.backgroundView = delegate?.coordinator(self, backgroundViewInTableView: tableView) }
+    }
+
+    public var sectionProvider: SectionProvider {
+        return mapper.provider
+    }
 
     private var mapper: SectionProviderMapping
 
+    private var defersUpdate: Bool = false
     private var sectionRemoves: [() -> Void] = []
     private var sectionInserts: [() -> Void] = []
 
@@ -115,11 +140,16 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
         reset()
+        defersUpdate = true
     }
 
     public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         tableView.performBatchUpdates({
+            if defersUpdate {
+                prepareSections()
+            }
+
             prepareSections()
             removes.forEach { $0() }
             inserts.forEach { $0() }
@@ -127,51 +157,78 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             moves.forEach { $0() }
             sectionRemoves.forEach { $0() }
             sectionInserts.forEach { $0() }
-        }, completion: { [unowned self] _ in
+        }, completion: { [weak self] _ in
+            guard let self = self else { return }
             self.reset()
+            self.defersUpdate = false
         })
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         assert(Thread.isMainThread)
-        sectionInserts.append { [unowned self] in
-            self.prepareSections()
+        sectionInserts.append { [weak self] in
+            guard let self = self else { return }
+            if !self.defersUpdate { self.prepareSections() }
             self.tableView.insertSections(sections, with: .automatic)
         }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
         assert(Thread.isMainThread)
-        sectionRemoves.append { [unowned self] in
-            self.prepareSections()
+        sectionRemoves.append { [weak self] in
+            guard let self = self else { return }
+            if !self.defersUpdate { self.prepareSections() }
             self.tableView.deleteSections(sections, with: .automatic)
         }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
-        inserts.append { [unowned self] in
+        inserts.append { [weak self] in
+            guard let self = self else { return }
             self.tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
-        removes.append { [unowned self] in
+        removes.append { [weak self] in
+            guard let self = self else { return }
             self.tableView.deleteRows(at: indexPaths, with: .automatic)
         }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
-        changes.append { [unowned self] in
+        changes.append { [weak self] in
+            guard let self = self else { return }
+
+            var indexPathsToReload: [IndexPath] = []
+            for indexPath in indexPaths {
+                guard let section = self.sectionProvider.sections[indexPath.section] as? TableUpdateHandling,
+                    !section.allowsReload(forItemAt: indexPath.item),
+                    let cell = self.tableView.cellForRow(at: indexPath) else {
+                        indexPathsToReload.append(indexPath)
+                        continue
+                }
+
+                self.cachedProviders[indexPath.section].cell.configure(cell, indexPath.item, self.mapper.provider.sections[indexPath.section])
+            }
+
+            guard !indexPathsToReload.isEmpty else { return }
+
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
             self.tableView.reloadRows(at: indexPaths, with: .automatic)
+            CATransaction.setDisableActions(false)
+            CATransaction.commit()
         }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
         assert(Thread.isMainThread)
-        self.moves.append { [unowned self] in
+        self.moves.append { [weak self] in
+            guard let self = self else { return }
             moves.forEach { self.tableView.moveRow(at: $0.0, to: $0.1) }
         }
     }
@@ -401,18 +458,24 @@ extension TableCoordinator: UITableViewDelegate {
     // MARK: - Metrics
 
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard let delegate = delegate else { return UITableView.automaticDimension }
-        return delegate.coordinator(tableView: tableView, heightForHeaderIn: section)
+        let suggested = tableView.estimatedSectionHeaderHeight == .zero ? tableView.sectionHeaderHeight : tableView.estimatedSectionHeaderHeight
+        guard let section = sectionProvider.sections[section] as? TableSectionLayoutHandler else { return suggested }
+        let height = section.estimatedHeightForHeader(suggested: suggested, traitCollection: tableView.traitCollection)
+        return height < 0 ? section.heightForHeader(suggested: suggested, traitCollection: tableView.traitCollection) : height
     }
 
     open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        guard let delegate = delegate else { return UITableView.automaticDimension }
-        return delegate.coordinator(tableView: tableView, heightForFooterIn: section)
+        let suggested = tableView.estimatedSectionFooterHeight == .zero ? tableView.sectionFooterHeight : tableView.estimatedSectionFooterHeight
+        guard let section = sectionProvider.sections[section] as? TableSectionLayoutHandler else { return suggested }
+        let height = section.estimatedHeightForFooter(suggested: suggested, traitCollection: tableView.traitCollection)
+        return height < 0 ? section.heightForFooter(suggested: suggested, traitCollection: tableView.traitCollection) : height
     }
 
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let delegate = delegate else { return UITableView.automaticDimension }
-        return delegate.coordinator(tableView: tableView, heightForRowAt: indexPath)
+        let suggested = tableView.estimatedRowHeight == .zero ? tableView.rowHeight : tableView.estimatedRowHeight
+        guard let section = sectionProvider.sections[indexPath.section] as? TableSectionLayoutHandler else { return suggested }
+        let height = section.estimatedHeightForItem(at: indexPath.item, suggested: suggested, traitCollection: tableView.traitCollection)
+        return height < 0 ? section.heightForItem(at: indexPath.item, suggested: suggested, traitCollection: tableView.traitCollection) : height
     }
 
     // MARK: - Forwarding
