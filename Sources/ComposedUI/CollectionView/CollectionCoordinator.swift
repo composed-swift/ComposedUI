@@ -440,7 +440,7 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
     public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         delegate?.coordinator(self, performDropWith: coordinator)
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
         delegate?.coordinator(self, dropSessionDidExit: session)
     }

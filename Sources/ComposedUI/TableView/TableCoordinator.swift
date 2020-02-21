@@ -492,3 +492,31 @@ extension TableCoordinator: UITableViewDelegate {
     }
 
 }
+
+extension TableCoordinator: UITableViewDropDelegate {
+
+    public func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+        return delegate?.coordinator(self, canHandleDropSession: session) ?? false
+    }
+
+    public func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
+        delegate?.coordinator(self, dropSessionDidEnter: session)
+    }
+
+    public func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        delegate?.coordinator(self, performDropWith: coordinator)
+    }
+
+    public func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
+        delegate?.coordinator(self, dropSessionDidExit: session)
+    }
+
+    public func tableView(_ tableView: UITableView, dropSessionDidEnd session: UIDropSession) {
+        delegate?.coordinator(self, dropSessionDidEnd: session)
+    }
+
+    public func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        return (sectionProvider.sections[indexPath.section] as? TableDropHandler)?.dropSesion(previewParametersForItemAt: indexPath.item)
+    }
+
+}
