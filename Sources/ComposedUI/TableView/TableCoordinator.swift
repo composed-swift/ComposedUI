@@ -170,8 +170,10 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         sectionUpdates.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
-            self.tableView.reloadSections(sections, with: .automatic)
+            self.tableView.reloadSections(sections, with: .fade)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -179,8 +181,10 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         sectionInserts.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
-            self.tableView.insertSections(sections, with: .automatic)
+            self.tableView.insertSections(sections, with: .fade)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -188,8 +192,10 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         sectionRemoves.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
-            self.tableView.deleteSections(sections, with: .automatic)
+            self.tableView.deleteSections(sections, with: .fade)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
@@ -198,6 +204,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             guard let self = self else { return }
             self.tableView.insertRows(at: indexPaths, with: .automatic)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
@@ -206,6 +214,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             guard let self = self else { return }
             self.tableView.deleteRows(at: indexPaths, with: .automatic)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -233,6 +243,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             CATransaction.setDisableActions(false)
             CATransaction.commit()
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
@@ -241,6 +253,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             guard let self = self else { return }
             moves.forEach { self.tableView.moveRow(at: $0.0, to: $0.1) }
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {

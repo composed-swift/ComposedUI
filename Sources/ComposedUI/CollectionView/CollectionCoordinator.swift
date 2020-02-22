@@ -190,6 +190,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             if !self.defersUpdate { self.prepareSections() }
             self.collectionView.reloadSections(sections)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -199,6 +201,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             if !self.defersUpdate { self.prepareSections() }
             self.collectionView.insertSections(sections)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -208,6 +212,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             if !self.defersUpdate { self.prepareSections() }
             self.collectionView.deleteSections(sections)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
@@ -216,6 +222,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             guard let self = self else { return }
             self.collectionView.insertItems(at: indexPaths)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
@@ -224,6 +232,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             guard let self = self else { return }
             self.collectionView.deleteItems(at: indexPaths)
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -251,6 +261,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             CATransaction.setDisableActions(false)
             CATransaction.commit()
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
@@ -259,6 +271,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             guard let self = self else { return }
             moves.forEach { self.collectionView.moveItem(at: $0.0, to: $0.1) }
         }
+        if defersUpdate { return }
+        mappingDidUpdate(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
