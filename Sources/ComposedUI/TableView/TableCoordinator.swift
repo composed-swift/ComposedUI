@@ -139,6 +139,18 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         tableView.reloadData()
     }
 
+    public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) {
+        reset()
+        defersUpdate = true
+
+        tableView.performBatchUpdates({
+            performBatchUpdates()
+        }) { [weak self] _ in
+            self?.reset()
+            self?.defersUpdate = false
+        }
+    }
+
     public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true

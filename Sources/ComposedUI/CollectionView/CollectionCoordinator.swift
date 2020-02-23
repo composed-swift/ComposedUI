@@ -157,6 +157,18 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         collectionView.reloadData()
     }
 
+    public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) {
+        reset()
+        defersUpdate = true
+
+        collectionView.performBatchUpdates({
+            performBatchUpdates()
+        }) { [weak self] _ in
+            self?.reset()
+            self?.defersUpdate = false
+        }
+    }
+
     public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true
