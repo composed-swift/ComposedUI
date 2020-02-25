@@ -75,6 +75,10 @@ open class CollectionCoordinator: NSObject {
             self?.originalDelegate = collectionView.delegate
             collectionView.delegate = self
         }
+
+        collectionView.register(PlaceholderSupplementaryView.self,
+                                forSupplementaryViewOfKind: PlaceholderSupplementaryView.kind,
+                                withReuseIdentifier: PlaceholderSupplementaryView.reuseIdentifier)
     }
 
     open func replace(sectionProvider: SectionProvider) {
@@ -350,7 +354,9 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             return view
         } else {
             guard let view = dataSource?.coordinator(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
-                fatalError("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath). Did you forget to register your header or footer?")
+                // when in production its better to return 'something' to prevent crashing
+                assertionFailure("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath). Did you forget to register your header or footer?")
+                return collectionView.dequeue(supplementary: PlaceholderSupplementaryView.self, ofKind: PlaceholderSupplementaryView.kind, for: indexPath)
             }
 
             return view
@@ -361,7 +367,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         guard cachedProviders.indices.contains(section) else { return nil }
         return cachedProviders[section]
     }
-
+    
 }
 
 @available(iOS 13.0, *)
@@ -490,4 +496,16 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
         return (sectionProvider.sections[indexPath.section] as? CollectionDropHandler)?.dropSesion(previewParametersForItemAt: indexPath.item)
     }
 
+}
+
+private final class PlaceholderSupplementaryView: UICollectionReusableView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        widthAnchor.constraint(greaterThanOrEqualToConstant: 1).isActive = true
+        heightAnchor.constraint(greaterThanOrEqualToConstant: 1).isActive = true
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
