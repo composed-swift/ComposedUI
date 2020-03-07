@@ -327,6 +327,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        assert(Thread.isMainThread)
         guard let section = collectionSection(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
@@ -338,6 +339,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        assert(Thread.isMainThread)
         guard let provider = collectionSection(for: indexPath.section) else {
             fatalError("No UI configuration available for section \(indexPath.section)")
         }
