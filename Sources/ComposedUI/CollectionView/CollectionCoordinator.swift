@@ -511,3 +511,12 @@ private final class PlaceholderSupplementaryView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+public extension CollectionCoordinator {
+
+    convenience init(collectionView: UICollectionView, sections: Section...) {
+        let provider = ComposedSectionProvider()
+        self.init(collectionView: collectionView, sectionProvider: provider)
+    }
+
+}

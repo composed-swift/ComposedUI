@@ -556,3 +556,12 @@ extension TableCoordinator: UITableViewDropDelegate {
     }
 
 }
+
+public extension TableCoordinator {
+
+    convenience init(tableView: UITableView, sections: Section...) {
+        let provider = ComposedSectionProvider()
+        self.init(tableView: tableView, sectionProvider: provider)
+    }
+
+}
