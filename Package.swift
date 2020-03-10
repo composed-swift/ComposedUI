@@ -18,6 +18,9 @@ let package = Package(
     targets: [
         .target(
             name: "ComposedUI",
-            dependencies: ["Composed"])
+            dependencies: ["Composed"]),
+        .testTarget(
+            name: "ComposedUITests",
+            dependencies: ["Composed"]),
     ]
 )
