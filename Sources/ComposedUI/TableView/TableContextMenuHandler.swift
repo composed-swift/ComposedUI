@@ -2,7 +2,7 @@ import UIKit
 import Composed
 
 @available(iOS 13.0, *)
-public protocol TableContextMenuHandler: CollectionSectionProvider {
+public protocol TableContextMenuHandler: TableSectionProvider {
     func contextMenu(forItemAt index: Int, cell: UITableViewCell, suggestedActions: [UIMenuElement]) -> UIMenu?
     func contextMenu(previewForItemAt index: Int, cell: UITableViewCell) -> UIContextMenuContentPreviewProvider?
     func contextMenu(previewForHighlightingItemAt index: Int, cell: UITableViewCell) -> UITargetedPreview?

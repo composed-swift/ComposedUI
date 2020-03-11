@@ -55,7 +55,7 @@ open class CollectionCoordinator: NSObject {
     private let collectionView: UICollectionView
 
     private weak var originalDelegate: UICollectionViewDelegate?
-    private var observer: NSKeyValueObservation?
+    private var delegateObserver: NSKeyValueObservation?
 
     private var cachedProviders: [CollectionSectionElementsProvider] = []
 
@@ -70,7 +70,7 @@ open class CollectionCoordinator: NSObject {
         collectionView.dropDelegate = self
         prepareSections()
 
-        observer = collectionView.observe(\.delegate, options: [.initial, .new]) { [weak self] collectionView, _ in
+        delegateObserver = collectionView.observe(\.delegate, options: [.initial, .new]) { [weak self] collectionView, _ in
             guard collectionView.delegate !== self else { return }
             self?.originalDelegate = collectionView.delegate
             collectionView.delegate = self

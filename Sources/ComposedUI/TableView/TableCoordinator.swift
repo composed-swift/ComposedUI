@@ -15,7 +15,7 @@ public protocol TableCoordinatorDelegate: class {
 
 public extension TableCoordinatorDelegate {
     func coordinator(_ coordinator: TableCoordinator, didScroll tableView: UITableView) { }
-    func coordinator(_ coordinator: TableCoordinator, backgroundViewInCollectionView tableView: UITableView) -> UIView? { return nil }
+    func coordinator(_ coordinator: TableCoordinator, backgroundViewInTableView tableView: UITableView) -> UIView? { return nil }
     func coordinatorDidUpdate(_ coordinator: TableCoordinator) { }
 
     func coordinator(_ coordinator: TableCoordinator, canHandleDropSession session: UIDropSession) -> Bool { return false }

@@ -6,7 +6,7 @@ public protocol TableSelectionHandler: SelectionHandler {
     func didDeselect(at index: Int, cell: UITableViewCell)
 }
 
-public extension CollectionSelectionHandler {
+public extension TableSelectionHandler {
     func didSelect(at index: Int, cell: UITableViewCell) {
         didSelect(at: index)
     }

@@ -8,11 +8,15 @@ open class StackCoordinator: NSObject {
     }
 
     private var mapper: SectionProviderMapping
-    private let stackView: UIStackView
+    private let composedView: ComposedView
 
-    public init(stackView: UIStackView, sectionProvider: SectionProvider) {
-        precondition(stackView.arrangedSubviews.isEmpty, "The stackView must not contain any existing arranged subviews")
-        self.stackView = stackView
+    public init(composedView: ComposedView, sectionProvider: SectionProvider) {
+        if !composedView.sections.isEmpty {
+//            assertionFailure("The stackView must not contain any existing arranged subviews")
+//            composedView.removeAllSections()
+        }
+
+        self.composedView = composedView
         self.mapper = SectionProviderMapping(provider: sectionProvider)
         super.init()
         prepareSections()
@@ -20,14 +24,6 @@ open class StackCoordinator: NSObject {
 
     private func prepareSections() {
 
-    }
-
-}
-
-public extension StackCoordinator {
-
-    convenience init(stackView: ComposedStackView, sectionProvider: SectionProvider) {
-        self.init(stackView: stackView.stackView, sectionProvider: sectionProvider)
     }
 
 }
