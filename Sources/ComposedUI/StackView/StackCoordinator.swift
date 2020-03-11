@@ -69,6 +69,11 @@ extension StackCoordinator: SectionProviderMappingDelegate {
         let section = ComposedSectionView()
         let provider = self.cachedProviders[sectionIndex]
 
+        if let appearance = sectionProvider.sections[sectionIndex] as? StackSectionAppearanceHandler {
+            section.separatorInsets = appearance.separatorInsets(suggested: section.separatorInsets, traitCollection: composedView.traitCollection)
+            section.separatorColor = appearance.separatorColor(suggested: section.separatorColor, traitCollection: composedView.traitCollection)
+        }
+
         for itemIndex in 0..<provider.numberOfElements {
             let indexPath = IndexPath(item: itemIndex, section: sectionIndex)
             insertItem(at: indexPath, into: section)

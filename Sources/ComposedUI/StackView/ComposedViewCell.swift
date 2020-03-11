@@ -62,7 +62,9 @@ open class ComposedViewCell: UIView {
     }
 
     private func updateSeparators() {
-        leadingBottomSeparatorConstraint?.constant = safeAreaInsets.left + separatorInsets.left
+        leadingBottomSeparatorConstraint?.constant = separatorInsets.left > 0
+            ? safeAreaInsets.left + separatorInsets.left
+            : separatorInsets.left
         trailingBottomSeparatorConstraint?.constant = separatorInsets.right
 
         [topSeparator, bottomSeparator].forEach {

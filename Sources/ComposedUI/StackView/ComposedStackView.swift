@@ -154,12 +154,15 @@ open class ComposedStackView: UIStackView {
         }
 
         var completionWillBeCalled = false
+        let options: UIView.AnimationOptions = shouldShow
+            ? [.curveEaseOut, .allowUserInteraction]
+            : [.curveEaseOut]
 
         if animations.contains(.hidden) {
             let filteredViews = views.filter { $0.isHidden == shouldShow } // only animated views that are not yet animated
             filteredViews.forEach { $0.isHidden = shouldShow }
 
-            UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
+            UIView.animate(withDuration: animationDuration, delay: 0, options: options, animations: {
                 filteredViews.forEach { $0.isHidden = !shouldShow }
             }, completion: { complete in
                 if !completionWillBeCalled { completion?(complete) }
@@ -171,7 +174,7 @@ open class ComposedStackView: UIStackView {
             let filteredViews = views.filter { $0.alpha == (shouldShow ? 0 : 1) } // only animated views that are not yet animated
             filteredViews.forEach { $0.alpha = shouldShow ? 0 : 1 }
 
-            UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
+            UIView.animate(withDuration: animationDuration, delay: 0, options: options, animations: {
                 filteredViews.forEach { $0.alpha = shouldShow ? 1 : 0 }
             }, completion: { complete in
                 if !completionWillBeCalled { completion?(complete) }
