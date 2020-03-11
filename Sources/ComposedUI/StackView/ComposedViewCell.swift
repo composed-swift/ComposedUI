@@ -24,10 +24,8 @@ open class ComposedViewCell: UIView {
         didSet { updateSeparators() }
     }
 
-    internal init() { fatalError() }
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
+    public required init() {
+        super.init(frame: .zero)
         prepare()
     }
 

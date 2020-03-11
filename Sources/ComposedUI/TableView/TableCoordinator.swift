@@ -86,23 +86,23 @@ open class TableCoordinator: NSObject {
             }
 
             switch section.cell.dequeueMethod {
-            case let .nib(type):
+            case let .fromNib(type):
                 let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
                 tableView.register(nib, forCellReuseIdentifier: section.cell.reuseIdentifier)
-            case let .class(type):
+            case let .fromClass(type):
                 tableView.register(type, forCellReuseIdentifier: section.cell.reuseIdentifier)
-            case .storyboard:
+            case .fromStoryboard:
                 break
             }
 
             [section.header, section.footer].compactMap { $0 }.forEach {
                 switch $0.dequeueMethod {
-                case let .nib(type):
+                case let .fromNib(type):
                     let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
                     tableView.register(nib, forHeaderFooterViewReuseIdentifier: $0.reuseIdentifier)
-                case let .class(type):
+                case let .fromClass(type):
                     tableView.register(type, forHeaderFooterViewReuseIdentifier: $0.reuseIdentifier)
-                case .storyboard:
+                case .fromStoryboard:
                     break
                 }
             }

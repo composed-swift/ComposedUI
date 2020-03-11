@@ -24,9 +24,9 @@ open class CollectionSection: CollectionSectionElementsProvider {
             
             let dequeueMethod: DequeueMethod<UICollectionViewCell>
             switch cell.dequeueMethod {
-            case .class: dequeueMethod = .class(Cell.self)
-            case .nib: dequeueMethod = .nib(Cell.self)
-            case .storyboard: dequeueMethod = .storyboard(Cell.self)
+            case .fromClass: dequeueMethod = .fromClass(Cell.self)
+            case .fromNib: dequeueMethod = .fromNib(Cell.self)
+            case .fromStoryboard: dequeueMethod = .fromStoryboard(Cell.self)
             }
 
             self.cell = CollectionCellElement(section: section,
@@ -37,9 +37,9 @@ open class CollectionSection: CollectionSectionElementsProvider {
             if let header = header {
                 let dequeueMethod: DequeueMethod<UICollectionReusableView>
                 switch header.dequeueMethod {
-                case .class: dequeueMethod = .class(Header.self)
-                case .nib: dequeueMethod = .nib(Header.self)
-                case .storyboard: dequeueMethod = .storyboard(Header.self)
+                case .fromClass: dequeueMethod = .fromClass(Header.self)
+                case .fromNib: dequeueMethod = .fromNib(Header.self)
+                case .fromStoryboard: dequeueMethod = .fromStoryboard(Header.self)
                 }
 
                 let kind: CollectionElementKind
@@ -61,9 +61,9 @@ open class CollectionSection: CollectionSectionElementsProvider {
             if let footer = footer {
                 let dequeueMethod: DequeueMethod<UICollectionReusableView>
                 switch footer.dequeueMethod {
-                case .class: dequeueMethod = .class(Footer.self)
-                case .nib: dequeueMethod = .nib(Footer.self)
-                case .storyboard: dequeueMethod = .storyboard(Footer.self)
+                case .fromClass: dequeueMethod = .fromClass(Footer.self)
+                case .fromNib: dequeueMethod = .fromNib(Footer.self)
+                case .fromStoryboard: dequeueMethod = .fromStoryboard(Footer.self)
                 }
 
                 let kind: CollectionElementKind

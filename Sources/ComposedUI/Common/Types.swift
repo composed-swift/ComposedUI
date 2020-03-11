@@ -6,9 +6,22 @@ import UIKit
 /// - `class`: Load from a class
 public enum DequeueMethod<View: UIView> {
     /// Load from a nib
-    case nib(View.Type)
-    /// Load from a class
-    case `class`(View.Type)
+    case fromNib(View.Type)
+    // Load from a class
+    case fromClass(View.Type)
     /// Load from a storyboard
-    case storyboard(View.Type)
+    case fromStoryboard(View.Type)
+}
+
+public extension DequeueMethod {
+
+    @available(*, deprecated, renamed: "fromNib")
+    static func nib(_: View.Type) -> Self { return .fromNib(View.self) }
+
+    @available(*, deprecated, renamed: "fromClass")
+    static func `class`(_: View.Type) -> Self { return .fromClass(View.self) }
+
+    @available(*, deprecated, renamed: "fromStoryboard")
+    static func storyboard(_: View.Type) -> Self { return .fromStoryboard(View.self) }
+
 }

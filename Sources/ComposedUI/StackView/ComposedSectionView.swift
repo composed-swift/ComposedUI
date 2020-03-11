@@ -47,7 +47,7 @@ public final class ComposedSectionView: UIView {
         updateSeparators()
     }
 
-    public func insertItemView(_ view: ComposedViewCell, at index: Int, with animation: ComposedStackView.Animation = .slide) {
+    public func insertItem(_ view: ComposedViewCell, at index: Int, with animation: ComposedStackView.Animation = .slide) {
         stackView.insertArrangedSubview(view, at: index, with: animation)
         updateSeparators()
     }
@@ -57,7 +57,7 @@ public final class ComposedSectionView: UIView {
         updateSeparators()
     }
 
-    public func removeItemView(at index: Int, with animation: ComposedStackView.Animation = .slide) {
+    public func deleteItem(at index: Int, with animation: ComposedStackView.Animation = .slide) {
         stackView.removeArrangedSubvew(at: index, with: animation)
         updateSeparators()
     }

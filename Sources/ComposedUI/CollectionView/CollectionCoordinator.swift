@@ -107,23 +107,23 @@ open class CollectionCoordinator: NSObject {
             }
 
             switch section.cell.dequeueMethod {
-            case let .nib(type):
+            case let .fromNib(type):
                 let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
                 collectionView.register(nib, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
-            case let .class(type):
+            case let .fromClass(type):
                 collectionView.register(type, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
-            case .storyboard:
+            case .fromStoryboard:
                 break
             }
 
             [section.header, section.footer].compactMap { $0 }.forEach {
                 switch $0.dequeueMethod {
-                case let .nib(type):
+                case let .fromNib(type):
                     let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
                     collectionView.register(nib, forSupplementaryViewOfKind: $0.kind.rawValue, withReuseIdentifier: $0.reuseIdentifier)
-                case let .class(type):
+                case let .fromClass(type):
                     collectionView.register(type, forSupplementaryViewOfKind: $0.kind.rawValue, withReuseIdentifier: $0.reuseIdentifier)
-                case .storyboard:
+                case .fromStoryboard:
                     break
                 }
             }

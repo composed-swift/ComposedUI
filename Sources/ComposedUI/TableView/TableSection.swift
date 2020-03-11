@@ -27,9 +27,9 @@ open class TableSection: TableElementsProvider {
 
             let dequeueMethod: DequeueMethod<UITableViewCell>
             switch cell.dequeueMethod {
-            case .class: dequeueMethod = .class(Cell.self)
-            case .nib: dequeueMethod = .nib(Cell.self)
-            case .storyboard: dequeueMethod = .storyboard(Cell.self)
+            case .fromClass: dequeueMethod = .fromClass(Cell.self)
+            case .fromNib: dequeueMethod = .fromNib(Cell.self)
+            case .fromStoryboard: dequeueMethod = .fromStoryboard(Cell.self)
             }
 
             self.cell = TableElement(section: section,
@@ -41,15 +41,15 @@ open class TableSection: TableElementsProvider {
             case .none:
                 self.header = nil
             case let .title(title):
-                self.header = TableElement(section: section, dequeueMethod: .class(Header.self)) { view, _, _ in
+                self.header = TableElement(section: section, dequeueMethod: .fromClass(Header.self)) { view, _, _ in
                     view.textLabel?.text = title
                 }
             case let .element(element):
                 let dequeueMethod: DequeueMethod<UITableViewHeaderFooterView>
                 switch element.dequeueMethod {
-                case .class: dequeueMethod = .class(Header.self)
-                case .nib: dequeueMethod = .nib(Header.self)
-                case .storyboard: dequeueMethod = .storyboard(Header.self)
+                case .fromClass: dequeueMethod = .fromClass(Header.self)
+                case .fromNib: dequeueMethod = .fromNib(Header.self)
+                case .fromStoryboard: dequeueMethod = .fromStoryboard(Header.self)
                 }
 
                 self.header = TableElement(section: section,
@@ -62,15 +62,15 @@ open class TableSection: TableElementsProvider {
             case .none:
                 self.footer = nil
             case let .title(title):
-                self.footer = TableElement(section: section, dequeueMethod: .class(Footer.self)) { view, _, _ in
+                self.footer = TableElement(section: section, dequeueMethod: .fromClass(Footer.self)) { view, _, _ in
                     view.textLabel?.text = title
                 }
             case let .element(element):
                 let dequeueMethod: DequeueMethod<UITableViewHeaderFooterView>
                 switch element.dequeueMethod {
-                case .class: dequeueMethod = .class(Footer.self)
-                case .nib: dequeueMethod = .nib(Footer.self)
-                case .storyboard: dequeueMethod = .storyboard(Footer.self)
+                case .fromClass: dequeueMethod = .fromClass(Footer.self)
+                case .fromNib: dequeueMethod = .fromNib(Footer.self)
+                case .fromStoryboard: dequeueMethod = .fromStoryboard(Footer.self)
                 }
 
                 self.footer = TableElement(section: section,

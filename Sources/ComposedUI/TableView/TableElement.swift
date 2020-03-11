@@ -3,8 +3,6 @@ import Composed
 
 public final class TableElement<View> where View: UIView & ReusableCell {
 
-    public typealias ViewType = View
-
     internal let dequeueMethod: DequeueMethod<View>
     internal let configure: (UIView, Int, Section) -> Void
 
