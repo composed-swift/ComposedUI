@@ -162,10 +162,12 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     }
 
     public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) {
+        assert(Thread.isMainThread)
         reset()
         defersUpdate = true
 
         collectionView.performBatchUpdates({
+            prepareSections()
             performBatchUpdates()
         }) { [weak self] _ in
             self?.reset()
@@ -193,9 +195,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             sectionInserts.forEach { $0() }
             sectionUpdates.forEach { $0() }
         }, completion: { [weak self] _ in
-            guard let self = self else { return }
-            self.reset()
-            self.defersUpdate = false
+            self?.reset()
+            self?.defersUpdate = false
         })
     }
 
