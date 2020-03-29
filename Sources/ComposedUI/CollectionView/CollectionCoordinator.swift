@@ -6,7 +6,6 @@ public protocol CollectionCoordinatorDataSource: class {
 }
 
 public protocol CollectionCoordinatorDelegate: class {
-    func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView)
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator)
 
@@ -18,7 +17,6 @@ public protocol CollectionCoordinatorDelegate: class {
 }
 
 public extension CollectionCoordinatorDelegate {
-    func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView) { }
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView? { return nil }
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator) { }
 
@@ -343,15 +341,34 @@ extension CollectionCoordinator: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionSection(for: section)?.numberOfElements ?? 0
+        return collectionSection(for: section).numberOfElements
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
+        }
+
+        let provider = collectionSection(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        provider.cell.willDisplay(cell, indexPath.item, section)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
+        }
+
+        let provider = collectionSection(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        provider.cell.didEndDisplay(cell, indexPath.item, section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         assert(Thread.isMainThread)
-        guard let section = collectionSection(for: indexPath.section) else {
-            fatalError("No UI configuration available for section \(indexPath.section)")
-        }
-
+        let section = collectionSection(for: indexPath.section)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.cell.reuseIdentifier, for: indexPath)
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
@@ -368,10 +385,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         assert(Thread.isMainThread)
-        guard let provider = collectionSection(for: indexPath.section) else {
-            fatalError("No UI configuration available for section \(indexPath.section)")
-        }
-
+        let provider = collectionSection(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
 
         if let header = provider.header, header.kind.rawValue == kind {
@@ -393,8 +407,10 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         }
     }
 
-    private func collectionSection(for section: Int) -> CollectionSectionElementsProvider? {
-        guard cachedProviders.indices.contains(section) else { return nil }
+    private func collectionSection(for section: Int) -> CollectionSectionElementsProvider {
+        guard cachedProviders.indices.contains(section) else {
+            fatalError("No UI configuration available for section \(section)")
+        }
         return cachedProviders[section]
     }
     
@@ -472,7 +488,7 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     }
 
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        delegate?.coordinator(self, didScroll: collectionView)
+        originalDelegate?.scrollViewDidScroll?(scrollView)
     }
 
     open func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {

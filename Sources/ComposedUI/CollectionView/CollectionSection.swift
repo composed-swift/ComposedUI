@@ -32,7 +32,9 @@ open class CollectionSection: CollectionSectionElementsProvider {
             self.cell = CollectionCellElement(section: section,
                                               dequeueMethod: dequeueMethod,
                                               reuseIdentifier: cell.reuseIdentifier,
-                                              configure: cell.configure)
+                                              configure: cell.configure,
+                                              willDisplay: cell.willDisplay,
+                                              didEndDisplay: cell.didEndDisplay)
 
             if let header = header {
                 let dequeueMethod: DequeueMethod<UICollectionReusableView>

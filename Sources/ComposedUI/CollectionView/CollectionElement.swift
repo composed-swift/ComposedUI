@@ -23,17 +23,52 @@ public protocol CollectionElement {
 public final class CollectionCellElement<View>: CollectionElement where View: UICollectionViewCell {
 
     public let dequeueMethod: DequeueMethod<View>
+    public let willDisplay: (UICollectionReusableView, Int, Section) -> Void
+    public let didEndDisplay: (UICollectionReusableView, Int, Section) -> Void
     public let configure: (UICollectionReusableView, Int, Section) -> Void
     public let reuseIdentifier: String
 
-    public init<Section>(section: Section, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, configure: @escaping (View, Int, Section) -> Void) where Section: Composed.Section {
-        self.reuseIdentifier = reuseIdentifier ?? View.reuseIdentifier
-        self.dequeueMethod = dequeueMethod
+    public init<Section>(section: Section,
+                         dequeueMethod: DequeueMethod<View>,
+                         reuseIdentifier: String? = nil,
+                         configure: @escaping (View, Int, Section) -> Void)
+        where Section: Composed.Section {
+            self.reuseIdentifier = reuseIdentifier ?? View.reuseIdentifier
+            self.dequeueMethod = dequeueMethod
 
-        self.configure = { view, index, section in
             // swiftlint:disable force_cast
-            configure(view as! View, index, section as! Section)
-        }
+
+            self.configure = { view, index, section in
+                configure(view as! View, index, section as! Section)
+            }
+
+            willDisplay = { _, _, _ in }
+            didEndDisplay = { _, _, _ in }
+    }
+
+    public init<Section>(section: Section,
+                         dequeueMethod: DequeueMethod<View>,
+                         reuseIdentifier: String? = nil,
+                         configure: @escaping (View, Int, Section) -> Void,
+                         willDisplay: ((View, Int, Section) -> Void)? = nil,
+                         didEndDisplay: ((View, Int, Section) -> Void)? = nil)
+        where Section: Composed.Section {
+            self.reuseIdentifier = reuseIdentifier ?? View.reuseIdentifier
+            self.dequeueMethod = dequeueMethod
+
+            // swiftlint:disable force_cast
+
+            self.configure = { view, index, section in
+                configure(view as! View, index, section as! Section)
+            }
+
+            self.willDisplay = { view, index, section in
+                willDisplay?(view as! View, index, section as! Section)
+            }
+
+            self.didEndDisplay = { view, index, section in
+                didEndDisplay?(view as! View, index, section as! Section)
+            }
     }
 
 }
@@ -42,18 +77,55 @@ public final class CollectionSupplementaryElement<View>: CollectionElement where
 
     public let dequeueMethod: DequeueMethod<View>
     public let configure: (UICollectionReusableView, Int, Section) -> Void
+    public let willDisplay: ((UICollectionReusableView, Int, Section) -> Void)?
+    public let didEndDisplay: ((UICollectionReusableView, Int, Section) -> Void)?
     public let reuseIdentifier: String
     public let kind: CollectionElementKind
 
-    public init<Section>(section: Section, dequeueMethod: DequeueMethod<View>, reuseIdentifier: String? = nil, kind: CollectionElementKind = .automatic, configure: @escaping (View, Int, Section) -> Void) where Section: Composed.Section {
-        self.kind = kind
-        self.reuseIdentifier = reuseIdentifier ?? View.reuseIdentifier
-        self.dequeueMethod = dequeueMethod
+    public init<Section>(section: Section,
+                         dequeueMethod: DequeueMethod<View>,
+                         reuseIdentifier: String? = nil,
+                         kind: CollectionElementKind = .automatic,
+                         configure: @escaping (View, Int, Section) -> Void)
+        where Section: Composed.Section {
+            self.kind = kind
+            self.reuseIdentifier = reuseIdentifier ?? View.reuseIdentifier
+            self.dequeueMethod = dequeueMethod
 
-        self.configure = { view, index, section in
+            self.configure = { view, index, section in
+                // swiftlint:disable force_cast
+                configure(view as! View, index, section as! Section)
+            }
+
+            willDisplay = nil
+            didEndDisplay = nil
+    }
+
+    public init<Section>(section: Section,
+                         dequeueMethod: DequeueMethod<View>,
+                         reuseIdentifier: String? = nil,
+                         kind: CollectionElementKind = .automatic,
+                         configure: @escaping (View, Int, Section) -> Void,
+                         willDisplay: ((View, Int, Section) -> Void)? = nil,
+                         didEndDisplay: ((View, Int, Section) -> Void)? = nil)
+        where Section: Composed.Section {
+            self.kind = kind
+            self.reuseIdentifier = reuseIdentifier ?? View.reuseIdentifier
+            self.dequeueMethod = dequeueMethod
+
             // swiftlint:disable force_cast
-            configure(view as! View, index, section as! Section)
-        }
+
+            self.configure = { view, index, section in
+                configure(view as! View, index, section as! Section)
+            }
+
+            self.willDisplay = { view, index, section in
+                willDisplay?(view as! View, index, section as! Section)
+            }
+
+            self.didEndDisplay = { view, index, section in
+                didEndDisplay?(view as! View, index, section as! Section)
+            }
     }
 
 }
