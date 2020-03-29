@@ -1,26 +1,25 @@
 import UIKit
 import Composed
 
-public protocol TableEditingHandler: TableSectionProvider {
-    func allowsEditing(at index: Int) -> Bool
+public protocol TableEditingHandler: TableSectionProvider, EditingHandler {
     func shouldIndentWhileEditing(at index: Int) -> Bool
     func allowsSelectionDuringEditing(at index: Int) -> Bool
 
     func editingStyle(at index: Int) -> UITableViewCell.EditingStyle
     func commitEditing(at index: Int, editingStyle: UITableViewCell.EditingStyle)
 
-    func willBeginEditing(at index: Int)
-    func didEndEditing(at index: Int)
+    func setEditing(_ editing: Bool, at index: Int, cell: UITableViewCell, animated: Bool)
 }
 
 public extension TableEditingHandler {
-    func allowsEditing(at index: Int) -> Bool { return true }
     func shouldIndentWhileEditing(at index: Int) -> Bool { return true }
     func allowsSelectionDuringEditing(at index: Int) -> Bool { return false }
 
     func editingStyle(at index: Int) -> UITableViewCell.EditingStyle { return .none }
     func commitEditing(at index: Int, editingStyle: UITableViewCell.EditingStyle) { }
 
-    func willBeginEditing(at index: Int) { }
-    func didEndEditing(at index: Int) { }
+    func setEditing(_ editing: Bool) { }
+    func setEditing(_ editing: Bool, at index: Int, cell: UITableViewCell, animated: Bool) {
+        setEditing(editing, at: index)
+    }
 }

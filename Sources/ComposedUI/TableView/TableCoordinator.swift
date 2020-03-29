@@ -54,6 +54,8 @@ open class TableCoordinator: NSObject {
 
     private var cachedProviders: [TableElementsProvider] = []
 
+    public private(set) var isEditing: Bool = false
+
     public init(tableView: UITableView, sectionProvider: SectionProvider) {
         self.tableView = tableView
         mapper = SectionProviderMapping(provider: sectionProvider)
@@ -75,6 +77,27 @@ open class TableCoordinator: NSObject {
         prepareSections()
         tableView.reloadData()
     }
+
+    public func setEditing(_ editing: Bool, animated: Bool) {
+        isEditing = editing
+        tableView.indexPathsForSelectedRows?.forEach { tableView.deselectRow(at: $0, animated: animated) }
+
+        for (index, section) in sectionProvider.sections.enumerated() {
+            guard let handler = section as? EditingHandler else { continue }
+            handler.setEditing(editing)
+
+            for item in 0..<section.numberOfElements {
+                let indexPath = IndexPath(item: item, section: index)
+
+                if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
+                    handler.setEditing(editing, at: item, cell: cell, animated: animated)
+                } else {
+                    handler.setEditing(editing, at: item)
+                }
+            }
+        }
+    }
+
 
     private func prepareSections() {
         mapper.delegate = self
@@ -320,6 +343,15 @@ extension TableCoordinator: UITableViewDataSource {
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: section.cell.reuseIdentifier, for: indexPath)
+
+        if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
+            if let handler = sectionProvider.sections[indexPath.section] as? TableEditingHandler {
+                handler.setEditing(isEditing, at: indexPath.item, cell: cell, animated: false)
+            } else {
+                handler.setEditing(isEditing, at: indexPath.item)
+            }
+        }
+
         section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section])
         return cell
     }
@@ -388,17 +420,31 @@ extension TableCoordinator: UITableViewDelegate {
     }
 
     open func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return }
-        handler.willBeginEditing(at: indexPath.item)
+        defer {
+            originalDelegate?.tableView?(tableView, willBeginEditingRowAt: indexPath)
+        }
+
+        guard let handler = mapper.provider.sections[indexPath.section] as? EditingHandler else { return }
+
+        if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
+            handler.setEditing(true, at: indexPath.item, cell: cell, animated: true)
+        } else {
+            handler.setEditing(true, at: indexPath.item)
+        }
     }
 
     open func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-        guard let indexPath = indexPath,
-            let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else {
-                return
+        defer {
+            originalDelegate?.tableView?(tableView, didEndEditingRowAt: indexPath)
         }
 
-        handler.didEndEditing(at: indexPath.item)
+        guard let indexPath = indexPath, let handler = mapper.provider.sections[indexPath.section] as? EditingHandler else { return }
+
+        if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
+            handler.setEditing(false, at: indexPath.item, cell: cell, animated: true)
+        } else {
+            handler.setEditing(true, at: indexPath.item)
+        }
     }
 
     // MARK: - Moving
@@ -444,6 +490,10 @@ extension TableCoordinator: UITableViewDelegate {
     }
 
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        defer {
+            originalDelegate?.tableView?(tableView, didSelectRowAt: indexPath)
+        }
+
         guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
 
         if let tableHandler = handler as? TableSelectionHandler, let cell = tableView.cellForRow(at: indexPath) {
@@ -471,6 +521,10 @@ extension TableCoordinator: UITableViewDelegate {
     }
 
     open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        defer {
+            originalDelegate?.tableView?(tableView, didDeselectRowAt: indexPath)
+        }
+
         guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
         if let tableHandler = handler as? TableSelectionHandler, let cell = tableView.cellForRow(at: indexPath) {
             tableHandler.didDeselect(at: indexPath.item, cell: cell)

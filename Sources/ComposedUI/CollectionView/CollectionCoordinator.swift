@@ -59,6 +59,8 @@ open class CollectionCoordinator: NSObject {
 
     private var cachedProviders: [CollectionSectionElementsProvider] = []
 
+    public private(set) var isEditing: Bool = false
+
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
         mapper = SectionProviderMapping(provider: sectionProvider)
@@ -85,6 +87,26 @@ open class CollectionCoordinator: NSObject {
         mapper = SectionProviderMapping(provider: sectionProvider)
         prepareSections()
         collectionView.reloadData()
+    }
+
+    public func setEditing(_ editing: Bool, animated: Bool) {
+        isEditing = editing
+        collectionView.indexPathsForSelectedItems?.forEach { collectionView.deselectItem(at: $0, animated: animated) }
+
+        for (index, section) in sectionProvider.sections.enumerated() {
+            guard let handler = section as? EditingHandler else { continue }
+            handler.setEditing(editing)
+
+            for item in 0..<section.numberOfElements {
+                let indexPath = IndexPath(item: item, section: index)
+
+                if let handler = handler as? CollectionEditingHandler, let cell = collectionView.cellForItem(at: indexPath) {
+                    handler.setEditing(editing, at: item, cell: cell, animated: animated)
+                } else {
+                    handler.setEditing(editing, at: item)
+                }
+            }
+        }
     }
 
     open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
@@ -131,10 +153,7 @@ open class CollectionCoordinator: NSObject {
             cachedProviders.append(section)
         }
 
-        collectionView.allowsMultipleSelection = mapper.provider.sections
-            .compactMap { $0 as? SelectionHandler }
-            .contains { $0.allowsMultipleSelection }
-
+        collectionView.allowsMultipleSelection = true
         collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView)
         delegate?.coordinatorDidUpdate(self)
     }
@@ -334,8 +353,16 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.cell.reuseIdentifier, for: indexPath)
-        section.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
 
+        if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
+            if let handler = sectionProvider.sections[indexPath.section] as? CollectionEditingHandler {
+                handler.setEditing(isEditing, at: indexPath.item, cell: cell, animated: false)
+            } else {
+                handler.setEditing(isEditing, at: indexPath.item)
+            }
+        }
+
+        section.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
         return cell
     }
 
@@ -425,9 +452,13 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     }
 
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        defer {
+            originalDelegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
+        }
+
         guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
-        if let collectionHandler = handler as? CollectionSelectionHandler, let cell = collectionView.cellForItem(at: indexPath) {
-            collectionHandler.didSelect(at: indexPath.item, cell: cell)
+        if let handler = handler as? CollectionSelectionHandler, let cell = collectionView.cellForItem(at: indexPath) {
+            handler.didSelect(at: indexPath.item, cell: cell)
         } else {
             handler.didSelect(at: indexPath.item)
         }
@@ -450,6 +481,10 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     }
 
     open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        defer {
+            originalDelegate?.collectionView?(collectionView, didDeselectItemAt: indexPath)
+        }
+
         guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return }
         if let collectionHandler = handler as? CollectionSelectionHandler, let cell = collectionView.cellForItem(at: indexPath) {
             collectionHandler.didDeselect(at: indexPath.item, cell: cell)
