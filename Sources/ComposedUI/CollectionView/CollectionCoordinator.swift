@@ -178,26 +178,12 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         collectionView.reloadData()
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) {
-        assert(Thread.isMainThread)
-        reset()
-        defersUpdate = true
-
-        collectionView.performBatchUpdates({
-            prepareSections()
-            performBatchUpdates()
-        }) { [weak self] _ in
-            self?.reset()
-            self?.defersUpdate = false
-        }
-    }
-
-    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true
     }
 
-    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         collectionView.performBatchUpdates({
             if defersUpdate {
@@ -225,7 +211,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.reloadSections(sections)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -236,7 +222,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.insertSections(sections)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -247,7 +233,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.deleteSections(sections)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
@@ -257,7 +243,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.insertItems(at: indexPaths)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
@@ -267,7 +253,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.deleteItems(at: indexPaths)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -296,7 +282,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             CATransaction.commit()
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
@@ -306,7 +292,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             moves.forEach { self.collectionView.moveItem(at: $0.0, to: $0.1) }
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
@@ -361,6 +347,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             originalDelegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
         }
 
+        guard indexPath.section > sectionProvider.numberOfSections else { return }
         let provider = collectionSection(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
         provider.cell.didEndDisplay(cell, indexPath.item, section)

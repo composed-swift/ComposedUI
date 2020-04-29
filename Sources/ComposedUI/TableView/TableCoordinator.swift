@@ -162,24 +162,12 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         tableView.reloadData()
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) {
-        reset()
-        defersUpdate = true
-
-        tableView.performBatchUpdates({
-            performBatchUpdates()
-        }) { [weak self] _ in
-            self?.reset()
-            self?.defersUpdate = false
-        }
-    }
-
-    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true
     }
 
-    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         tableView.performBatchUpdates({
             if defersUpdate {
@@ -194,9 +182,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             sectionInserts.forEach { $0() }
             sectionUpdates.forEach { $0() }
         }, completion: { [weak self] _ in
-            guard let self = self else { return }
-            self.reset()
-            self.defersUpdate = false
+            self?.reset()
+            self?.defersUpdate = false
         })
     }
 
@@ -208,7 +195,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.reloadSections(sections, with: .fade)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -219,7 +206,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.insertSections(sections, with: .fade)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -230,7 +217,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.deleteSections(sections, with: .fade)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
@@ -240,7 +227,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.insertRows(at: indexPaths, with: .automatic)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
@@ -250,7 +237,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.deleteRows(at: indexPaths, with: .automatic)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -279,7 +266,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             CATransaction.commit()
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
@@ -289,7 +276,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             moves.forEach { self.tableView.moveRow(at: $0.0, to: $0.1) }
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
