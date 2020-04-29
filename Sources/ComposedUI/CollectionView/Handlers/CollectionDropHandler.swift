@@ -16,5 +16,5 @@ public protocol CollectionDropHandler: CollectionSectionProvider {
 }
 
 extension CollectionDropHandler {
-    func dropSesion(_ session: UIDropSession, previewParametersForItemAt index: Int) -> UIDragPreviewParameters? { return nil }
+    func dropSesion(previewParametersForElementAt index: Int) -> UIDragPreviewParameters? { return nil }
 }

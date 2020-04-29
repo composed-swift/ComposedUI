@@ -4,23 +4,11 @@ import Composed
 public protocol CollectionCoordinatorDelegate: class {
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator)
-
-//    func coordinator(_ coordinator: CollectionCoordinator, canHandleDropSession session: UIDropSession) -> Bool
-//    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnter: UIDropSession)
-//    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidExit session: UIDropSession)
-//    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnd session: UIDropSession)
-//    func coordinator(_ coordinator: CollectionCoordinator, performDropWith dropCoordinator: UICollectionViewDropCoordinator)
 }
 
 public extension CollectionCoordinatorDelegate {
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView? { return nil }
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator) { }
-
-//    func coordinator(_ coordinator: CollectionCoordinator, canHandleDropSession session: UIDropSession) -> Bool { return false }
-//    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnter: UIDropSession) { }
-//    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidExit session: UIDropSession) { }
-//    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnd session: UIDropSession) { }
-//    func coordinator(_ coordinator: CollectionCoordinator, performDropWith dropCoordinator: UICollectionViewDropCoordinator) { }
 }
 
 /// The coordinator that provides the 'glue' between a section provider and a collection view
