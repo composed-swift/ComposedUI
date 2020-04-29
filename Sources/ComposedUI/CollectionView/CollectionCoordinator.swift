@@ -90,7 +90,7 @@ open class CollectionCoordinator: NSObject {
 
         for (index, section) in sectionProvider.sections.enumerated() {
             guard let handler = section as? EditingHandler else { continue }
-            handler.setEditing(editing)
+            handler.didSetEditing(editing)
 
             for item in 0..<section.numberOfElements {
                 let indexPath = IndexPath(item: item, section: index)
@@ -98,7 +98,7 @@ open class CollectionCoordinator: NSObject {
                 if let handler = handler as? CollectionEditingHandler, let cell = collectionView.cellForItem(at: indexPath) {
                     handler.setEditing(editing, at: item, cell: cell, animated: animated)
                 } else {
-                    handler.setEditing(editing, at: item)
+                    handler.didSetEditing(editing, at: item)
                 }
             }
         }
@@ -354,7 +354,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             if let handler = sectionProvider.sections[indexPath.section] as? CollectionEditingHandler {
                 handler.setEditing(collectionView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
-                handler.setEditing(collectionView.isEditing, at: indexPath.item)
+                handler.didSetEditing(collectionView.isEditing, at: indexPath.item)
             }
         }
 

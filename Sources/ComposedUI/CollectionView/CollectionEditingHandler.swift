@@ -6,8 +6,8 @@ public protocol CollectionEditingHandler: EditingHandler {
 }
 
 public extension CollectionEditingHandler {
-    func setEditing(_ editing: Bool) { }
+    func didSetEditing(_ editing: Bool) { }
     func setEditing(_ editing: Bool, at index: Int, cell: UICollectionViewCell, animated: Bool) {
-        setEditing(editing, at: index)
+        didSetEditing(editing, at: index)
     }
 }

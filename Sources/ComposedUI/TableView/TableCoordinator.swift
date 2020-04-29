@@ -81,7 +81,7 @@ open class TableCoordinator: NSObject {
 
         for (index, section) in sectionProvider.sections.enumerated() {
             guard let handler = section as? EditingHandler else { continue }
-            handler.setEditing(editing)
+            handler.didSetEditing(editing)
 
             for item in 0..<section.numberOfElements {
                 let indexPath = IndexPath(item: item, section: index)
@@ -89,7 +89,7 @@ open class TableCoordinator: NSObject {
                 if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
                     handler.setEditing(editing, at: item, cell: cell, animated: animated)
                 } else {
-                    handler.setEditing(editing, at: item)
+                    handler.didSetEditing(editing, at: item)
                 }
             }
         }
@@ -328,7 +328,7 @@ extension TableCoordinator: UITableViewDataSource {
             if let handler = sectionProvider.sections[indexPath.section] as? TableEditingHandler {
                 handler.setEditing(tableView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
-                handler.setEditing(tableView.isEditing, at: indexPath.item)
+                handler.didSetEditing(tableView.isEditing, at: indexPath.item)
             }
         }
 
@@ -409,7 +409,7 @@ extension TableCoordinator: UITableViewDelegate {
         if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
             handler.setEditing(true, at: indexPath.item, cell: cell, animated: true)
         } else {
-            handler.setEditing(true, at: indexPath.item)
+            handler.didSetEditing(true, at: indexPath.item)
         }
     }
 
@@ -423,7 +423,7 @@ extension TableCoordinator: UITableViewDelegate {
         if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
             handler.setEditing(false, at: indexPath.item, cell: cell, animated: true)
         } else {
-            handler.setEditing(true, at: indexPath.item)
+            handler.didSetEditing(true, at: indexPath.item)
         }
     }
 

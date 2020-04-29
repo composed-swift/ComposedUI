@@ -18,8 +18,8 @@ public extension TableEditingHandler {
     func editingStyle(at index: Int) -> UITableViewCell.EditingStyle { return .none }
     func commitEditing(at index: Int, editingStyle: UITableViewCell.EditingStyle) { }
 
-    func setEditing(_ editing: Bool) { }
+    func didSetEditing(_ editing: Bool) { }
     func setEditing(_ editing: Bool, at index: Int, cell: UITableViewCell, animated: Bool) {
-        setEditing(editing, at: index)
+        didSetEditing(editing, at: index)
     }
 }
