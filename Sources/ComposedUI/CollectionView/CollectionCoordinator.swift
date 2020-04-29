@@ -260,8 +260,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             
             var indexPathsToReload: [IndexPath] = []
             for indexPath in indexPaths {
-                guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateHandling,
-                    !section.allowsReload(forItemAt: indexPath.item),
+                guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateBehaviour,
+                    !section.prefersReload(forElementAt: indexPath.item),
                     let cell = self.collectionView.cellForItem(at: indexPath) else {
                         indexPathsToReload.append(indexPath)
                         continue
