@@ -87,7 +87,7 @@ open class TableCoordinator: NSObject {
                 let indexPath = IndexPath(item: item, section: index)
 
                 if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
-                    handler.setEditing(editing, at: item, cell: cell, animated: animated)
+                    handler.didSetEditing(editing, at: item, cell: cell, animated: animated)
                 } else {
                     handler.didSetEditing(editing, at: item)
                 }
@@ -244,8 +244,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
             var indexPathsToReload: [IndexPath] = []
             for indexPath in indexPaths {
-                guard let section = self.sectionProvider.sections[indexPath.section] as? TableUpdateHandling,
-                    !section.allowsReload(forItemAt: indexPath.item),
+                guard let section = self.sectionProvider.sections[indexPath.section] as? TableUpdateHandler,
+                    !section.prefersReload(forElementAt: indexPath.item),
                     let cell = self.tableView.cellForRow(at: indexPath) else {
                         indexPathsToReload.append(indexPath)
                         continue
@@ -326,7 +326,7 @@ extension TableCoordinator: UITableViewDataSource {
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? TableEditingHandler {
-                handler.setEditing(tableView.isEditing, at: indexPath.item, cell: cell, animated: false)
+                handler.didSetEditing(tableView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
                 handler.didSetEditing(tableView.isEditing, at: indexPath.item)
             }
@@ -351,9 +351,9 @@ extension TableCoordinator {
     open func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
-        let preview = provider.contextMenu(previewForItemAt: indexPath.item, cell: cell)
+        let preview = provider.contextMenu(previewForElementAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
-            return provider.contextMenu(forItemAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
+            return provider.contextMenu(forElementAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
         }
     }
 
@@ -361,21 +361,21 @@ extension TableCoordinator {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForHighlightingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForHighlightingElementAt: indexPath.item, cell: cell)
     }
 
     open func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForDismissingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForDismissingElementAt: indexPath.item, cell: cell)
     }
 
     open func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return }
-        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, cell: cell, animator: animator)
+        provider.contextMenu(willPerformPreviewActionForElementAt: indexPath.item, cell: cell, animator: animator)
     }
 
 }
@@ -407,7 +407,7 @@ extension TableCoordinator: UITableViewDelegate {
         guard let handler = mapper.provider.sections[indexPath.section] as? EditingHandler else { return }
 
         if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
-            handler.setEditing(true, at: indexPath.item, cell: cell, animated: true)
+            handler.didSetEditing(true, at: indexPath.item, cell: cell, animated: true)
         } else {
             handler.didSetEditing(true, at: indexPath.item)
         }
@@ -421,7 +421,7 @@ extension TableCoordinator: UITableViewDelegate {
         guard let indexPath = indexPath, let handler = mapper.provider.sections[indexPath.section] as? EditingHandler else { return }
 
         if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
-            handler.setEditing(false, at: indexPath.item, cell: cell, animated: true)
+            handler.didSetEditing(false, at: indexPath.item, cell: cell, animated: true)
         } else {
             handler.didSetEditing(true, at: indexPath.item)
         }

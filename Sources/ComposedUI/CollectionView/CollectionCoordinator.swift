@@ -96,7 +96,7 @@ open class CollectionCoordinator: NSObject {
                 let indexPath = IndexPath(item: item, section: index)
 
                 if let handler = handler as? CollectionEditingHandler, let cell = collectionView.cellForItem(at: indexPath) {
-                    handler.setEditing(editing, at: item, cell: cell, animated: animated)
+                    handler.didSetEditing(editing, at: item, cell: cell, animated: animated)
                 } else {
                     handler.didSetEditing(editing, at: item)
                 }
@@ -260,7 +260,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             
             var indexPathsToReload: [IndexPath] = []
             for indexPath in indexPaths {
-                guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateBehaviour,
+                guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateHandler,
                     !section.prefersReload(forElementAt: indexPath.item),
                     let cell = self.collectionView.cellForItem(at: indexPath) else {
                         indexPathsToReload.append(indexPath)
@@ -352,7 +352,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? CollectionEditingHandler {
-                handler.setEditing(collectionView.isEditing, at: indexPath.item, cell: cell, animated: false)
+                handler.didSetEditing(collectionView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
                 handler.didSetEditing(collectionView.isEditing, at: indexPath.item)
             }
@@ -403,9 +403,9 @@ extension CollectionCoordinator {
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
-        let preview = provider.contextMenu(previewForItemAt: indexPath.item, cell: cell)
+        let preview = provider.contextMenu(previewForElementAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
-            return provider.contextMenu(forItemAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
+            return provider.contextMenu(forElementAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
         }
     }
 
@@ -413,21 +413,21 @@ extension CollectionCoordinator {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForHighlightingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForHighlightingElementAt: indexPath.item, cell: cell)
     }
 
     public func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForDismissingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForDismissingElementAt: indexPath.item, cell: cell)
     }
 
     public func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return }
-        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, cell: cell, animator: animator)
+        provider.contextMenu(willPerformPreviewActionForElementAt: indexPath.item, cell: cell, animator: animator)
     }
 
 }
@@ -526,7 +526,7 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        return (sectionProvider.sections[indexPath.section] as? CollectionDropHandler)?.dropSesion(previewParametersForItemAt: indexPath.item)
+        return (sectionProvider.sections[indexPath.section] as? CollectionDropHandler)?.dropSesion(previewParametersForElementAt: indexPath.item)
     }
 
 }
