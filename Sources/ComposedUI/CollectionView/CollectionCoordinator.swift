@@ -57,8 +57,6 @@ open class CollectionCoordinator: NSObject {
 
     private var cachedProviders: [CollectionSectionElementsProvider] = []
 
-    public private(set) var isEditing: Bool = false
-
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
         mapper = SectionProviderMapping(provider: sectionProvider)
@@ -88,7 +86,6 @@ open class CollectionCoordinator: NSObject {
     }
 
     public func setEditing(_ editing: Bool, animated: Bool) {
-        isEditing = editing
         collectionView.indexPathsForSelectedItems?.forEach { collectionView.deselectItem(at: $0, animated: animated) }
 
         for (index, section) in sectionProvider.sections.enumerated() {
@@ -171,7 +168,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         sectionRemoves.removeAll()
     }
 
-    public func mappingDidReload(_ mapping: SectionProviderMapping) {
+    public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         reset()
         prepareSections()
@@ -311,11 +308,6 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool {
-        assert(Thread.isMainThread)
-        return collectionView.isEditing
-    }
-
 }
 
 // MARK: - UICollectionViewDataSource
@@ -360,9 +352,9 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? CollectionEditingHandler {
-                handler.setEditing(isEditing, at: indexPath.item, cell: cell, animated: false)
+                handler.setEditing(collectionView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
-                handler.setEditing(isEditing, at: indexPath.item)
+                handler.setEditing(collectionView.isEditing, at: indexPath.item)
             }
         }
 

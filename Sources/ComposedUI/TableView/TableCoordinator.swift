@@ -54,8 +54,6 @@ open class TableCoordinator: NSObject {
 
     private var cachedProviders: [TableElementsProvider] = []
 
-    public private(set) var isEditing: Bool = false
-
     public init(tableView: UITableView, sectionProvider: SectionProvider) {
         self.tableView = tableView
         mapper = SectionProviderMapping(provider: sectionProvider)
@@ -79,7 +77,6 @@ open class TableCoordinator: NSObject {
     }
 
     public func setEditing(_ editing: Bool, animated: Bool) {
-        isEditing = editing
         tableView.indexPathsForSelectedRows?.forEach { tableView.deselectRow(at: $0, animated: animated) }
 
         for (index, section) in sectionProvider.sections.enumerated() {
@@ -155,7 +152,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         sectionRemoves.removeAll()
     }
 
-    public func mappingDidReload(_ mapping: SectionProviderMapping) {
+    public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         reset()
         prepareSections()
@@ -291,10 +288,6 @@ extension TableCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
-    public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool {
-        return tableView.isEditing
-    }
     
 }
 
@@ -333,9 +326,9 @@ extension TableCoordinator: UITableViewDataSource {
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? TableEditingHandler {
-                handler.setEditing(isEditing, at: indexPath.item, cell: cell, animated: false)
+                handler.setEditing(tableView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
-                handler.setEditing(isEditing, at: indexPath.item)
+                handler.setEditing(tableView.isEditing, at: indexPath.item)
             }
         }
 

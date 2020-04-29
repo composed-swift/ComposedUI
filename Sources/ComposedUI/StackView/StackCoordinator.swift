@@ -61,7 +61,7 @@ open class StackCoordinator: NSObject {
 
 extension StackCoordinator: SectionProviderMappingDelegate {
 
-    public func mappingDidReload(_ mapping: SectionProviderMapping) {
+    public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         reloadData()
     }
 
@@ -134,6 +134,5 @@ extension StackCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] { return [] }
     public func mapping(_ mapping: SectionProviderMapping, select indexPath: IndexPath) { }
     public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) { }
-    public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool { return false }
 
 }
