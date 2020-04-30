@@ -11,7 +11,7 @@ public extension CollectionCoordinatorDelegate {
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator) { }
 }
 
-/// The coordinator that provides the 'glue' between a section provider and a collection view
+/// The coordinator that provides the 'glue' between a section provider and a `UICollectionView`
 open class CollectionCoordinator: NSObject {
 
     /// Get/set the delegate for this coordinator

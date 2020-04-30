@@ -2,31 +2,19 @@ import UIKit
 import Composed
 
 public protocol TableCoordinatorDelegate: class {
-    func coordinator(_ coordinator: TableCoordinator, didScroll tableView: UITableView)
     func coordinator(_ coordinator: TableCoordinator, backgroundViewInTableView tableView: UITableView) -> UIView?
     func coordinatorDidUpdate(_ coordinator: TableCoordinator)
-
-    func coordinator(_ coordinator: TableCoordinator, canHandleDropSession session: UIDropSession) -> Bool
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnter: UIDropSession)
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidExit session: UIDropSession)
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnd session: UIDropSession)
-    func coordinator(_ coordinator: TableCoordinator, performDropWith dropCoordinator: UITableViewDropCoordinator)
 }
 
+/// The coordinator that provides the 'glue' between a section provider and a `UITableView`
 public extension TableCoordinatorDelegate {
-    func coordinator(_ coordinator: TableCoordinator, didScroll tableView: UITableView) { }
     func coordinator(_ coordinator: TableCoordinator, backgroundViewInTableView tableView: UITableView) -> UIView? { return nil }
     func coordinatorDidUpdate(_ coordinator: TableCoordinator) { }
-
-    func coordinator(_ coordinator: TableCoordinator, canHandleDropSession session: UIDropSession) -> Bool { return false }
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnter: UIDropSession) { }
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidExit session: UIDropSession) { }
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnd session: UIDropSession) { }
-    func coordinator(_ coordinator: TableCoordinator, performDropWith dropCoordinator: UITableViewDropCoordinator) { }
 }
 
 open class TableCoordinator: NSObject {
 
+    /// Get/set the delegate for this coordinator
     public weak var delegate: TableCoordinatorDelegate? {
         didSet { tableView.backgroundView = delegate?.coordinator(self, backgroundViewInTableView: tableView) }
     }
@@ -54,6 +42,10 @@ open class TableCoordinator: NSObject {
 
     private var cachedProviders: [TableElementsProvider] = []
 
+    /// Make a new coordinator with the specified tableView and sectionProvider
+    /// - Parameters:
+    ///   - tableView: The tableView to associate with this coordinator
+    ///   - sectionProvider: The sectionProvider to associate with this coordinator
     public init(tableView: UITableView, sectionProvider: SectionProvider) {
         self.tableView = tableView
         mapper = SectionProviderMapping(provider: sectionProvider)
@@ -630,28 +622,31 @@ extension TableCoordinator: UITableViewDelegate {
 
 extension TableCoordinator: UITableViewDropDelegate {
 
-    public func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
-        return delegate?.coordinator(self, canHandleDropSession: session) ?? false
-    }
+    public func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if destinationIndexPath == nil {
+            return (originalDelegate as? UITableViewDropDelegate)?
+                .tableView?(tableView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
+                ?? UITableViewDropProposal(operation: .forbidden)
+        }
 
-    public func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidEnter: session)
+        guard let indexPath = destinationIndexPath, let section = sectionProvider.sections[indexPath.section] as? TableDropHandler else {
+            return (originalDelegate as? UITableViewDropDelegate)?
+                .tableView?(tableView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
+                ?? UITableViewDropProposal(operation: .forbidden)
+        }
+
+        return section.dropSessionDidUpdate(session, destinationIndex: indexPath.item)
     }
 
     public func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
-        delegate?.coordinator(self, performDropWith: coordinator)
-    }
-
-    public func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidExit: session)
-    }
-
-    public func tableView(_ tableView: UITableView, dropSessionDidEnd session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidEnd: session)
+        (originalDelegate as? UITableViewDropDelegate)?.tableView(tableView, performDropWith: coordinator)
     }
 
     public func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        return (sectionProvider.sections[indexPath.section] as? TableDropHandler)?.dropSesion(previewParametersForItemAt: indexPath.item)
+        guard let section = sectionProvider.sections[indexPath.section] as? TableDropHandler else {
+            return (originalDelegate as? UITableViewDropDelegate)?.tableView?(tableView, dropPreviewParametersForRowAt: indexPath)
+        }
+        return section.dropSesion(previewParametersForItemAt: indexPath.item)
     }
 
 }
