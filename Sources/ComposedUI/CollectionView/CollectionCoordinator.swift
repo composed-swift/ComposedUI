@@ -1,8 +1,17 @@
 import UIKit
 import Composed
 
+/// Conform to this protocol to receive `CollectionCoordinator` events
 public protocol CollectionCoordinatorDelegate: class {
+
+    /// Return a background view to be shown in the `UICollectionView` when its content is empty. Defaults to nil
+    /// - Parameters:
+    ///   - coordinator: The coordinator that manages this collection view
+    ///   - collectionView: The collection view that will show this background view
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
+
+    /// Called whenever the coordinator's content updates
+    /// - Parameter coordinator: The coordinator that manages the updates
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator)
 }
 
@@ -596,7 +605,7 @@ private final class PlaceholderSupplementaryView: UICollectionReusableView {
 
 public extension CollectionCoordinator {
 
-    /// A convenience initializer that allow creation without a provider
+    /// A convenience initializer that allows creation without a provider
     /// - Parameters:
     ///   - collectionView: The collectionView associated with this coordinator
     ///   - sections: The sections associated with this coordinator

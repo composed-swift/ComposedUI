@@ -1,9 +1,19 @@
 import UIKit
 import Composed
 
+/// Conform to this protocol to receive `TableCoordinator` events
 public protocol TableCoordinatorDelegate: class {
+
+    /// Return a background view to be shown in the `UITableView` when its content is empty. Defaults to nil
+    /// - Parameters:
+    ///   - coordinator: The coordinator that manages this table view
+    ///   - tableView: The table view that will show this background view
     func coordinator(_ coordinator: TableCoordinator, backgroundViewInTableView tableView: UITableView) -> UIView?
+
+    /// Called whenever the coordinator's content updates
+    /// - Parameter coordinator: The coordinator that manages the updates
     func coordinatorDidUpdate(_ coordinator: TableCoordinator)
+
 }
 
 /// The coordinator that provides the 'glue' between a section provider and a `UITableView`
@@ -653,6 +663,10 @@ extension TableCoordinator: UITableViewDropDelegate {
 
 public extension TableCoordinator {
 
+    /// A convenience initializer that allows creation without a provider
+    /// - Parameters:
+    ///   - collectionView: The collectionView associated with this coordinator
+    ///   - sections: The sections associated with this coordinator
     convenience init(tableView: UITableView, sections: Section...) {
         let provider = ComposedSectionProvider()
         self.init(tableView: tableView, sectionProvider: provider)

@@ -26,7 +26,7 @@ public protocol CollectionElement {
     /// The method to use for registering and dequeueing a view for this element
     var dequeueMethod: DequeueMethod<View> { get }
 
-    /// A closure that will be called whenever this view needs to be configured
+    /// A closure that will be called whenever the elements view needs to be configured
     var configure: (UICollectionReusableView, Int, Section) -> Void { get }
 
     /// The reuseIdentifier to use for this element
@@ -34,18 +34,24 @@ public protocol CollectionElement {
 
 }
 
-/// Defines a cell element to e used by a `CollectionSection` to provide a configuration for a cell
+/// Defines a cell element to be used by a `CollectionSection` to provide a configuration for a cell
 public final class CollectionCellElement<View>: CollectionElement where View: UICollectionViewCell {
 
     public let dequeueMethod: DequeueMethod<View>
     public let configure: (UICollectionReusableView, Int, Section) -> Void
     public let reuseIdentifier: String
 
-    /// A closure that will be called before the cell is appeared
+    /// The closure that will be called before the elements view appears
     public let willAppear: (UICollectionReusableView, Int, Section) -> Void
-    /// A closure that will be called after the cell has disappeared
+    /// The closure that will be called after the elements view disappears
     public let didDisappear: (UICollectionReusableView, Int, Section) -> Void
 
+    /// Makes a new element for representing a cell
+    /// - Parameters:
+    ///   - section: The section where this element's cell will be shown in
+    ///   - dequeueMethod: The method to use for registering and dequeueing a cell for this element
+    ///   - reuseIdentifier: The reuseIdentifier to use for this element
+    ///   - configure: A closure that will be called whenever the elements view needs to be configured
     public init<Section>(section: Section,
                          dequeueMethod: DequeueMethod<View>,
                          reuseIdentifier: String? = nil,
@@ -64,6 +70,14 @@ public final class CollectionCellElement<View>: CollectionElement where View: UI
             didDisappear = { _, _, _ in }
     }
 
+    /// Makes a new element for representing a cell
+    /// - Parameters:
+    ///   - section: The section where this element's cell will be shown in
+    ///   - dequeueMethod: The method to use for registering and dequeueing a cell for this element
+    ///   - reuseIdentifier: The reuseIdentifier to use for this element
+    ///   - configure: A closure that will be called whenever the elements view needs to be configured
+    ///   - willAppear: A closure that will be called before the elements view appears
+    ///   - didDisappear: A closure that will be called after the elements view disappears
     public init<Section>(section: Section,
                          dequeueMethod: DequeueMethod<View>,
                          reuseIdentifier: String? = nil,
@@ -91,15 +105,28 @@ public final class CollectionCellElement<View>: CollectionElement where View: UI
 
 }
 
+/// Defines a supplementary element to be used by a `CollectionSection` to provide a configuration for a supplementary view
 public final class CollectionSupplementaryElement<View>: CollectionElement where View: UICollectionReusableView {
 
     public let dequeueMethod: DequeueMethod<View>
     public let configure: (UICollectionReusableView, Int, Section) -> Void
-    public let willAppear: ((UICollectionReusableView, Int, Section) -> Void)?
-    public let didDisappear: ((UICollectionReusableView, Int, Section) -> Void)?
     public let reuseIdentifier: String
+
+    /// The `elementKind` this element represents
     public let kind: CollectionElementKind
 
+    /// A closure that will be called before the elements view is appeared
+    public let willAppear: ((UICollectionReusableView, Int, Section) -> Void)?
+    /// A closure that will be called after the elements view has disappeared
+    public let didDisappear: ((UICollectionReusableView, Int, Section) -> Void)?
+
+    /// Makes a new element for representing a supplementary view
+    /// - Parameters:
+    ///   - section: The section where this element's view will be shown in
+    ///   - dequeueMethod: The method to use for registering and dequeueing a view for this element
+    ///   - reuseIdentifier: The reuseIdentifier to use for this element
+    ///   - kind: The `elementKind` this element represents
+    ///   - configure: A closure that will be called whenever the elements view needs to be configured
     public init<Section>(section: Section,
                          dequeueMethod: DequeueMethod<View>,
                          reuseIdentifier: String? = nil,
@@ -119,6 +146,15 @@ public final class CollectionSupplementaryElement<View>: CollectionElement where
             didDisappear = nil
     }
 
+    /// Makes a new element for representing a supplementary view
+    /// - Parameters:
+    ///   - section: The section where this element's view will be shown in
+    ///   - dequeueMethod: The method to use for registering and dequeueing a view for this element
+    ///   - reuseIdentifier: The reuseIdentifier to use for this element
+    ///   - kind: The `elementKind` this element represents
+    ///   - configure: A closure that will be called whenever the elements view needs to be configured
+    ///   - willAppear: A closure that will be called before the elements view appears
+    ///   - didDisappear: A closure that will be called after the elements view disappears
     public init<Section>(section: Section,
                          dequeueMethod: DequeueMethod<View>,
                          reuseIdentifier: String? = nil,
