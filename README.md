@@ -1,6 +1,6 @@
-# ComposedUI
+<img src="composed.png" width=20%/>
 
-This library builds upon [`Composed`](http://github.com/composed-swift/composed) by adding user interface features that allow you to power the screens in an application.
+**ComposedUI** builds upon [`Composed`](http://github.com/composed-swift/composed) by adding user interface features that allow you to power the screens in an application.
 
 > If you prefer to look at code, there's a demo project here: [ComposedDemo](http://github.com/composed-swift/composed-demo)
 
