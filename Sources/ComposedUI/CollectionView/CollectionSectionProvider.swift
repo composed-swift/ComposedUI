@@ -1,14 +1,14 @@
 import UIKit
 import Composed
 
-public protocol CollectionSectionElementsProvider {
+internal protocol CollectionElementsProvider {
     var cell: CollectionCellElement<UICollectionViewCell> { get }
     var header: CollectionSupplementaryElement<UICollectionReusableView>? { get }
     var footer: CollectionSupplementaryElement<UICollectionReusableView>? { get }
     var numberOfElements: Int { get }
 }
 
-public extension CollectionSectionElementsProvider {
+extension CollectionElementsProvider {
     var isEmpty: Bool { return numberOfElements == 0 }
 }
 

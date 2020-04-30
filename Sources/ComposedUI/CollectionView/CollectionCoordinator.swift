@@ -44,7 +44,7 @@ open class CollectionCoordinator: NSObject {
     private weak var originalDataSource: UICollectionViewDataSource?
     private var delegateObserver: NSKeyValueObservation?
 
-    private var cachedProviders: [CollectionSectionElementsProvider] = []
+    private var cachedProviders: [CollectionElementsProvider] = []
 
     /// Make a new coordinator with the specified collectionView and sectionProvider
     /// - Parameters:
@@ -394,7 +394,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         }
     }
 
-    private func collectionSection(for section: Int) -> CollectionSectionElementsProvider {
+    private func collectionSection(for section: Int) -> CollectionElementsProvider {
         guard cachedProviders.indices.contains(section) else {
             fatalError("No UI configuration available for section \(section)")
         }
