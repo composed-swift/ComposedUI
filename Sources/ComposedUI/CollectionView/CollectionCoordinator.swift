@@ -327,7 +327,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionSection(for: section).numberOfElements
+        return elementsProvider(for: section).numberOfElements
     }
 
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -336,9 +336,9 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             originalDelegate?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
         }
 
-        let provider = collectionSection(for: indexPath.section)
+        let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
-        provider.cell.willDisplay(cell, indexPath.item, section)
+        elements.cell.willAppear(cell, indexPath.item, section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -348,15 +348,15 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         }
 
         guard indexPath.section > sectionProvider.numberOfSections else { return }
-        let provider = collectionSection(for: indexPath.section)
+        let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
-        provider.cell.didEndDisplay(cell, indexPath.item, section)
+        elements.cell.didDisappear(cell, indexPath.item, section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         assert(Thread.isMainThread)
-        let section = collectionSection(for: indexPath.section)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.cell.reuseIdentifier, for: indexPath)
+        let elements = elementsProvider(for: indexPath.section)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: elements.cell.reuseIdentifier, for: indexPath)
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? CollectionEditingHandler {
@@ -366,20 +366,39 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             }
         }
 
-        section.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
+        elements.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
         return cell
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, willDisplaySupplementaryView: view, forElementKind: elementKind, at: indexPath)
+        }
+
+        guard indexPath.section > sectionProvider.numberOfSections else { return }
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+
+        if let header = elements.header, header.kind.rawValue == elementKind {
+            elements.header?.willAppear?(view, indexPath.section, section)
+        } else if let footer = elements.footer, footer.kind.rawValue == elementKind {
+            elements.footer?.willAppear?(view, indexPath.section, section)
+        } else {
+            // the original delegate can handle this
+        }
     }
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         assert(Thread.isMainThread)
-        let provider = collectionSection(for: indexPath.section)
+        let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
 
-        if let header = provider.header, header.kind.rawValue == kind {
+        if let header = elements.header, header.kind.rawValue == kind {
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: header.reuseIdentifier, for: indexPath)
             header.configure(view, indexPath.section, section)
             return view
-        } else if let footer = provider.footer, footer.kind.rawValue == kind {
+        } else if let footer = elements.footer, footer.kind.rawValue == kind {
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footer.reuseIdentifier, for: indexPath)
             footer.configure(view, indexPath.section, section)
             return view
@@ -394,7 +413,26 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         }
     }
 
-    private func collectionSection(for section: Int) -> CollectionElementsProvider {
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
+        }
+
+        guard indexPath.section > sectionProvider.numberOfSections else { return }
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+
+        if let header = elements.header, header.kind.rawValue == elementKind {
+            elements.header?.didDisappear?(view, indexPath.section, section)
+        } else if let footer = elements.footer, footer.kind.rawValue == elementKind {
+            elements.footer?.didDisappear?(view, indexPath.section, section)
+        } else {
+            // the original delegate can handle this
+        }
+    }
+
+    private func elementsProvider(for section: Int) -> CollectionElementsProvider {
         guard cachedProviders.indices.contains(section) else {
             fatalError("No UI configuration available for section \(section)")
         }

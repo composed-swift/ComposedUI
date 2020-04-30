@@ -2,6 +2,8 @@
 
 This library builds upon [`Composed`](http://github.com/composed-swift/composed) by adding user interface features that allow you to power the screens in an application.
 
+> If you prefer to look at code, there's a demo project here: [ComposedDemo](http://github.com/composed-swift/composed-demo)
+
 The library is comprised of 4 key types for each view type, as well as various protocols for providing optional functionality.
 
 `UICollectionView` implementations are prefixed with `Collection`

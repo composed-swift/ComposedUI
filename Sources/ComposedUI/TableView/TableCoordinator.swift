@@ -295,18 +295,62 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
 extension TableCoordinator: UITableViewDataSource {
 
+    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.header?.willAppear(view, section, s)
+    }
+
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableSection(for: section)?.header else { return nil }
+        guard let header = elementsProvider(for: section).header else { return nil }
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: header.reuseIdentifier) else { return nil }
         header.configure(view, section, mapper.provider.sections[section])
         return view
     }
 
+    public func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, didEndDisplayingHeaderView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.header?.didDisappear(view, section, s)
+    }
+
+    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.footer?.willAppear(view, section, s)
+    }
+
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let footer = tableSection(for: section)?.footer else { return nil }
+        guard let footer = elementsProvider(for: section).footer else { return nil }
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footer.reuseIdentifier) else { return nil }
         footer.configure(view, section, mapper.provider.sections[section])
         return view
+    }
+
+    public func tableView(_ tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, didEndDisplayingFooterView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.footer?.didDisappear(view, section, s)
     }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
@@ -314,15 +358,23 @@ extension TableCoordinator: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableSection(for: section)?.numberOfElements ?? 0
+        return elementsProvider(for: section).numberOfElements
+    }
+
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
+        }
+
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        elements.cell.willAppear(cell, indexPath.item, section)
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let section = tableSection(for: indexPath.section) else {
-            fatalError("No UI configuration available for section \(indexPath.section)")
-        }
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: section.cell.reuseIdentifier, for: indexPath)
+        let elements = elementsProvider(for: indexPath.section)
+        let cell = tableView.dequeueReusableCell(withIdentifier: elements.cell.reuseIdentifier, for: indexPath)
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? TableEditingHandler {
@@ -332,12 +384,25 @@ extension TableCoordinator: UITableViewDataSource {
             }
         }
 
-        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section])
+        elements.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section])
         return cell
     }
 
-    private func tableSection(for section: Int) -> TableElementsProvider? {
-        guard cachedProviders.indices.contains(section) else { return nil }
+    public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath)
+        }
+
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        elements.cell.didDisappear(cell, indexPath.item, section)
+    }
+
+    private func elementsProvider(for section: Int) -> TableElementsProvider {
+        guard cachedProviders.indices.contains(section) else {
+            fatalError("No UI configuration available for section \(section)")
+        }
         return cachedProviders[section]
     }
 
