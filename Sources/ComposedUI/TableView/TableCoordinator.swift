@@ -1,32 +1,30 @@
 import UIKit
 import Composed
 
+/// Conform to this protocol to receive `TableCoordinator` events
 public protocol TableCoordinatorDelegate: class {
-    func coordinator(_ coordinator: TableCoordinator, didScroll tableView: UITableView)
+
+    /// Return a background view to be shown in the `UITableView` when its content is empty. Defaults to nil
+    /// - Parameters:
+    ///   - coordinator: The coordinator that manages this table view
+    ///   - tableView: The table view that will show this background view
     func coordinator(_ coordinator: TableCoordinator, backgroundViewInTableView tableView: UITableView) -> UIView?
+
+    /// Called whenever the coordinator's content updates
+    /// - Parameter coordinator: The coordinator that manages the updates
     func coordinatorDidUpdate(_ coordinator: TableCoordinator)
 
-    func coordinator(_ coordinator: TableCoordinator, canHandleDropSession session: UIDropSession) -> Bool
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnter: UIDropSession)
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidExit session: UIDropSession)
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnd session: UIDropSession)
-    func coordinator(_ coordinator: TableCoordinator, performDropWith dropCoordinator: UITableViewDropCoordinator)
 }
 
+/// The coordinator that provides the 'glue' between a section provider and a `UITableView`
 public extension TableCoordinatorDelegate {
-    func coordinator(_ coordinator: TableCoordinator, didScroll tableView: UITableView) { }
     func coordinator(_ coordinator: TableCoordinator, backgroundViewInTableView tableView: UITableView) -> UIView? { return nil }
     func coordinatorDidUpdate(_ coordinator: TableCoordinator) { }
-
-    func coordinator(_ coordinator: TableCoordinator, canHandleDropSession session: UIDropSession) -> Bool { return false }
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnter: UIDropSession) { }
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidExit session: UIDropSession) { }
-    func coordinator(_ coordinator: TableCoordinator, dropSessionDidEnd session: UIDropSession) { }
-    func coordinator(_ coordinator: TableCoordinator, performDropWith dropCoordinator: UITableViewDropCoordinator) { }
 }
 
 open class TableCoordinator: NSObject {
 
+    /// Get/set the delegate for this coordinator
     public weak var delegate: TableCoordinatorDelegate? {
         didSet { tableView.backgroundView = delegate?.coordinator(self, backgroundViewInTableView: tableView) }
     }
@@ -54,8 +52,10 @@ open class TableCoordinator: NSObject {
 
     private var cachedProviders: [TableElementsProvider] = []
 
-    public private(set) var isEditing: Bool = false
-
+    /// Make a new coordinator with the specified tableView and sectionProvider
+    /// - Parameters:
+    ///   - tableView: The tableView to associate with this coordinator
+    ///   - sectionProvider: The sectionProvider to associate with this coordinator
     public init(tableView: UITableView, sectionProvider: SectionProvider) {
         self.tableView = tableView
         mapper = SectionProviderMapping(provider: sectionProvider)
@@ -79,20 +79,19 @@ open class TableCoordinator: NSObject {
     }
 
     public func setEditing(_ editing: Bool, animated: Bool) {
-        isEditing = editing
         tableView.indexPathsForSelectedRows?.forEach { tableView.deselectRow(at: $0, animated: animated) }
 
         for (index, section) in sectionProvider.sections.enumerated() {
             guard let handler = section as? EditingHandler else { continue }
-            handler.setEditing(editing)
+            handler.didSetEditing(editing)
 
             for item in 0..<section.numberOfElements {
                 let indexPath = IndexPath(item: item, section: index)
 
                 if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
-                    handler.setEditing(editing, at: item, cell: cell, animated: animated)
+                    handler.didSetEditing(editing, at: item, cell: cell, animated: animated)
                 } else {
-                    handler.setEditing(editing, at: item)
+                    handler.didSetEditing(editing, at: item)
                 }
             }
         }
@@ -155,31 +154,19 @@ extension TableCoordinator: SectionProviderMappingDelegate {
         sectionRemoves.removeAll()
     }
 
-    public func mappingDidReload(_ mapping: SectionProviderMapping) {
+    public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         reset()
         prepareSections()
         tableView.reloadData()
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) {
-        reset()
-        defersUpdate = true
-
-        tableView.performBatchUpdates({
-            performBatchUpdates()
-        }) { [weak self] _ in
-            self?.reset()
-            self?.defersUpdate = false
-        }
-    }
-
-    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true
     }
 
-    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         tableView.performBatchUpdates({
             if defersUpdate {
@@ -194,9 +181,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             sectionInserts.forEach { $0() }
             sectionUpdates.forEach { $0() }
         }, completion: { [weak self] _ in
-            guard let self = self else { return }
-            self.reset()
-            self.defersUpdate = false
+            self?.reset()
+            self?.defersUpdate = false
         })
     }
 
@@ -208,7 +194,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.reloadSections(sections, with: .fade)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -219,7 +205,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.insertSections(sections, with: .fade)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -230,7 +216,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.deleteSections(sections, with: .fade)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
@@ -240,7 +226,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.insertRows(at: indexPaths, with: .automatic)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
@@ -250,7 +236,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             self.tableView.deleteRows(at: indexPaths, with: .automatic)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -260,8 +246,8 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
             var indexPathsToReload: [IndexPath] = []
             for indexPath in indexPaths {
-                guard let section = self.sectionProvider.sections[indexPath.section] as? TableUpdateHandling,
-                    !section.allowsReload(forItemAt: indexPath.item),
+                guard let section = self.sectionProvider.sections[indexPath.section] as? TableUpdateHandler,
+                    !section.prefersReload(forElementAt: indexPath.item),
                     let cell = self.tableView.cellForRow(at: indexPath) else {
                         indexPathsToReload.append(indexPath)
                         continue
@@ -279,7 +265,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             CATransaction.commit()
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
@@ -289,7 +275,7 @@ extension TableCoordinator: SectionProviderMappingDelegate {
             moves.forEach { self.tableView.moveRow(at: $0.0, to: $0.1) }
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
@@ -304,10 +290,6 @@ extension TableCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
-    public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool {
-        return tableView.isEditing
-    }
     
 }
 
@@ -315,18 +297,62 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
 extension TableCoordinator: UITableViewDataSource {
 
+    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.header?.willAppear(view, section, s)
+    }
+
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableSection(for: section)?.header else { return nil }
+        guard let header = elementsProvider(for: section).header else { return nil }
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: header.reuseIdentifier) else { return nil }
         header.configure(view, section, mapper.provider.sections[section])
         return view
     }
 
+    public func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, didEndDisplayingHeaderView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.header?.didDisappear(view, section, s)
+    }
+
+    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.footer?.willAppear(view, section, s)
+    }
+
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let footer = tableSection(for: section)?.footer else { return nil }
+        guard let footer = elementsProvider(for: section).footer else { return nil }
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footer.reuseIdentifier) else { return nil }
         footer.configure(view, section, mapper.provider.sections[section])
         return view
+    }
+
+    public func tableView(_ tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, didEndDisplayingFooterView: view, forSection: section)
+        }
+
+        let elements = elementsProvider(for: section)
+        let s = mapper.provider.sections[section]
+        elements.footer?.didDisappear(view, section, s)
     }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
@@ -334,30 +360,51 @@ extension TableCoordinator: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableSection(for: section)?.numberOfElements ?? 0
+        return elementsProvider(for: section).numberOfElements
+    }
+
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
+        }
+
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        elements.cell.willAppear(cell, indexPath.item, section)
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let section = tableSection(for: indexPath.section) else {
-            fatalError("No UI configuration available for section \(indexPath.section)")
-        }
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: section.cell.reuseIdentifier, for: indexPath)
+        let elements = elementsProvider(for: indexPath.section)
+        let cell = tableView.dequeueReusableCell(withIdentifier: elements.cell.reuseIdentifier, for: indexPath)
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? TableEditingHandler {
-                handler.setEditing(isEditing, at: indexPath.item, cell: cell, animated: false)
+                handler.didSetEditing(tableView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
-                handler.setEditing(isEditing, at: indexPath.item)
+                handler.didSetEditing(tableView.isEditing, at: indexPath.item)
             }
         }
 
-        section.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section])
+        elements.cell.configure(cell, indexPath.row, mapper.provider.sections[indexPath.section])
         return cell
     }
 
-    private func tableSection(for section: Int) -> TableElementsProvider? {
-        guard cachedProviders.indices.contains(section) else { return nil }
+    public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath)
+        }
+
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        elements.cell.didDisappear(cell, indexPath.item, section)
+    }
+
+    private func elementsProvider(for section: Int) -> TableElementsProvider {
+        guard cachedProviders.indices.contains(section) else {
+            fatalError("No UI configuration available for section \(section)")
+        }
         return cachedProviders[section]
     }
 
@@ -371,9 +418,9 @@ extension TableCoordinator {
     open func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
-        let preview = provider.contextMenu(previewForItemAt: indexPath.item, cell: cell)
+        let preview = provider.contextMenu(previewForElementAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
-            return provider.contextMenu(forItemAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
+            return provider.contextMenu(forElementAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
         }
     }
 
@@ -381,21 +428,21 @@ extension TableCoordinator {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForHighlightingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForHighlightingElementAt: indexPath.item, cell: cell)
     }
 
     open func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForDismissingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForDismissingElementAt: indexPath.item, cell: cell)
     }
 
     open func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return }
-        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, cell: cell, animator: animator)
+        provider.contextMenu(willPerformPreviewActionForElementAt: indexPath.item, cell: cell, animator: animator)
     }
 
 }
@@ -427,9 +474,9 @@ extension TableCoordinator: UITableViewDelegate {
         guard let handler = mapper.provider.sections[indexPath.section] as? EditingHandler else { return }
 
         if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
-            handler.setEditing(true, at: indexPath.item, cell: cell, animated: true)
+            handler.didSetEditing(true, at: indexPath.item, cell: cell, animated: true)
         } else {
-            handler.setEditing(true, at: indexPath.item)
+            handler.didSetEditing(true, at: indexPath.item)
         }
     }
 
@@ -441,9 +488,9 @@ extension TableCoordinator: UITableViewDelegate {
         guard let indexPath = indexPath, let handler = mapper.provider.sections[indexPath.section] as? EditingHandler else { return }
 
         if let handler = handler as? TableEditingHandler, let cell = tableView.cellForRow(at: indexPath) {
-            handler.setEditing(false, at: indexPath.item, cell: cell, animated: true)
+            handler.didSetEditing(false, at: indexPath.item, cell: cell, animated: true)
         } else {
-            handler.setEditing(true, at: indexPath.item)
+            handler.didSetEditing(true, at: indexPath.item)
         }
     }
 
@@ -585,34 +632,41 @@ extension TableCoordinator: UITableViewDelegate {
 
 extension TableCoordinator: UITableViewDropDelegate {
 
-    public func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
-        return delegate?.coordinator(self, canHandleDropSession: session) ?? false
-    }
+    public func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if destinationIndexPath == nil {
+            return (originalDelegate as? UITableViewDropDelegate)?
+                .tableView?(tableView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
+                ?? UITableViewDropProposal(operation: .forbidden)
+        }
 
-    public func tableView(_ tableView: UITableView, dropSessionDidEnter session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidEnter: session)
+        guard let indexPath = destinationIndexPath, let section = sectionProvider.sections[indexPath.section] as? TableDropHandler else {
+            return (originalDelegate as? UITableViewDropDelegate)?
+                .tableView?(tableView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
+                ?? UITableViewDropProposal(operation: .forbidden)
+        }
+
+        return section.dropSessionDidUpdate(session, destinationIndex: indexPath.item)
     }
 
     public func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
-        delegate?.coordinator(self, performDropWith: coordinator)
-    }
-
-    public func tableView(_ tableView: UITableView, dropSessionDidExit session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidExit: session)
-    }
-
-    public func tableView(_ tableView: UITableView, dropSessionDidEnd session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidEnd: session)
+        (originalDelegate as? UITableViewDropDelegate)?.tableView(tableView, performDropWith: coordinator)
     }
 
     public func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        return (sectionProvider.sections[indexPath.section] as? TableDropHandler)?.dropSesion(previewParametersForItemAt: indexPath.item)
+        guard let section = sectionProvider.sections[indexPath.section] as? TableDropHandler else {
+            return (originalDelegate as? UITableViewDropDelegate)?.tableView?(tableView, dropPreviewParametersForRowAt: indexPath)
+        }
+        return section.dropSesion(previewParametersForItemAt: indexPath.item)
     }
 
 }
 
 public extension TableCoordinator {
 
+    /// A convenience initializer that allows creation without a provider
+    /// - Parameters:
+    ///   - collectionView: The collectionView associated with this coordinator
+    ///   - sections: The sections associated with this coordinator
     convenience init(tableView: UITableView, sections: Section...) {
         let provider = ComposedSectionProvider()
         self.init(tableView: tableView, sectionProvider: provider)

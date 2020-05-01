@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -13,7 +13,7 @@ let package = Package(
             targets: ["ComposedUI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/composed-swift/composed", from: "1.0.0"),
+        .package(name: "Composed", url: "https://github.com/composed-swift/composed", from: "1.0.0"),
     ],
     targets: [
         .target(

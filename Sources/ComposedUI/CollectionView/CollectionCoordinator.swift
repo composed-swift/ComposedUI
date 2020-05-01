@@ -1,41 +1,34 @@
 import UIKit
 import Composed
 
-public protocol CollectionCoordinatorDataSource: class {
-    func coordinator(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
-}
-
+/// Conform to this protocol to receive `CollectionCoordinator` events
 public protocol CollectionCoordinatorDelegate: class {
-    func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView)
-    func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
-    func coordinatorDidUpdate(_ coordinator: CollectionCoordinator)
 
-    func coordinator(_ coordinator: CollectionCoordinator, canHandleDropSession session: UIDropSession) -> Bool
-    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnter: UIDropSession)
-    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidExit session: UIDropSession)
-    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnd session: UIDropSession)
-    func coordinator(_ coordinator: CollectionCoordinator, performDropWith dropCoordinator: UICollectionViewDropCoordinator)
+    /// Return a background view to be shown in the `UICollectionView` when its content is empty. Defaults to nil
+    /// - Parameters:
+    ///   - coordinator: The coordinator that manages this collection view
+    ///   - collectionView: The collection view that will show this background view
+    func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView?
+
+    /// Called whenever the coordinator's content updates
+    /// - Parameter coordinator: The coordinator that manages the updates
+    func coordinatorDidUpdate(_ coordinator: CollectionCoordinator)
 }
 
 public extension CollectionCoordinatorDelegate {
-    func coordinator(_ coordinator: CollectionCoordinator, didScroll collectionView: UICollectionView) { }
     func coordinator(_ coordinator: CollectionCoordinator, backgroundViewInCollectionView collectionView: UICollectionView) -> UIView? { return nil }
     func coordinatorDidUpdate(_ coordinator: CollectionCoordinator) { }
-
-    func coordinator(_ coordinator: CollectionCoordinator, canHandleDropSession session: UIDropSession) -> Bool { return false }
-    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnter: UIDropSession) { }
-    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidExit session: UIDropSession) { }
-    func coordinator(_ coordinator: CollectionCoordinator, dropSessionDidEnd session: UIDropSession) { }
-    func coordinator(_ coordinator: CollectionCoordinator, performDropWith dropCoordinator: UICollectionViewDropCoordinator) { }
 }
 
+/// The coordinator that provides the 'glue' between a section provider and a `UICollectionView`
 open class CollectionCoordinator: NSObject {
 
-    public weak var dataSource: CollectionCoordinatorDataSource?
+    /// Get/set the delegate for this coordinator
     public weak var delegate: CollectionCoordinatorDelegate? {
         didSet { collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView) }
     }
 
+    /// Returns the root section provider associated with this coordinator
     public var sectionProvider: SectionProvider {
         return mapper.provider
     }
@@ -55,12 +48,17 @@ open class CollectionCoordinator: NSObject {
     private let collectionView: UICollectionView
 
     private weak var originalDelegate: UICollectionViewDelegate?
+    private var dataSourceObserver: NSKeyValueObservation?
+
+    private weak var originalDataSource: UICollectionViewDataSource?
     private var delegateObserver: NSKeyValueObservation?
 
-    private var cachedProviders: [CollectionSectionElementsProvider] = []
+    private var cachedProviders: [CollectionElementsProvider] = []
 
-    public private(set) var isEditing: Bool = false
-
+    /// Make a new coordinator with the specified collectionView and sectionProvider
+    /// - Parameters:
+    ///   - collectionView: The collectionView to associate with this coordinator
+    ///   - sectionProvider: The sectionProvider to associate with this coordinator
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
         mapper = SectionProviderMapping(provider: sectionProvider)
@@ -78,37 +76,50 @@ open class CollectionCoordinator: NSObject {
             collectionView.delegate = self
         }
 
+        dataSourceObserver = collectionView.observe(\.dataSource, options: [.initial, .new]) { [weak self] collectionView, _ in
+            guard collectionView.dataSource !== self else { return }
+            self?.originalDataSource = collectionView.dataSource
+            collectionView.dataSource = self
+        }
+
         collectionView.register(PlaceholderSupplementaryView.self,
                                 forSupplementaryViewOfKind: PlaceholderSupplementaryView.kind,
                                 withReuseIdentifier: PlaceholderSupplementaryView.reuseIdentifier)
     }
 
+    /// Replaces the current sectionProvider with the specified provider
+    /// - Parameter sectionProvider: The new sectionProvider
     open func replace(sectionProvider: SectionProvider) {
         mapper = SectionProviderMapping(provider: sectionProvider)
         prepareSections()
         collectionView.reloadData()
     }
 
+    /// Enables / disables editing on this coordinator
+    /// - Parameters:
+    ///   - editing: True if editing should be enabled, false otherwise
+    ///   - animated: If true, the change should be animated
     public func setEditing(_ editing: Bool, animated: Bool) {
-        isEditing = editing
         collectionView.indexPathsForSelectedItems?.forEach { collectionView.deselectItem(at: $0, animated: animated) }
 
         for (index, section) in sectionProvider.sections.enumerated() {
             guard let handler = section as? EditingHandler else { continue }
-            handler.setEditing(editing)
+            handler.didSetEditing(editing)
 
             for item in 0..<section.numberOfElements {
                 let indexPath = IndexPath(item: item, section: index)
 
                 if let handler = handler as? CollectionEditingHandler, let cell = collectionView.cellForItem(at: indexPath) {
-                    handler.setEditing(editing, at: item, cell: cell, animated: animated)
+                    handler.didSetEditing(editing, at: item, cell: cell, animated: animated)
                 } else {
-                    handler.setEditing(editing, at: item)
+                    handler.didSetEditing(editing, at: item)
                 }
             }
         }
     }
 
+    /// Invalidates the current layout with the specified context
+    /// - Parameter context: The invalidation context to apply during the invalidate (optional)
     open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext? = nil) {
         guard collectionView.window != nil else { return }
 
@@ -119,6 +130,7 @@ open class CollectionCoordinator: NSObject {
         }
     }
 
+    // Prepares and caches the section to improve performance
     private func prepareSections() {
         cachedProviders.removeAll()
         mapper.delegate = self
@@ -173,33 +185,19 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         sectionRemoves.removeAll()
     }
 
-    public func mappingDidReload(_ mapping: SectionProviderMapping) {
+    public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         reset()
         prepareSections()
         collectionView.reloadData()
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) {
-        assert(Thread.isMainThread)
-        reset()
-        defersUpdate = true
-
-        collectionView.performBatchUpdates({
-            prepareSections()
-            performBatchUpdates()
-        }) { [weak self] _ in
-            self?.reset()
-            self?.defersUpdate = false
-        }
-    }
-
-    public func mappingWillUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true
     }
 
-    public func mappingDidUpdate(_ mapping: SectionProviderMapping) {
+    public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
         collectionView.performBatchUpdates({
             if defersUpdate {
@@ -227,7 +225,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.reloadSections(sections)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -238,7 +236,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.insertSections(sections)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -249,7 +247,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.deleteSections(sections)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
@@ -259,7 +257,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.insertItems(at: indexPaths)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
@@ -269,7 +267,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             self.collectionView.deleteItems(at: indexPaths)
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -279,8 +277,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             
             var indexPathsToReload: [IndexPath] = []
             for indexPath in indexPaths {
-                guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateHandling,
-                    !section.allowsReload(forItemAt: indexPath.item),
+                guard let section = self.sectionProvider.sections[indexPath.section] as? CollectionUpdateHandler,
+                    !section.prefersReload(forElementAt: indexPath.item),
                     let cell = self.collectionView.cellForItem(at: indexPath) else {
                         indexPathsToReload.append(indexPath)
                         continue
@@ -298,7 +296,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             CATransaction.commit()
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
@@ -308,7 +306,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             moves.forEach { self.collectionView.moveItem(at: $0.0, to: $0.1) }
         }
         if defersUpdate { return }
-        mappingDidUpdate(mapping)
+        mappingDidEndUpdating(mapping)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {
@@ -327,11 +325,6 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 
-    public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool {
-        assert(Thread.isMainThread)
-        return collectionView.isEditing
-    }
-
 }
 
 // MARK: - UICollectionViewDataSource
@@ -343,47 +336,83 @@ extension CollectionCoordinator: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionSection(for: section)?.numberOfElements ?? 0
+        return elementsProvider(for: section).numberOfElements
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
+        }
+
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        elements.cell.willAppear(cell, indexPath.item, section)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
+        }
+
+        guard indexPath.section > sectionProvider.numberOfSections else { return }
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+        elements.cell.didDisappear(cell, indexPath.item, section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         assert(Thread.isMainThread)
-        guard let section = collectionSection(for: indexPath.section) else {
-            fatalError("No UI configuration available for section \(indexPath.section)")
-        }
-
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: section.cell.reuseIdentifier, for: indexPath)
+        let elements = elementsProvider(for: indexPath.section)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: elements.cell.reuseIdentifier, for: indexPath)
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? CollectionEditingHandler {
-                handler.setEditing(isEditing, at: indexPath.item, cell: cell, animated: false)
+                handler.didSetEditing(collectionView.isEditing, at: indexPath.item, cell: cell, animated: false)
             } else {
-                handler.setEditing(isEditing, at: indexPath.item)
+                handler.didSetEditing(collectionView.isEditing, at: indexPath.item)
             }
         }
 
-        section.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
+        elements.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
         return cell
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, willDisplaySupplementaryView: view, forElementKind: elementKind, at: indexPath)
+        }
+
+        guard indexPath.section > sectionProvider.numberOfSections else { return }
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+
+        if let header = elements.header, header.kind.rawValue == elementKind {
+            elements.header?.willAppear?(view, indexPath.section, section)
+        } else if let footer = elements.footer, footer.kind.rawValue == elementKind {
+            elements.footer?.willAppear?(view, indexPath.section, section)
+        } else {
+            // the original delegate can handle this
+        }
     }
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         assert(Thread.isMainThread)
-        guard let provider = collectionSection(for: indexPath.section) else {
-            fatalError("No UI configuration available for section \(indexPath.section)")
-        }
-
+        let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
 
-        if let header = provider.header, header.kind.rawValue == kind {
+        if let header = elements.header, header.kind.rawValue == kind {
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: header.reuseIdentifier, for: indexPath)
             header.configure(view, indexPath.section, section)
             return view
-        } else if let footer = provider.footer, footer.kind.rawValue == kind {
+        } else if let footer = elements.footer, footer.kind.rawValue == kind {
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footer.reuseIdentifier, for: indexPath)
             footer.configure(view, indexPath.section, section)
             return view
         } else {
-            guard let view = dataSource?.coordinator(collectionView: collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
+            guard let view = originalDataSource?.collectionView?(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
                 // when in production its better to return 'something' to prevent crashing
                 assertionFailure("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath). Did you forget to register your header or footer?")
                 return collectionView.dequeue(supplementary: PlaceholderSupplementaryView.self, ofKind: PlaceholderSupplementaryView.kind, for: indexPath)
@@ -393,8 +422,29 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         }
     }
 
-    private func collectionSection(for section: Int) -> CollectionSectionElementsProvider? {
-        guard cachedProviders.indices.contains(section) else { return nil }
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        assert(Thread.isMainThread)
+        defer {
+            originalDelegate?.collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
+        }
+
+        guard indexPath.section > sectionProvider.numberOfSections else { return }
+        let elements = elementsProvider(for: indexPath.section)
+        let section = mapper.provider.sections[indexPath.section]
+
+        if let header = elements.header, header.kind.rawValue == elementKind {
+            elements.header?.didDisappear?(view, indexPath.section, section)
+        } else if let footer = elements.footer, footer.kind.rawValue == elementKind {
+            elements.footer?.didDisappear?(view, indexPath.section, section)
+        } else {
+            // the original delegate can handle this
+        }
+    }
+
+    private func elementsProvider(for section: Int) -> CollectionElementsProvider {
+        guard cachedProviders.indices.contains(section) else {
+            fatalError("No UI configuration available for section \(section)")
+        }
         return cachedProviders[section]
     }
     
@@ -408,9 +458,9 @@ extension CollectionCoordinator {
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
-        let preview = provider.contextMenu(previewForItemAt: indexPath.item, cell: cell)
+        let preview = provider.contextMenu(previewForElementAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
-            return provider.contextMenu(forItemAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
+            return provider.contextMenu(forElementAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
         }
     }
 
@@ -418,21 +468,21 @@ extension CollectionCoordinator {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForHighlightingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForHighlightingElementAt: indexPath.item, cell: cell)
     }
 
     public func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
-        return provider.contextMenu(previewForDismissingItemAt: indexPath.item, cell: cell)
+        return provider.contextMenu(previewForDismissingElementAt: indexPath.item, cell: cell)
     }
 
     public func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
         guard let cell = collectionView.cellForItem(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return }
-        provider.contextMenu(willPerformPreviewActionForItemAt: indexPath.item, cell: cell, animator: animator)
+        provider.contextMenu(willPerformPreviewActionForElementAt: indexPath.item, cell: cell, animator: animator)
     }
 
 }
@@ -472,7 +522,7 @@ extension CollectionCoordinator: UICollectionViewDelegate {
     }
 
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        delegate?.coordinator(self, didScroll: collectionView)
+        originalDelegate?.scrollViewDidScroll?(scrollView)
     }
 
     open func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
@@ -510,28 +560,33 @@ extension CollectionCoordinator: UICollectionViewDelegate {
 
 extension CollectionCoordinator: UICollectionViewDropDelegate {
 
-    public func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-        return delegate?.coordinator(self, canHandleDropSession: session) ?? false
-    }
+    public func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        if destinationIndexPath == nil {
+            return (originalDelegate as? UICollectionViewDropDelegate)?
+                .collectionView?(collectionView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
+                ?? UICollectionViewDropProposal(operation: .forbidden)
+        }
 
-    public func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidEnter: session)
+        guard let indexPath = destinationIndexPath, let section = sectionProvider.sections[indexPath.section] as? CollectionDropHandler else {
+            return (originalDelegate as? UICollectionViewDropDelegate)?
+                .collectionView?(collectionView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
+                ?? UICollectionViewDropProposal(operation: .forbidden)
+        }
+
+        return section.dropSessionDidUpdate(session, destinationIndex: indexPath.item)
     }
 
     public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        delegate?.coordinator(self, performDropWith: coordinator)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidExit: session)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
-        delegate?.coordinator(self, dropSessionDidEnd: session)
+        (originalDelegate as? UICollectionViewDropDelegate)?.collectionView(collectionView, performDropWith: coordinator)
     }
 
     public func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        return (sectionProvider.sections[indexPath.section] as? CollectionDropHandler)?.dropSesion(previewParametersForItemAt: indexPath.item)
+        guard let section = sectionProvider.sections[indexPath.section] as? CollectionDropHandler else {
+            return (originalDelegate as? UICollectionViewDropDelegate)?
+                .collectionView?(collectionView, dropPreviewParametersForItemAt: indexPath)
+        }
+
+        return section.dropSesion(previewParametersForElementAt: indexPath.item)
     }
 
 }
@@ -550,6 +605,10 @@ private final class PlaceholderSupplementaryView: UICollectionReusableView {
 
 public extension CollectionCoordinator {
 
+    /// A convenience initializer that allows creation without a provider
+    /// - Parameters:
+    ///   - collectionView: The collectionView associated with this coordinator
+    ///   - sections: The sections associated with this coordinator
     convenience init(collectionView: UICollectionView, sections: Section...) {
         let provider = ComposedSectionProvider()
         self.init(collectionView: collectionView, sectionProvider: provider)

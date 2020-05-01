@@ -1,23 +1,41 @@
 import UIKit
 import Composed
 
+/// A table view can provide headers and footers via custom views or a simple string, this provides a solution for specifying which option to use
 public enum TableHeaderFooter<View> where View: UITableViewHeaderFooterView {
+    /// A title will be usef for this element
     case title(String)
+    /// A custom view will be used for this element
     case element(TableElement<View>)
 }
 
+/// Defines a configuration for a section in a `UITableView`.
+/// The section must contain a cell element, but can also optionally include a header and/or footer element.
 open class TableSection: TableElementsProvider {
 
+    /// The cell configuration element
     public let cell: TableElement<UITableViewCell>
+
+    /// The header configuration element
     public let header: TableElement<UITableViewHeaderFooterView>?
+
+    /// The footer configuration element
     public let footer: TableElement<UITableViewHeaderFooterView>?
 
+    /// The number of elements in this section
     open var numberOfElements: Int {
         return section?.numberOfElements ?? 0
     }
 
+    // The underlying section associated with this section
     private weak var section: Section?
 
+    /// Makes a new configuration with the specified cell, header and/or footer elements
+    /// - Parameters:
+    ///   - section: The section this will be associated with
+    ///   - cell: The cell configuration element
+    ///   - header: The header configuration element
+    ///   - footer: The footer configuration element
     public init<Section, Cell, Header, Footer>(section: Section,
                                                cell: TableElement<Cell>,
                                                header: TableHeaderFooter<Header>? = nil,

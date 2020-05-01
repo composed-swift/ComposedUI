@@ -61,7 +61,7 @@ open class StackCoordinator: NSObject {
 
 extension StackCoordinator: SectionProviderMappingDelegate {
 
-    public func mappingDidReload(_ mapping: SectionProviderMapping) {
+    public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         reloadData()
     }
 
@@ -127,14 +127,12 @@ extension StackCoordinator: SectionProviderMappingDelegate {
         indexPaths.forEach { composedView.sections[$0.section].deleteItem(at: $0.item) }
     }
 
-    public func mappingWillUpdate(_ mapping: SectionProviderMapping) { }
-    public func mappingDidUpdate(_ mapping: SectionProviderMapping) { }
-    public func mapping(_ mapping: SectionProviderMapping, performBatchUpdates: () -> Void) { }
+    public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) { }
+    public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) { }
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) { }
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) { }
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] { return [] }
     public func mapping(_ mapping: SectionProviderMapping, select indexPath: IndexPath) { }
     public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) { }
-    public func mapping(_ mapping: SectionProviderMapping, isEditingIn section: Int) -> Bool { return false }
 
 }

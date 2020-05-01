@@ -1,6 +1,6 @@
 import UIKit
 
-extension IndexPath {
+internal extension IndexPath {
     init?(string: String) {
         let components = string.components(separatedBy: ".").compactMap { Int($0) }
         guard components.count == 2 else { return nil }
