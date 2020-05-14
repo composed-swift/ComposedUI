@@ -2,7 +2,7 @@ import UIKit
 import Composed
 
 /// Provides edit handling for `UICollectionView`'s
-public protocol CollectionEditingHandler: EditingHandler {
+public protocol CollectionEditingHandler: EditingHandler, CollectionSectionProvider {
 
     /// When editing is toggled, this method will be called to notify the section
     /// - Parameters:

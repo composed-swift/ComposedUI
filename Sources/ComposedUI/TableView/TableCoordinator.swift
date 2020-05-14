@@ -48,7 +48,10 @@ open class TableCoordinator: NSObject {
     private let tableView: UITableView
 
     private weak var originalDelegate: UITableViewDelegate?
-    private var observer: NSKeyValueObservation?
+    private var delegateObserver: NSKeyValueObservation?
+
+    private weak var originalDataSource: UITableViewDataSource?
+    private var dataSourceObserver: NSKeyValueObservation?
 
     private var cachedProviders: [TableElementsProvider] = []
 
@@ -65,10 +68,16 @@ open class TableCoordinator: NSObject {
         tableView.dataSource = self
         prepareSections()
 
-        observer = tableView.observe(\.delegate, options: [.initial, .new]) { [weak self] tableView, _ in
+        delegateObserver = tableView.observe(\.delegate, options: [.initial, .new]) { [weak self] tableView, _ in
             guard tableView.delegate !== self else { return }
             self?.originalDelegate = tableView.delegate
             tableView.delegate = self
+        }
+
+        dataSourceObserver = tableView.observe(\.dataSource, options: [.initial, .new]) { [weak self] tableView, _ in
+            guard tableView.dataSource !== self else { return }
+            self?.originalDataSource = tableView.dataSource
+            tableView.dataSource = self
         }
     }
 
@@ -290,6 +299,10 @@ extension TableCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, deselect indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
+
+    public func mapping(_ mapping: SectionProviderMapping, move sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+    }
     
 }
 
@@ -309,7 +322,9 @@ extension TableCoordinator: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = elementsProvider(for: section).header else { return nil }
+        guard let header = elementsProvider(for: section).header else {
+            return originalDelegate?.tableView?(tableView, viewForHeaderInSection: section) ?? nil
+        }
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: header.reuseIdentifier) else { return nil }
         header.configure(view, section, mapper.provider.sections[section])
         return view
@@ -338,7 +353,10 @@ extension TableCoordinator: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let footer = elementsProvider(for: section).footer else { return nil }
+        guard let footer = elementsProvider(for: section).footer else {
+            return originalDelegate?.tableView?(tableView, viewForFooterInSection: section) ?? nil
+        }
+
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footer.reuseIdentifier) else { return nil }
         footer.configure(view, section, mapper.provider.sections[section])
         return view
@@ -396,6 +414,7 @@ extension TableCoordinator: UITableViewDataSource {
             originalDelegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath)
         }
 
+        guard indexPath.section > sectionProvider.numberOfSections else { return }
         let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
         elements.cell.didDisappear(cell, indexPath.item, section)
@@ -417,7 +436,10 @@ extension TableCoordinator {
 
     open func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let cell = tableView.cellForRow(at: indexPath),
-            let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
+            let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else {
+                return originalDelegate?.tableView?(tableView, contextMenuConfigurationForRowAt: indexPath, point: point) ?? nil
+        }
+
         let preview = provider.contextMenu(previewForElementAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
             return provider.contextMenu(forElementAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
@@ -425,23 +447,34 @@ extension TableCoordinator {
     }
 
     open func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
+        guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else {
+            return originalDelegate?.tableView?(tableView, previewForHighlightingContextMenuWithConfiguration: configuration) ?? nil
+        }
+
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
         return provider.contextMenu(previewForHighlightingElementAt: indexPath.item, cell: cell)
     }
 
     open func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return nil }
+        guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else {
+            return originalDelegate?.tableView?(tableView, previewForDismissingContextMenuWithConfiguration: configuration) ?? nil
+        }
+
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return nil }
         return provider.contextMenu(previewForDismissingElementAt: indexPath.item, cell: cell)
     }
 
     open func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        defer {
+            originalDelegate?.tableView?(tableView, willPerformPreviewActionForMenuWith: configuration, animator: animator)
+        }
+
         guard let identifier = configuration.identifier as? String, let indexPath = IndexPath(string: identifier) else { return }
         guard let cell = tableView.cellForRow(at: indexPath),
             let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else { return }
+
         provider.contextMenu(willPerformPreviewActionForElementAt: indexPath.item, cell: cell, animator: animator)
     }
 
@@ -452,16 +485,24 @@ extension TableCoordinator: UITableViewDelegate {
     // MARK: - Editing
 
     open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return false }
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else {
+            return originalDataSource?.tableView?(tableView, canEditRowAt: indexPath) ?? false
+        }
         return handler.allowsEditing(at: indexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return .none }
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else {
+            return originalDelegate?.tableView?(tableView, editingStyleForRowAt: indexPath) ?? .none
+        }
         return handler.editingStyle(at: indexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        defer {
+            originalDataSource?.tableView?(tableView, commit: editingStyle, forRowAt: indexPath)
+        }
+
         guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return }
         handler.commitEditing(at: indexPath.item, editingStyle: editingStyle)
     }
@@ -497,25 +538,42 @@ extension TableCoordinator: UITableViewDelegate {
     // MARK: - Moving
 
     open func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else { return true }
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else {
+            return originalDelegate?.tableView?(tableView, shouldIndentWhileEditingRowAt: indexPath) ?? true
+        }
+
         return handler.editingStyle(at: indexPath.item) == .none ? false : handler.shouldIndentWhileEditing(at: indexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableMovingHandler else { return false }
-        return handler.allowsMove(at: indexPath.item)
+        guard let handler = mapper.provider.sections[indexPath.section] as? MoveHandler else {
+            return originalDataSource?.tableView?(tableView, canMoveRowAt: indexPath) ?? false
+        }
+
+        return handler.canMove(at: indexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        defer {
+            originalDataSource?.tableView?(tableView, moveRowAt: sourceIndexPath, to: destinationIndexPath)
+        }
+
         guard sourceIndexPath.section == destinationIndexPath.section,
-            let handler = mapper.provider.sections[sourceIndexPath.section] as? TableMovingHandler else { return }
+            let handler = mapper.provider.sections[sourceIndexPath.section] as? MoveHandler else {
+                return
+        }
+
         handler.didMove(from: sourceIndexPath.item, to: destinationIndexPath.item)
     }
 
     open func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-        guard sourceIndexPath.section == proposedDestinationIndexPath.section,
-            let handler = mapper.provider.sections[sourceIndexPath.section] as? TableMovingHandler else { return proposedDestinationIndexPath }
-        return IndexPath(item: handler.targetIndex(forMoveFrom: sourceIndexPath.item, to: proposedDestinationIndexPath.item), section: sourceIndexPath.section)
+        guard let handler = mapper.provider.sections[sourceIndexPath.section] as? MoveHandler else {
+            return originalDelegate?.tableView?(tableView, targetIndexPathForMoveFromRowAt: sourceIndexPath, toProposedIndexPath: proposedDestinationIndexPath)
+                ?? proposedDestinationIndexPath
+        }
+
+        let index = handler.targetIndex(for: proposedDestinationIndexPath.item)
+        return IndexPath(item: index, section: proposedDestinationIndexPath.section)
     }
 
     // MARK: - Selection
@@ -524,7 +582,7 @@ extension TableCoordinator: UITableViewDelegate {
         if tableView.isEditing,
             let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler,
             !handler.allowsSelectionDuringEditing(at: indexPath.item) {
-            return false
+            return originalDelegate?.tableView?(tableView, shouldHighlightRowAt: indexPath) ?? false
         }
 
         guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return false }
@@ -532,7 +590,9 @@ extension TableCoordinator: UITableViewDelegate {
     }
 
     open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return nil }
+        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else {
+            return originalDelegate?.tableView?(tableView, willSelectRowAt: indexPath) ?? nil
+        }
         return handler.shouldSelect(at: indexPath.item) ? indexPath : nil
     }
 
@@ -563,7 +623,9 @@ extension TableCoordinator: UITableViewDelegate {
     }
 
     open func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
-        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else { return nil }
+        guard let handler = mapper.provider.sections[indexPath.section] as? SelectionHandler else {
+            return originalDelegate?.tableView?(tableView, willDeselectRowAt: indexPath) ?? nil
+        }
         return handler.shouldDeselect(at: indexPath.item) ? indexPath : nil
     }
 
@@ -583,12 +645,16 @@ extension TableCoordinator: UITableViewDelegate {
     // MARK: - Actions
 
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableActionsHandler else { return nil }
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableActionsHandler else {
+            return originalDelegate?.tableView?(tableView, leadingSwipeActionsConfigurationForRowAt: indexPath) ?? nil
+        }
         return handler.leadingSwipeActions(at: indexPath.item)
     }
 
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let handler = mapper.provider.sections[indexPath.section] as? TableActionsHandler else { return nil }
+        guard let handler = mapper.provider.sections[indexPath.section] as? TableActionsHandler else {
+            return originalDelegate?.tableView?(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath) ?? nil
+        }
         return handler.trailingSwipeActions(at: indexPath.item)
     }
 
