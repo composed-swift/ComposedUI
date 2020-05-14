@@ -60,11 +60,6 @@ open class CollectionCoordinator: NSObject {
     private var dropDelegateObserver: NSKeyValueObservation?
 
     private var cachedProviders: [CollectionElementsProvider] = []
-    private lazy var moveGesture: UILongPressGestureRecognizer = {
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleMove(gesture:)))
-        gesture.minimumPressDuration = 0.2
-        return gesture
-    }()
 
     /// Make a new coordinator with the specified collectionView and sectionProvider
     /// - Parameters:
@@ -73,7 +68,6 @@ open class CollectionCoordinator: NSObject {
     public init(collectionView: UICollectionView, sectionProvider: SectionProvider) {
         self.collectionView = collectionView
         mapper = SectionProviderMapping(provider: sectionProvider)
-        originalDelegate = collectionView.delegate
 
         super.init()
         prepareSections()
@@ -96,7 +90,7 @@ open class CollectionCoordinator: NSObject {
             collectionView.dragDelegate = self
         }
 
-        dropDelegateObserver = collectionView.observe(\.dropDelegate, options: [.new]) { [weak self] collectionView, _ in
+        dropDelegateObserver = collectionView.observe(\.dropDelegate, options: [.initial, .new]) { [weak self] collectionView, _ in
             guard collectionView.dropDelegate !== self else { return }
             self?.originalDropDelegate = collectionView.dropDelegate
             collectionView.dropDelegate = self
@@ -105,24 +99,6 @@ open class CollectionCoordinator: NSObject {
         collectionView.register(PlaceholderSupplementaryView.self,
                                 forSupplementaryViewOfKind: PlaceholderSupplementaryView.kind,
                                 withReuseIdentifier: PlaceholderSupplementaryView.reuseIdentifier)
-
-        collectionView.addGestureRecognizer(moveGesture)
-    }
-
-    @objc private func handleMove(gesture: UILongPressGestureRecognizer) {
-        let location = gesture.location(in: gesture.view)
-
-        switch gesture.state {
-        case .began:
-            guard let indexPath = collectionView.indexPathForItem(at: location) else { return }
-            collectionView.beginInteractiveMovementForItem(at: indexPath)
-        case .changed:
-            collectionView.updateInteractiveMovementTargetPosition(location)
-        case .ended:
-            collectionView.endInteractiveMovement()
-        default:
-            collectionView.cancelInteractiveMovement()
-        }
     }
 
     /// Replaces the current sectionProvider with the specified provider
@@ -205,8 +181,8 @@ open class CollectionCoordinator: NSObject {
 
         collectionView.allowsMultipleSelection = true
         collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView)
+        collectionView.dragInteractionEnabled = sectionProvider.sections.contains { $0 is MoveHandler || $0 is CollectionDragHandler || $0 is CollectionDropHandler }
         delegate?.coordinatorDidUpdate(self)
-        moveGesture.isEnabled = sectionProvider.sections.contains { $0 is MoveHandler }
     }
 
 }
@@ -595,38 +571,6 @@ extension CollectionCoordinator: UICollectionViewDelegate {
         }
     }
 
-    public func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-        guard let handler = mapper.provider.sections[indexPath.section] as? MoveHandler else {
-            return originalDataSource?.collectionView?(collectionView, canMoveItemAt: indexPath)
-                ?? false
-        }
-
-        return handler.canMove(at: indexPath.item)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        defer {
-            originalDataSource?.collectionView?(collectionView, moveItemAt: sourceIndexPath, to: destinationIndexPath)
-        }
-
-        guard sourceIndexPath.section == destinationIndexPath.section,
-            let handler = mapper.provider.sections[sourceIndexPath.section] as? MoveHandler else {
-                return
-        }
-
-        return handler.didMove(from: sourceIndexPath.item, to: destinationIndexPath.item)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
-        guard let handler = mapper.provider.sections[proposedIndexPath.section] as? MoveHandler else {
-            return originalDelegate?.collectionView?(collectionView, targetIndexPathForMoveFromItemAt: originalIndexPath, toProposedIndexPath: proposedIndexPath)
-                ?? proposedIndexPath
-        }
-
-        let index = handler.targetIndex(for: proposedIndexPath.item)
-        return IndexPath(item: index, section: originalIndexPath.section)
-    }
-
     // MARK: - Forwarding
 
     open override func responds(to aSelector: Selector!) -> Bool {
@@ -646,12 +590,32 @@ extension CollectionCoordinator: UICollectionViewDelegate {
 
 extension CollectionCoordinator: UICollectionViewDragDelegate {
 
+    public func collectionView(_ collectionView: UICollectionView, dragSessionWillBegin session: UIDragSession) {
+        sectionProvider.sections
+            .compactMap { $0 as? CollectionDragHandler }
+            .forEach { $0.dragSessionWillBegin(session) }
+
+        originalDragDelegate?.collectionView?(collectionView, dragSessionWillBegin: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        sectionProvider.sections
+            .compactMap { $0 as? CollectionDragHandler }
+            .forEach { $0.dragSessionDidEnd(session) }
+
+        originalDragDelegate?.collectionView?(collectionView, dragSessionDidEnd: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dragSessionIsRestrictedToDraggingApplication session: UIDragSession) -> Bool {
+        return originalDragDelegate?.collectionView?(collectionView, dragSessionIsRestrictedToDraggingApplication: session) ?? false
+    }
+
     public func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         guard let provider = sectionProvider.sections[indexPath.section] as? CollectionDragHandler else {
             return originalDragDelegate?.collectionView(collectionView, itemsForBeginning: session, at: indexPath) ?? []
         }
 
-        return provider.dragSession(session, dragItemForBeginning: indexPath.item)
+        return provider.dragSession(session, dragItemsForBeginning: indexPath.item)
     }
 
     public func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
@@ -659,11 +623,12 @@ extension CollectionCoordinator: UICollectionViewDragDelegate {
             return originalDragDelegate?.collectionView(collectionView, itemsForBeginning: session, at: indexPath) ?? []
         }
 
-        return provider.dragSession(session, dragItemForAdding: indexPath.item)
+        return provider.dragSession(session, dragItemsForAdding: indexPath.item)
     }
 
     public func collectionView(_ collectionView: UICollectionView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
-        return sectionProvider.sections.contains { $0 is MoveHandler }
+        let sections = sectionProvider.sections.compactMap { $0 as? MoveHandler }
+        return originalDragDelegate?.collectionView?(collectionView, dragSessionAllowsMoveOperation: session) ?? sections.contains { $0.allowsReorder }
     }
 
 }
@@ -673,18 +638,62 @@ extension CollectionCoordinator: UICollectionViewDragDelegate {
 extension CollectionCoordinator: UICollectionViewDropDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        if collectionView.hasActiveDrag { return true }
         return originalDropDelegate?.collectionView?(collectionView, canHandle: session) ?? false
     }
 
+    public func collectionView(_ collectionView: UICollectionView, dropSessionDidEnter session: UIDropSession) {
+        if !collectionView.hasActiveDrag {
+            sectionProvider.sections
+                .compactMap { $0 as? CollectionDropHandler }
+                .forEach { $0.dropSessionWillBegin(session) }
+        }
+
+        originalDropDelegate?.collectionView?(collectionView, dropSessionDidEnter: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dropSessionDidExit session: UIDropSession) {
+        originalDropDelegate?.collectionView?(collectionView, dropSessionDidExit: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
+        sectionProvider.sections
+            .compactMap { $0 as? CollectionDropHandler }
+            .forEach { $0.dropSessionDidEnd(session) }
+
+        originalDropDelegate?.collectionView?(collectionView, dropSessionDidEnd: session)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        guard let section = sectionProvider.sections[indexPath.section] as? CollectionDragHandler,
+            let cell = collectionView.cellForItem(at: indexPath) else {
+                return originalDragDelegate?.collectionView?(collectionView, dragPreviewParametersForItemAt: indexPath)
+        }
+
+        return section.dragSession(previewParametersForElementAt: indexPath.item, cell: cell)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        guard let section = sectionProvider.sections[indexPath.section] as? CollectionDropHandler,
+            let cell = collectionView.cellForItem(at: indexPath) else {
+            return originalDropDelegate?
+                .collectionView?(collectionView, dropPreviewParametersForItemAt: indexPath)
+        }
+
+        return section.dropSesion(previewParametersForElementAt: indexPath.item, cell: cell)
+    }
+
     public func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        if collectionView.hasActiveDrag {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+
         if destinationIndexPath == nil {
-            return (originalDelegate as? UICollectionViewDropDelegate)?
-                .collectionView?(collectionView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
-                ?? UICollectionViewDropProposal(operation: .forbidden)
+            return originalDropDelegate?.collectionView?(collectionView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath) ?? UICollectionViewDropProposal(operation: .forbidden)
         }
 
         guard let indexPath = destinationIndexPath, let section = sectionProvider.sections[indexPath.section] as? CollectionDropHandler else {
-            return (originalDelegate as? UICollectionViewDropDelegate)?
+            return originalDropDelegate?
                 .collectionView?(collectionView, dropSessionDidUpdate: session, withDestinationIndexPath: destinationIndexPath)
                 ?? UICollectionViewDropProposal(operation: .forbidden)
         }
@@ -694,31 +703,29 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         defer {
-            (originalDelegate as? UICollectionViewDropDelegate)?
-                .collectionView(collectionView, performDropWith: coordinator)
+            originalDropDelegate?.collectionView(collectionView, performDropWith: coordinator)
         }
 
         guard coordinator.proposal.operation == .move,
-            let destination = coordinator.destinationIndexPath,
-            let section = sectionProvider.sections[destination.section] as? MoveHandler else {
+            let destinationIndexPath = coordinator.destinationIndexPath,
+            let section = sectionProvider.sections[destinationIndexPath.section] as? MoveHandler else {
                 return
         }
 
+        let items = coordinator.items.lazy
+            .filter { $0.sourceIndexPath != nil }
+            .filter { $0.sourceIndexPath?.section == destinationIndexPath.section }
+            .compactMap { ($0, $0.sourceIndexPath!) }
+
         collectionView.performBatchUpdates({
-            coordinator.items.forEach {
-                guard let source = $0.sourceIndexPath else { return }
-                section.didMove(from: source.item, to: destination.item)
+            let indexes = IndexSet(items.compactMap { $0.1.item })
+            section.didMove(sourceIndexes: indexes, to: destinationIndexPath.item)
+
+            items.forEach {
+                collectionView.moveItem(at: $0.1, to: destinationIndexPath)
+                coordinator.drop($0.0.dragItem, toItemAt: destinationIndexPath)
             }
         }, completion: nil)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        guard let section = sectionProvider.sections[indexPath.section] as? CollectionDropHandler else {
-            return (originalDelegate as? UICollectionViewDropDelegate)?
-                .collectionView?(collectionView, dropPreviewParametersForItemAt: indexPath)
-        }
-
-        return section.dropSesion(previewParametersForElementAt: indexPath.item)
     }
 
 }

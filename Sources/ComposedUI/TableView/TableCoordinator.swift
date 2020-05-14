@@ -545,14 +545,6 @@ extension TableCoordinator: UITableViewDelegate {
         return handler.editingStyle(at: indexPath.item) == .none ? false : handler.shouldIndentWhileEditing(at: indexPath.item)
     }
 
-    open func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        guard let handler = mapper.provider.sections[indexPath.section] as? MoveHandler else {
-            return originalDataSource?.tableView?(tableView, canMoveRowAt: indexPath) ?? false
-        }
-
-        return handler.canMove(at: indexPath.item)
-    }
-
     open func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         defer {
             originalDataSource?.tableView?(tableView, moveRowAt: sourceIndexPath, to: destinationIndexPath)
@@ -563,17 +555,7 @@ extension TableCoordinator: UITableViewDelegate {
                 return
         }
 
-        handler.didMove(from: sourceIndexPath.item, to: destinationIndexPath.item)
-    }
-
-    open func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-        guard let handler = mapper.provider.sections[sourceIndexPath.section] as? MoveHandler else {
-            return originalDelegate?.tableView?(tableView, targetIndexPathForMoveFromRowAt: sourceIndexPath, toProposedIndexPath: proposedDestinationIndexPath)
-                ?? proposedDestinationIndexPath
-        }
-
-        let index = handler.targetIndex(for: proposedDestinationIndexPath.item)
-        return IndexPath(item: index, section: proposedDestinationIndexPath.section)
+        handler.didMove(sourceIndexes: IndexSet(integer: sourceIndexPath.item), to: destinationIndexPath.item)
     }
 
     // MARK: - Selection
