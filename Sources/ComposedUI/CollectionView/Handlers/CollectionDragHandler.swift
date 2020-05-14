@@ -25,5 +25,6 @@ public extension CollectionDragHandler {
     func dragSession(_ session: UIDragSession, dragItemsForAdding index: Int) -> [UIDragItem] {
         return dragSession(session, dragItemsForBeginning: index)
     }
+    func dragSession(previewParametersForElementAt index: Int, cell: UICollectionViewCell) -> UIDragPreviewParameters? { return nil }
     
 }

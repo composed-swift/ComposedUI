@@ -615,6 +615,7 @@ extension CollectionCoordinator: UICollectionViewDragDelegate {
             return originalDragDelegate?.collectionView(collectionView, itemsForBeginning: session, at: indexPath) ?? []
         }
 
+        session.localContext = indexPath.section
         return provider.dragSession(session, dragItemsForBeginning: indexPath.item)
     }
 
@@ -684,7 +685,11 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-        if collectionView.hasActiveDrag {
+        if let section = session.localDragSession?.localContext as? Int, section != destinationIndexPath?.section {
+            return UICollectionViewDropProposal(operation: .forbidden)
+        }
+
+        if collectionView.hasActiveDrag || session.localDragSession != nil {
             return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
         }
 
@@ -706,26 +711,41 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
             originalDropDelegate?.collectionView(collectionView, performDropWith: coordinator)
         }
 
+        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
+
+//        switch coordinator.proposal.operation {
+//        case .copy:
+//            // import from another app
+//        case .move:
+//            if coordinator.items.contains(where: { $0.sourceIndexPath != nil }) {
+//                // re-ordering
+//            } else {
+//                // from somewhere else in this app
+//            }
+//        default:
+//            return
+//        }
+
         guard coordinator.proposal.operation == .move,
-            let destinationIndexPath = coordinator.destinationIndexPath,
             let section = sectionProvider.sections[destinationIndexPath.section] as? MoveHandler else {
                 return
         }
 
-        let items = coordinator.items.lazy
+        let item = coordinator.items.lazy
             .filter { $0.sourceIndexPath != nil }
             .filter { $0.sourceIndexPath?.section == destinationIndexPath.section }
             .compactMap { ($0, $0.sourceIndexPath!) }
+            .first!
 
         collectionView.performBatchUpdates({
-            let indexes = IndexSet(items.compactMap { $0.1.item })
+            let indexes = IndexSet(integer: item.1.item)
             section.didMove(sourceIndexes: indexes, to: destinationIndexPath.item)
 
-            items.forEach {
-                collectionView.moveItem(at: $0.1, to: destinationIndexPath)
-                coordinator.drop($0.0.dragItem, toItemAt: destinationIndexPath)
-            }
+            collectionView.deleteItems(at: [item.1])
+            collectionView.insertItems(at: [destinationIndexPath])
         }, completion: nil)
+
+        coordinator.drop(item.0.dragItem, toItemAt: destinationIndexPath)
     }
 
 }

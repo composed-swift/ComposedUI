@@ -28,4 +28,5 @@ public extension CollectionDropHandler {
     func dropSessionDidUpdate(_ session: UIDropSession, destinationIndex: Int?) -> UICollectionViewDropProposal {
         return UICollectionViewDropProposal(operation: .copy)
     }
+    func dropSesion(previewParametersForElementAt index: Int, cell: UICollectionViewCell) -> UIDragPreviewParameters? { return nil }
 }
