@@ -666,6 +666,9 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        // this seems to happen sometimes when iOS gets interrupted
+        guard !indexPath.isEmpty else { return nil }
+
         guard let section = sectionProvider.sections[indexPath.section] as? CollectionDragHandler,
             let cell = collectionView.cellForItem(at: indexPath) else {
                 return originalDragDelegate?.collectionView?(collectionView, dragPreviewParametersForItemAt: indexPath)
