@@ -144,6 +144,13 @@ open class CollectionCoordinator: NSObject {
         }
     }
 
+    open func invalidateVisibleCells() {
+        for (indexPath, cell) in zip(collectionView.indexPathsForVisibleItems, collectionView.visibleCells) {
+            let elements = elementsProvider(for: indexPath.section)
+            elements.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
+        }
+    }
+
     // Prepares and caches the section to improve performance
     private func prepareSections() {
         cachedProviders.removeAll()
