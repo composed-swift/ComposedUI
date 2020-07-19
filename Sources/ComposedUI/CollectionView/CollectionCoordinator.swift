@@ -73,25 +73,25 @@ open class CollectionCoordinator: NSObject {
         prepareSections()
 
         delegateObserver = collectionView.observe(\.delegate, options: [.initial, .new]) { [weak self] collectionView, _ in
-            guard collectionView.delegate !== self else { return }
+            guard !(collectionView.delegate is CollectionCoordinator) else { return }
             self?.originalDelegate = collectionView.delegate
             collectionView.delegate = self
         }
 
         dataSourceObserver = collectionView.observe(\.dataSource, options: [.initial, .new]) { [weak self] collectionView, _ in
-            guard collectionView.dataSource !== self else { return }
+            guard !(collectionView.dataSource is CollectionCoordinator) else { return }
             self?.originalDataSource = collectionView.dataSource
             collectionView.dataSource = self
         }
 
         dragDelegateObserver = collectionView.observe(\.dragDelegate, options: [.initial, .new]) { [weak self] collectionView, _ in
-            guard collectionView.dragDelegate !== self else { return }
+            guard !(collectionView.dragDelegate is CollectionCoordinator) else { return }
             self?.originalDragDelegate = collectionView.dragDelegate
             collectionView.dragDelegate = self
         }
 
         dropDelegateObserver = collectionView.observe(\.dropDelegate, options: [.initial, .new]) { [weak self] collectionView, _ in
-            guard collectionView.dropDelegate !== self else { return }
+            guard !(collectionView.dropDelegate is CollectionCoordinator) else { return }
             self?.originalDropDelegate = collectionView.dropDelegate
             collectionView.dropDelegate = self
         }
