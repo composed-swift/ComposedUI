@@ -611,6 +611,7 @@ public extension CollectionCoordinator {
     ///   - sections: The sections associated with this coordinator
     convenience init(collectionView: UICollectionView, sections: Section...) {
         let provider = ComposedSectionProvider()
+        sections.forEach(provider.append(_:))
         self.init(collectionView: collectionView, sectionProvider: provider)
     }
 
