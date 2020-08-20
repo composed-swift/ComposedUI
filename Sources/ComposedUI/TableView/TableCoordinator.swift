@@ -336,7 +336,7 @@ extension TableCoordinator: UITableViewDataSource {
             originalDelegate?.tableView?(tableView, didEndDisplayingHeaderView: view, forSection: section)
         }
 
-        guard section < sectionProvider.sections else { return }
+        guard section < sectionProvider.numberOfSections else { return }
         let elements = elementsProvider(for: section)
         let s = mapper.provider.sections[section]
         elements.header?.didDisappear(view, section, s)
