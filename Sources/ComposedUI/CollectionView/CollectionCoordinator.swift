@@ -136,21 +136,23 @@ open class CollectionCoordinator: NSObject {
         mapper.delegate = self
 
         for index in 0..<mapper.numberOfSections {
-            guard let section = (mapper.provider.sections[index] as? CollectionSectionProvider)?.section(with: collectionView.traitCollection) else {
-                fatalError("No provider available for section: \(index), or it does not conform to CollectionSectionProvider")
+            guard let collectionElementsProvider = (mapper.provider.sections[index] as? CollectionElementsProviderProvider)?.collectionElementsProvider(with: collectionView.traitCollection) else {
+                fatalError("No provider available for section: \(index), or it does not conform to CollectionElementsProviderProvider")
             }
 
-            switch section.cell.dequeueMethod {
-            case let .fromNib(type):
-                let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
-                collectionView.register(nib, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
-            case let .fromClass(type):
-                collectionView.register(type, forCellWithReuseIdentifier: section.cell.reuseIdentifier)
-            case .fromStoryboard:
-                break
+            for (dequeueMethod, reuseIdentifier) in collectionElementsProvider.uniqueCells {
+                switch dequeueMethod {
+                case let .fromNib(type):
+                    let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
+                    collectionView.register(nib, forCellWithReuseIdentifier: reuseIdentifier)
+                case let .fromClass(type):
+                    collectionView.register(type, forCellWithReuseIdentifier: reuseIdentifier)
+                case .fromStoryboard:
+                    break
+                }
             }
 
-            [section.header, section.footer].compactMap { $0 }.forEach {
+            [collectionElementsProvider.header, collectionElementsProvider.footer].compactMap { $0 }.forEach {
                 switch $0.dequeueMethod {
                 case let .fromNib(type):
                     let nib = UINib(nibName: String(describing: type), bundle: Bundle(for: type))
@@ -162,7 +164,7 @@ open class CollectionCoordinator: NSObject {
                 }
             }
 
-            cachedProviders.append(section)
+            cachedProviders.append(collectionElementsProvider)
         }
 
         collectionView.allowsMultipleSelection = true
@@ -284,7 +286,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
                         continue
                 }
 
-                self.cachedProviders[indexPath.section].cell.configure(cell, indexPath.item, self.mapper.provider.sections[indexPath.section])
+                self.cachedProviders[indexPath.section].cellForIndex(indexPath.item).configure(cell, indexPath.item, self.mapper.provider.sections[indexPath.section])
             }
 
             guard !indexPathsToReload.isEmpty else { return }
@@ -347,7 +349,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
 
         let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
-        elements.cell.willAppear(cell, indexPath.item, section)
+        elements.cellForIndex(indexPath.row).willAppear(cell, indexPath.item, section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -359,13 +361,13 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         guard indexPath.section > sectionProvider.numberOfSections else { return }
         let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
-        elements.cell.didDisappear(cell, indexPath.item, section)
+        elements.cellForIndex(indexPath.row).didDisappear(cell, indexPath.item, section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         assert(Thread.isMainThread)
         let elements = elementsProvider(for: indexPath.section)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: elements.cell.reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: elements.cellForIndex(indexPath.row).reuseIdentifier, for: indexPath)
 
         if let handler = sectionProvider.sections[indexPath.section] as? EditingHandler {
             if let handler = sectionProvider.sections[indexPath.section] as? CollectionEditingHandler {
@@ -375,7 +377,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             }
         }
 
-        elements.cell.configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
+        elements.cellForIndex(indexPath.row).configure(cell, indexPath.item, mapper.provider.sections[indexPath.section])
         return cell
     }
 

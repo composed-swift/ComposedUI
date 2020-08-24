@@ -8,6 +8,10 @@ open class CollectionSection: CollectionElementsProvider {
     /// The cell configuration element
     public let cell: CollectionCellElement<UICollectionViewCell>
 
+    public var uniqueCells: [(dequeueMethod: DequeueMethod<UICollectionViewCell>, resuseIdentifier: String)] {
+        [(cell.dequeueMethod, cell.reuseIdentifier)]
+    }
+
     /// The header configuration element
     public let header: CollectionSupplementaryElement<UICollectionReusableView>?
 
@@ -98,6 +102,10 @@ open class CollectionSection: CollectionElementsProvider {
             } else {
                 self.footer = nil
             }
+    }
+
+    public func cellForIndex(_ index: Int) -> CollectionCellElement<UICollectionViewCell> {
+        return cell
     }
 
 }
