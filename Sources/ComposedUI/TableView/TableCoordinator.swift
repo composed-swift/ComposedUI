@@ -538,6 +538,18 @@ extension TableCoordinator: UITableViewDelegate {
 
     // MARK: - Moving
 
+    public func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+        guard sourceIndexPath.section == proposedDestinationIndexPath.section else { return sourceIndexPath }
+        let item = (mapper.provider.sections[sourceIndexPath.section] as? MoveHandler)?
+            .targetIndex(sourceIndex: sourceIndexPath.item, proposedIndex: proposedDestinationIndexPath.item)
+            ?? proposedDestinationIndexPath.item
+        return IndexPath(item: item, section: sourceIndexPath.section)
+    }
+
+    public func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return (mapper.provider.sections[indexPath.section] as? MoveHandler)?.canMove(index: indexPath.item) ?? false
+    }
+
     open func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         guard let handler = mapper.provider.sections[indexPath.section] as? TableEditingHandler else {
             return originalDelegate?.tableView?(tableView, shouldIndentWhileEditingRowAt: indexPath) ?? true

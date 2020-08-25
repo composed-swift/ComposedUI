@@ -636,7 +636,7 @@ extension CollectionCoordinator: UICollectionViewDragDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
         let sections = sectionProvider.sections.compactMap { $0 as? MoveHandler }
-        return originalDragDelegate?.collectionView?(collectionView, dragSessionAllowsMoveOperation: session) ?? sections.contains { $0.allowsReorder }
+        return originalDragDelegate?.collectionView?(collectionView, dragSessionAllowsMoveOperation: session) ?? !sections.isEmpty
     }
 
 }
@@ -722,19 +722,6 @@ extension CollectionCoordinator: UICollectionViewDropDelegate {
         }
 
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
-
-//        switch coordinator.proposal.operation {
-//        case .copy:
-//            // import from another app
-//        case .move:
-//            if coordinator.items.contains(where: { $0.sourceIndexPath != nil }) {
-//                // re-ordering
-//            } else {
-//                // from somewhere else in this app
-//            }
-//        default:
-//            return
-//        }
 
         guard coordinator.proposal.operation == .move,
             let section = sectionProvider.sections[destinationIndexPath.section] as? MoveHandler else {
