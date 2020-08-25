@@ -382,7 +382,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             originalDelegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
         }
 
-        guard indexPath.section > sectionProvider.numberOfSections else { return }
+        guard indexPath.section < sectionProvider.numberOfSections else { return }
         let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
         elements.cell.didDisappear(cell, indexPath.item, section)
@@ -454,7 +454,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             originalDelegate?.collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
         }
 
-        guard indexPath.section > sectionProvider.numberOfSections else { return }
+        guard indexPath.section < sectionProvider.numberOfSections else { return }
         let elements = elementsProvider(for: indexPath.section)
         let section = mapper.provider.sections[indexPath.section]
 
