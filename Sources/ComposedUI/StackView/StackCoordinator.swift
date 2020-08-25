@@ -137,3 +137,17 @@ extension StackCoordinator: SectionProviderMappingDelegate {
     public func mapping(_ mapping: SectionProviderMapping, move sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) { }
 
 }
+
+public extension StackCoordinator {
+
+    /// A convenience initializer that allows creation without a provider
+    /// - Parameters:
+    ///   - composedView: The `ComposedView` associated with this coordinator
+    ///   - sections: The sections associated with this coordinator
+    convenience init(composedView: ComposedView, sections: Section...) {
+        let provider = ComposedSectionProvider()
+        sections.forEach(provider.append(_:))
+        self.init(composedView: composedView, sectionProvider: provider)
+    }
+
+}

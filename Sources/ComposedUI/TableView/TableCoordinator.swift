@@ -717,6 +717,7 @@ public extension TableCoordinator {
     ///   - sections: The sections associated with this coordinator
     convenience init(tableView: UITableView, sections: Section...) {
         let provider = ComposedSectionProvider()
+        sections.forEach(provider.append(_:))
         self.init(tableView: tableView, sectionProvider: provider)
     }
 
