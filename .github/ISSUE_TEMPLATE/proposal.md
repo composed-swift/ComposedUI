@@ -2,7 +2,7 @@
 name: Proposal
 about: A proposal for an enhancement or change to the library.
 title: "[PROPOSAL] [short title]"
-labels: ''
+labels: proposal
 assignees: ''
 
 ---
