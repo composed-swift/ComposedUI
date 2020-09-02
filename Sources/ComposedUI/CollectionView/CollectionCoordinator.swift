@@ -61,6 +61,19 @@ open class CollectionCoordinator: NSObject {
 
     private var cachedProviders: [CollectionElementsProvider] = []
 
+    @available(iOS 13.0, *)
+    private lazy var diffableDataSource: UICollectionViewDiffableDataSource<Int, AnyHashable> = {
+        let dataSource = UICollectionViewDiffableDataSource<Int, AnyHashable>(collectionView: collectionView) { collectionView, indexPath, _ in
+            return self.collectionView(collectionView, cellForItemAt: indexPath)
+        }
+
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            return self.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
+        }
+
+        return dataSource
+    }()
+
     /// Make a new coordinator with the specified collectionView and sectionProvider
     /// - Parameters:
     ///   - collectionView: The collectionView to associate with this coordinator
@@ -70,18 +83,22 @@ open class CollectionCoordinator: NSObject {
         mapper = SectionProviderMapping(provider: sectionProvider)
 
         super.init()
-        prepareSections()
+        prepareSections(animated: false)
+
+        if #available(iOS 13, *) {
+            // do nothing
+        } else {
+            dataSourceObserver = collectionView.observe(\.dataSource, options: [.initial, .new]) { [weak self] collectionView, _ in
+                guard collectionView.dataSource !== self else { return }
+                self?.originalDataSource = collectionView.dataSource
+                collectionView.dataSource = self
+            }
+        }
 
         delegateObserver = collectionView.observe(\.delegate, options: [.initial, .new]) { [weak self] collectionView, _ in
             guard collectionView.delegate !== self else { return }
             self?.originalDelegate = collectionView.delegate
             collectionView.delegate = self
-        }
-
-        dataSourceObserver = collectionView.observe(\.dataSource, options: [.initial, .new]) { [weak self] collectionView, _ in
-            guard collectionView.dataSource !== self else { return }
-            self?.originalDataSource = collectionView.dataSource
-            collectionView.dataSource = self
         }
 
         dragDelegateObserver = collectionView.observe(\.dragDelegate, options: [.initial, .new]) { [weak self] collectionView, _ in
@@ -106,7 +123,12 @@ open class CollectionCoordinator: NSObject {
     open func replace(sectionProvider: SectionProvider) {
         mapper = SectionProviderMapping(provider: sectionProvider)
         prepareSections()
-        collectionView.reloadData()
+
+        if #available(iOS 13, *) {
+            // do nothing
+        } else {
+            collectionView.reloadData()
+        }
     }
 
     /// Enables / disables editing on this coordinator
@@ -152,7 +174,7 @@ open class CollectionCoordinator: NSObject {
     }
 
     // Prepares and caches the section to improve performance
-    private func prepareSections() {
+    private func prepareSections(animated: Bool = true) {
         cachedProviders.removeAll()
         mapper.delegate = self
 
@@ -186,6 +208,19 @@ open class CollectionCoordinator: NSObject {
             cachedProviders.append(section)
         }
 
+        if #available(iOS 13.0, *) {
+            var snapshot = NSDiffableDataSourceSnapshot<Int, AnyHashable>()
+
+            (0..<mapper.numberOfSections).forEach { sectionIdentifier in
+                let section = mapper.provider.sections[sectionIdentifier]
+                snapshot.appendSections([sectionIdentifier])
+                let identifiers = section.itemIdentifiers
+                snapshot.appendItems(identifiers, toSection: sectionIdentifier)
+            }
+
+            diffableDataSource.apply(snapshot, animatingDifferences: animated)
+        }
+
         collectionView.allowsMultipleSelection = true
         collectionView.backgroundView = delegate?.coordinator(self, backgroundViewInCollectionView: collectionView)
         collectionView.dragInteractionEnabled = sectionProvider.sections.contains { $0 is MoveHandler || $0 is CollectionDragHandler || $0 is CollectionDropHandler }
@@ -209,9 +244,15 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
-        reset()
-        prepareSections()
-        collectionView.reloadData()
+
+        if #available(iOS 13, *) {
+            prepareSections(animated: false)
+            defersUpdate = false
+        } else {
+            reset()
+            prepareSections(animated: false)
+            collectionView.reloadData()
+        }
     }
 
     public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
@@ -221,26 +262,37 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
-        collectionView.performBatchUpdates({
-            if defersUpdate {
-                prepareSections()
-            }
 
-            removes.forEach { $0() }
-            inserts.forEach { $0() }
-            changes.forEach { $0() }
-            moves.forEach { $0() }
-            sectionRemoves.forEach { $0() }
-            sectionInserts.forEach { $0() }
-            sectionUpdates.forEach { $0() }
-        }, completion: { [weak self] _ in
-            self?.reset()
-            self?.defersUpdate = false
-        })
+        if #available(iOS 13, *) {
+            prepareSections()
+            defersUpdate = false
+        } else {
+            collectionView.performBatchUpdates({
+                if defersUpdate {
+                    prepareSections()
+                }
+
+                removes.forEach { $0() }
+                inserts.forEach { $0() }
+                changes.forEach { $0() }
+                moves.forEach { $0() }
+                sectionRemoves.forEach { $0() }
+                sectionInserts.forEach { $0() }
+                sectionUpdates.forEach { $0() }
+            }, completion: { [weak self] _ in
+                self?.reset()
+                self?.defersUpdate = false
+            })
+        }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         sectionUpdates.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
@@ -252,6 +304,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         sectionInserts.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
@@ -263,6 +320,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         sectionRemoves.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
@@ -274,6 +336,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         inserts.append { [weak self] in
             guard let self = self else { return }
             self.collectionView.insertItems(at: indexPaths)
@@ -284,6 +351,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         removes.append { [weak self] in
             guard let self = self else { return }
             self.collectionView.deleteItems(at: indexPaths)
@@ -294,6 +366,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         changes.append { [weak self] in
             guard let self = self else { return }
             
@@ -323,6 +400,11 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         self.moves.append { [weak self] in
             guard let self = self else { return }
             moves.forEach { self.collectionView.moveItem(at: $0.0, to: $0.1) }
@@ -381,6 +463,8 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         defer {
             originalDelegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
         }
+
+        guard indexPath.count == 2 else { return }
 
         guard indexPath.section < sectionProvider.numberOfSections else { return }
         let elements = elementsProvider(for: indexPath.section)
@@ -453,6 +537,8 @@ extension CollectionCoordinator: UICollectionViewDataSource {
         defer {
             originalDelegate?.collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
         }
+
+        guard indexPath.count == 2 else { return }
 
         guard indexPath.section < sectionProvider.numberOfSections else { return }
         let elements = elementsProvider(for: indexPath.section)

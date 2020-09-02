@@ -55,6 +55,13 @@ open class TableCoordinator: NSObject {
 
     private var cachedProviders: [TableElementsProvider] = []
 
+    @available(iOS 13.0, *)
+    private lazy var diffableDataSource: UITableViewDiffableDataSource<Int, AnyHashable> = {
+        return UITableViewDiffableDataSource<Int, AnyHashable>(tableView: tableView) { tableView, indexPath, _ in
+            return self.tableView(tableView, cellForRowAt: indexPath)
+        }
+    }()
+
     /// Make a new coordinator with the specified tableView and sectionProvider
     /// - Parameters:
     ///   - tableView: The tableView to associate with this coordinator
@@ -68,16 +75,20 @@ open class TableCoordinator: NSObject {
         tableView.dataSource = self
         prepareSections()
 
+        if #available(iOS 13, *) {
+            // do nothing
+        } else {
+            dataSourceObserver = tableView.observe(\.dataSource, options: [.initial, .new]) { [weak self] tableView, _ in
+                guard tableView.dataSource !== self else { return }
+                self?.originalDataSource = tableView.dataSource
+                tableView.dataSource = self
+            }
+        }
+
         delegateObserver = tableView.observe(\.delegate, options: [.initial, .new]) { [weak self] tableView, _ in
             guard tableView.delegate !== self else { return }
             self?.originalDelegate = tableView.delegate
             tableView.delegate = self
-        }
-
-        dataSourceObserver = tableView.observe(\.dataSource, options: [.initial, .new]) { [weak self] tableView, _ in
-            guard tableView.dataSource !== self else { return }
-            self?.originalDataSource = tableView.dataSource
-            tableView.dataSource = self
         }
     }
 
@@ -107,7 +118,7 @@ open class TableCoordinator: NSObject {
     }
 
 
-    private func prepareSections() {
+    private func prepareSections(_ animated: Bool = true) {
         mapper.delegate = self
         cachedProviders.removeAll()
 
@@ -141,11 +152,26 @@ open class TableCoordinator: NSObject {
             cachedProviders.append(section)
         }
 
+        if #available(iOS 13.0, *) {
+            var snapshot = NSDiffableDataSourceSnapshot<Int, AnyHashable>()
+
+            (0..<mapper.numberOfSections).forEach { sectionIdentifier in
+                let section = mapper.provider.sections[sectionIdentifier]
+                snapshot.appendSections([sectionIdentifier])
+                let identifiers = section.itemIdentifiers
+                snapshot.appendItems(identifiers, toSection: sectionIdentifier)
+            }
+
+            diffableDataSource.apply(snapshot, animatingDifferences: animated)
+        }
+
         tableView.allowsMultipleSelection = mapper.provider.sections
             .compactMap { $0 as? SelectionHandler }
             .contains { $0.allowsMultipleSelection }
 
         tableView.allowsSelectionDuringEditing = true
+        tableView.backgroundView = delegate?.coordinator(self, backgroundViewInTableView: tableView)
+        delegate?.coordinatorDidUpdate(self)
     }
 
 }
@@ -177,26 +203,37 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
-        tableView.performBatchUpdates({
-            if defersUpdate {
-                prepareSections()
-            }
 
-            removes.forEach { $0() }
-            inserts.forEach { $0() }
-            changes.forEach { $0() }
-            moves.forEach { $0() }
-            sectionRemoves.forEach { $0() }
-            sectionInserts.forEach { $0() }
-            sectionUpdates.forEach { $0() }
-        }, completion: { [weak self] _ in
-            self?.reset()
-            self?.defersUpdate = false
-        })
+        if #available(iOS 13, *) {
+            prepareSections()
+            defersUpdate = false
+        } else {
+            tableView.performBatchUpdates({
+                if defersUpdate {
+                    prepareSections()
+                }
+
+                removes.forEach { $0() }
+                inserts.forEach { $0() }
+                changes.forEach { $0() }
+                moves.forEach { $0() }
+                sectionRemoves.forEach { $0() }
+                sectionInserts.forEach { $0() }
+                sectionUpdates.forEach { $0() }
+            }, completion: { [weak self] _ in
+                self?.reset()
+                self?.defersUpdate = false
+            })
+        }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         sectionUpdates.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
@@ -208,6 +245,11 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         sectionInserts.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
@@ -219,6 +261,11 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         sectionRemoves.append { [weak self] in
             guard let self = self else { return }
             if !self.defersUpdate { self.prepareSections() }
@@ -230,6 +277,11 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         inserts.append { [weak self] in
             guard let self = self else { return }
             self.tableView.insertRows(at: indexPaths, with: .automatic)
@@ -240,6 +292,11 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         removes.append { [weak self] in
             guard let self = self else { return }
             self.tableView.deleteRows(at: indexPaths, with: .automatic)
@@ -250,6 +307,11 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+
         changes.append { [weak self] in
             guard let self = self else { return }
 
@@ -279,6 +341,11 @@ extension TableCoordinator: SectionProviderMappingDelegate {
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
         assert(Thread.isMainThread)
+        if #available(iOS 13, *) {
+            if defersUpdate { return }
+            else { return prepareSections() }
+        }
+        
         self.moves.append { [weak self] in
             guard let self = self else { return }
             moves.forEach { self.tableView.moveRow(at: $0.0, to: $0.1) }
