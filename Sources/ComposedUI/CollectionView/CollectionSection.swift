@@ -36,29 +36,15 @@ open class CollectionSection: CollectionElementsProvider {
             self.section = section
 
             // The code below copies the relevent elements to erase type-safety
-            
-            let dequeueMethod: DequeueMethod<UICollectionViewCell>
-            switch cell.dequeueMethod {
-            case .fromClass: dequeueMethod = .fromClass(Cell.self)
-            case .fromNib: dequeueMethod = .fromNib(Cell.self)
-            case .fromStoryboard: dequeueMethod = .fromStoryboard(Cell.self)
-            }
 
             self.cell = CollectionCellElement(section: section,
-                                              dequeueMethod: dequeueMethod,
+                                              dequeueMethod: cell.dequeueMethod.map(),
                                               reuseIdentifier: cell.reuseIdentifier,
-                                              configure: cell.configure,
-                                              willAppear: cell.willAppear,
-                                              didDisappear: cell.didDisappear)
+                                              configure: { cell.configure($0 as! Cell, $1, $2) },
+                                              willAppear: { cell.willAppear($0 as! Cell, $1, $2) },
+                                              didDisappear: { cell.didDisappear($0 as! Cell, $1, $2) })
 
             if let header = header {
-                let dequeueMethod: DequeueMethod<UICollectionReusableView>
-                switch header.dequeueMethod {
-                case .fromClass: dequeueMethod = .fromClass(Header.self)
-                case .fromNib: dequeueMethod = .fromNib(Header.self)
-                case .fromStoryboard: dequeueMethod = .fromStoryboard(Header.self)
-                }
-
                 let kind: CollectionElementKind
                 if case .automatic = header.kind {
                     kind = .custom(kind: UICollectionView.elementKindSectionHeader)
@@ -67,22 +53,15 @@ open class CollectionSection: CollectionElementsProvider {
                 }
 
                 self.header = CollectionSupplementaryElement(section: section,
-                                                             dequeueMethod: dequeueMethod,
+                                                             dequeueMethod: header.dequeueMethod.map(),
                                                              reuseIdentifier: header.reuseIdentifier,
                                                              kind: kind,
-                                                             configure: header.configure)
+                                                             configure: { header.configure($0 as! Header, $1, $2) })
             } else {
                 self.header = nil
             }
 
             if let footer = footer {
-                let dequeueMethod: DequeueMethod<UICollectionReusableView>
-                switch footer.dequeueMethod {
-                case .fromClass: dequeueMethod = .fromClass(Footer.self)
-                case .fromNib: dequeueMethod = .fromNib(Footer.self)
-                case .fromStoryboard: dequeueMethod = .fromStoryboard(Footer.self)
-                }
-
                 let kind: CollectionElementKind
                 if case .automatic = footer.kind {
                     kind = .custom(kind: UICollectionView.elementKindSectionFooter)
@@ -91,10 +70,10 @@ open class CollectionSection: CollectionElementsProvider {
                 }
                 
                 self.footer = CollectionSupplementaryElement(section: section,
-                                                             dequeueMethod: dequeueMethod,
+                                                             dequeueMethod: footer.dequeueMethod.map(),
                                                              reuseIdentifier: footer.reuseIdentifier,
                                                              kind: kind,
-                                                             configure: footer.configure)
+                                                             configure: { footer.configure($0 as! Footer, $1, $2) })
             } else {
                 self.footer = nil
             }

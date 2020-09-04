@@ -43,15 +43,8 @@ open class TableSection: TableElementsProvider {
         where Section: Composed.Section, Cell: UITableViewCell, Header: UITableViewHeaderFooterView, Footer: UITableViewHeaderFooterView {
             self.section = section
 
-            let dequeueMethod: DequeueMethod<UITableViewCell>
-            switch cell.dequeueMethod {
-            case .fromClass: dequeueMethod = .fromClass(Cell.self)
-            case .fromNib: dequeueMethod = .fromNib(Cell.self)
-            case .fromStoryboard: dequeueMethod = .fromStoryboard(Cell.self)
-            }
-
             self.cell = TableElement(section: section,
-                                     dequeueMethod: dequeueMethod,
+                                     dequeueMethod: cell.dequeueMethod.map(),
                                      reuseIdentifier: cell.reuseIdentifier,
                                      configure: cell.configure)
 
@@ -63,15 +56,8 @@ open class TableSection: TableElementsProvider {
                     view.textLabel?.text = title
                 }
             case let .element(element):
-                let dequeueMethod: DequeueMethod<UITableViewHeaderFooterView>
-                switch element.dequeueMethod {
-                case .fromClass: dequeueMethod = .fromClass(Header.self)
-                case .fromNib: dequeueMethod = .fromNib(Header.self)
-                case .fromStoryboard: dequeueMethod = .fromStoryboard(Header.self)
-                }
-
                 self.header = TableElement(section: section,
-                                           dequeueMethod: dequeueMethod,
+                                           dequeueMethod: element.dequeueMethod.map(),
                                            reuseIdentifier: element.reuseIdentifier,
                                            configure: element.configure)
             }
@@ -84,15 +70,8 @@ open class TableSection: TableElementsProvider {
                     view.textLabel?.text = title
                 }
             case let .element(element):
-                let dequeueMethod: DequeueMethod<UITableViewHeaderFooterView>
-                switch element.dequeueMethod {
-                case .fromClass: dequeueMethod = .fromClass(Footer.self)
-                case .fromNib: dequeueMethod = .fromNib(Footer.self)
-                case .fromStoryboard: dequeueMethod = .fromStoryboard(Footer.self)
-                }
-
                 self.footer = TableElement(section: section,
-                                           dequeueMethod: dequeueMethod,
+                                           dequeueMethod: element.dequeueMethod.map(),
                                            reuseIdentifier: element.reuseIdentifier,
                                            configure: element.configure)
             }

@@ -441,7 +441,7 @@ extension CollectionCoordinator: UICollectionViewDataSource {
             guard let view = originalDataSource?.collectionView?(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) else {
                 // when in production its better to return 'something' to prevent crashing
                 assertionFailure("Unsupported supplementary kind: \(kind) at indexPath: \(indexPath). Did you forget to register your header or footer?")
-                return collectionView.dequeue(supplementary: PlaceholderSupplementaryView.self, ofKind: PlaceholderSupplementaryView.kind, for: indexPath)
+                return collectionView.dequeueReusableSupplementaryView(ofKind: PlaceholderSupplementaryView.kind, withReuseIdentifier: PlaceholderSupplementaryView.reuseIdentifier, for: indexPath)
             }
 
             return view

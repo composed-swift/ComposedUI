@@ -27,7 +27,7 @@ public protocol CollectionElement {
     var dequeueMethod: DequeueMethod<View> { get }
 
     /// A closure that will be called whenever the elements view needs to be configured
-    var configure: (UICollectionReusableView, Int, Section) -> Void { get }
+    var configure: (View, Int, Section) -> Void { get }
 
     /// The reuseIdentifier to use for this element
     var reuseIdentifier: String { get }
@@ -38,13 +38,13 @@ public protocol CollectionElement {
 public final class CollectionCellElement<View>: CollectionElement where View: UICollectionViewCell {
 
     public let dequeueMethod: DequeueMethod<View>
-    public let configure: (UICollectionReusableView, Int, Section) -> Void
+    public let configure: (View, Int, Section) -> Void
     public let reuseIdentifier: String
 
     /// The closure that will be called before the elements view appears
-    public let willAppear: (UICollectionReusableView, Int, Section) -> Void
+    public let willAppear: (View, Int, Section) -> Void
     /// The closure that will be called after the elements view disappears
-    public let didDisappear: (UICollectionReusableView, Int, Section) -> Void
+    public let didDisappear: (View, Int, Section) -> Void
 
     /// Makes a new element for representing a cell
     /// - Parameters:
@@ -91,15 +91,15 @@ public final class CollectionCellElement<View>: CollectionElement where View: UI
             // swiftlint:disable force_cast
 
             self.configure = { view, index, section in
-                configure(view as! View, index, section as! Section)
+                configure(view, index, section as! Section)
             }
 
             self.willAppear = { view, index, section in
-                willAppear?(view as! View, index, section as! Section)
+                willAppear?(view, index, section as! Section)
             }
 
             self.didDisappear = { view, index, section in
-                didDisappear?(view as! View, index, section as! Section)
+                didDisappear?(view, index, section as! Section)
             }
     }
 
@@ -109,16 +109,16 @@ public final class CollectionCellElement<View>: CollectionElement where View: UI
 public final class CollectionSupplementaryElement<View>: CollectionElement where View: UICollectionReusableView {
 
     public let dequeueMethod: DequeueMethod<View>
-    public let configure: (UICollectionReusableView, Int, Section) -> Void
+    public let configure: (View, Int, Section) -> Void
     public let reuseIdentifier: String
 
     /// The `elementKind` this element represents
     public let kind: CollectionElementKind
 
     /// A closure that will be called before the elements view is appeared
-    public let willAppear: ((UICollectionReusableView, Int, Section) -> Void)?
+    public let willAppear: ((View, Int, Section) -> Void)?
     /// A closure that will be called after the elements view has disappeared
-    public let didDisappear: ((UICollectionReusableView, Int, Section) -> Void)?
+    public let didDisappear: ((View, Int, Section) -> Void)?
 
     /// Makes a new element for representing a supplementary view
     /// - Parameters:
@@ -138,8 +138,7 @@ public final class CollectionSupplementaryElement<View>: CollectionElement where
             self.dequeueMethod = dequeueMethod
 
             self.configure = { view, index, section in
-                // swiftlint:disable force_cast
-                configure(view as! View, index, section as! Section)
+                configure(view, index, section as! Section)
             }
 
             willAppear = nil
@@ -170,15 +169,15 @@ public final class CollectionSupplementaryElement<View>: CollectionElement where
             // swiftlint:disable force_cast
 
             self.configure = { view, index, section in
-                configure(view as! View, index, section as! Section)
+                configure(view, index, section as! Section)
             }
 
             self.willAppear = { view, index, section in
-                willAppear?(view as! View, index, section as! Section)
+                willAppear?(view, index, section as! Section)
             }
 
             self.didDisappear = { view, index, section in
-                didDisappear?(view as! View, index, section as! Section)
+                didDisappear?(view, index, section as! Section)
             }
     }
 
