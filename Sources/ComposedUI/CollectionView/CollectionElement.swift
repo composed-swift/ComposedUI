@@ -63,7 +63,7 @@ public final class CollectionCellElement<View>: CollectionElement where View: UI
             // swiftlint:disable force_cast
 
             self.configure = { view, index, section in
-                configure(view as! View, index, section as! Section)
+                configure(view, index, section as! Section)
             }
 
             willAppear = { _, _, _ in }
