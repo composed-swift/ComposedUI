@@ -482,8 +482,9 @@ extension CollectionCoordinator {
     // MARK: - Context Menus
 
     public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let cell = collectionView.cellForItem(at: indexPath),
-            let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler else { return nil }
+        guard let provider = mapper.provider.sections[indexPath.section] as? CollectionContextMenuHandler,
+            provider.allowsContextMenu(forElementAt: indexPath.item),
+            let cell = collectionView.cellForItem(at: indexPath) else { return nil }
         let preview = provider.contextMenu(previewForElementAt: indexPath.item, cell: cell)
         return UIContextMenuConfiguration(identifier: indexPath.string, previewProvider: preview) { suggestedElements in
             return provider.contextMenu(forElementAt: indexPath.item, cell: cell, suggestedActions: suggestedElements)
