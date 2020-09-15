@@ -45,6 +45,7 @@ public protocol TableContextMenuHandler: TableSectionProvider {
 
 @available(iOS 13.0, *)
 public extension TableContextMenuHandler {
+    func allowsContextMenu(forElementAt index: Int) -> Bool { return true }
     func contextMenu(forElementAt index: Int, cell: UITableViewCell, suggestedActions: [UIMenuElement]) -> UIMenu? { return nil }
     func contextMenu(previewForElementAt index: Int, cell: UITableViewCell) -> UIContextMenuContentPreviewProvider? { return nil }
     func contextMenu(previewForHighlightingElementAt index: Int, cell: UITableViewCell) -> UITargetedPreview? { return nil }
