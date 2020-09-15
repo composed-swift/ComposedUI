@@ -436,9 +436,10 @@ extension TableCoordinator {
     // MARK: - Context Menus
 
     open func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let cell = tableView.cellForRow(at: indexPath),
-            let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler else {
-                return originalDelegate?.tableView?(tableView, contextMenuConfigurationForRowAt: indexPath, point: point) ?? nil
+        guard let provider = mapper.provider.sections[indexPath.section] as? TableContextMenuHandler,
+              provider.allowsContextMenu(forElementAt: indexPath.item),
+              let cell = tableView.cellForRow(at: indexPath) else {
+            return originalDelegate?.tableView?(tableView, contextMenuConfigurationForRowAt: indexPath, point: point) ?? nil
         }
 
         let preview = provider.contextMenu(previewForElementAt: indexPath.item, cell: cell)

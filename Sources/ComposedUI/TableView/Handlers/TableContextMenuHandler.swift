@@ -5,6 +5,10 @@ import Composed
 @available(iOS 13.0, *)
 public protocol TableContextMenuHandler: TableSectionProvider {
 
+    /// Specifies whether or not a specific element allows showing a context menu. If you want UIKit to indicate that a menu is usually provided for this element, true `true` and simply return `nil` for `contextMenu(forElementAt:cell:suggestedActions:)`
+    /// - Parameter index: The index of the element
+    func allowsContextMenu(forElementAt index: Int) -> Bool
+
     /// Return a `UIMenu` representing the actions that should be shown for the specified cell.
     /// - Parameters:
     ///   - index: The index of the element
