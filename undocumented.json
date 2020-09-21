@@ -1,0 +1,1335 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 147,
+      "symbol": "CollectionCoordinator.invalidateVisibleCells()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 359,
+      "symbol": "CollectionCoordinator.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 363,
+      "symbol": "CollectionCoordinator.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 367,
+      "symbol": "CollectionCoordinator.collectionView(_:willDisplay:forItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 378,
+      "symbol": "CollectionCoordinator.collectionView(_:didEndDisplaying:forItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 390,
+      "symbol": "CollectionCoordinator.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 407,
+      "symbol": "CollectionCoordinator.collectionView(_:willDisplaySupplementaryView:forElementKind:at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 426,
+      "symbol": "CollectionCoordinator.collectionView(_:viewForSupplementaryElementOfKind:at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 450,
+      "symbol": "CollectionCoordinator.collectionView(_:didEndDisplayingSupplementaryView:forElementOfKind:at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 483,
+      "symbol": "CollectionCoordinator.collectionView(_:contextMenuConfigurationForItemAt:point:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 493,
+      "symbol": "CollectionCoordinator.collectionView(_:previewForHighlightingContextMenuWithConfiguration:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 500,
+      "symbol": "CollectionCoordinator.collectionView(_:previewForDismissingContextMenuWithConfiguration:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 507,
+      "symbol": "CollectionCoordinator.collectionView(_:willPerformPreviewActionForMenuWith:animator:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 520,
+      "symbol": "CollectionCoordinator.collectionView(_:shouldHighlightItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 528,
+      "symbol": "CollectionCoordinator.collectionView(_:shouldSelectItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 536,
+      "symbol": "CollectionCoordinator.collectionView(_:didSelectItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 556,
+      "symbol": "CollectionCoordinator.scrollViewDidScroll(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 560,
+      "symbol": "CollectionCoordinator.collectionView(_:shouldDeselectItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 568,
+      "symbol": "CollectionCoordinator.collectionView(_:didDeselectItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 583,
+      "symbol": "CollectionCoordinator.responds(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 589,
+      "symbol": "CollectionCoordinator.forwardingTarget(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 600,
+      "symbol": "CollectionCoordinator.collectionView(_:dragSessionWillBegin:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 608,
+      "symbol": "CollectionCoordinator.collectionView(_:dragSessionDidEnd:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 616,
+      "symbol": "CollectionCoordinator.collectionView(_:dragSessionIsRestrictedToDraggingApplication:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 620,
+      "symbol": "CollectionCoordinator.collectionView(_:itemsForBeginning:at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 629,
+      "symbol": "CollectionCoordinator.collectionView(_:itemsForAddingTo:at:point:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 637,
+      "symbol": "CollectionCoordinator.collectionView(_:dragSessionAllowsMoveOperation:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 648,
+      "symbol": "CollectionCoordinator.collectionView(_:canHandle:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 653,
+      "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidEnter:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 663,
+      "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidExit:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 667,
+      "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidEnd:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 675,
+      "symbol": "CollectionCoordinator.collectionView(_:dragPreviewParametersForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 687,
+      "symbol": "CollectionCoordinator.collectionView(_:dropPreviewParametersForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 697,
+      "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidUpdate:withDestinationIndexPath:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
+      "line": 719,
+      "symbol": "CollectionCoordinator.collectionView(_:performDropWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 5,
+      "symbol": "CollectionDragHandler",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 7,
+      "symbol": "CollectionDragHandler.dragSessionWillBegin(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 8,
+      "symbol": "CollectionDragHandler.dragSessionDidEnd(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 10,
+      "symbol": "CollectionDragHandler.dragSession(_:dragItemsForBeginning:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 11,
+      "symbol": "CollectionDragHandler.dragSession(_:dragItemsForAdding:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 21,
+      "symbol": "CollectionDragHandler",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 23,
+      "symbol": "CollectionDragHandler.dragSessionWillBegin(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 24,
+      "symbol": "CollectionDragHandler.dragSessionDidEnd(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDragHandler.swift",
+      "line": 25,
+      "symbol": "CollectionDragHandler.dragSession(_:dragItemsForAdding:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDropHandler.swift",
+      "line": 8,
+      "symbol": "CollectionDropHandler.dropSessionWillBegin(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDropHandler.swift",
+      "line": 9,
+      "symbol": "CollectionDropHandler.dropSessionDidEnd(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDropHandler.swift",
+      "line": 26,
+      "symbol": "CollectionDropHandler.dropSessionWillBegin(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/Handlers/CollectionDropHandler.swift",
+      "line": 27,
+      "symbol": "CollectionDropHandler.dropSessionDidEnd(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 6,
+      "symbol": "NibLoadable.nib",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 8,
+      "symbol": "NibLoadable.nibName",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 23,
+      "symbol": "NibLoadable.nibName",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 27,
+      "symbol": "NibLoadable.nib",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 53,
+      "symbol": "ReusableCell",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 54,
+      "symbol": "ReusableCell.reuseIdentifier",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 57,
+      "symbol": "ReusableCell",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 58,
+      "symbol": "ReusableCell.reuseIdentifier",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 63,
+      "symbol": "ReuseableView",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 64,
+      "symbol": "ReuseableView.reuseIdentifier",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 65,
+      "symbol": "ReuseableView.kind",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 66,
+      "symbol": "ReuseableView.reuseIdentifier",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 69,
+      "symbol": "ReuseableView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 70,
+      "symbol": "ReuseableView.kind",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 84,
+      "symbol": "UITableView.register(nib:bundle:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 89,
+      "symbol": "UITableView.dequeue(cell:reuseIdentifier:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 96,
+      "symbol": "UITableView.registerHeaderFooterNib(class:bundle:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 101,
+      "symbol": "UITableView.dequeue(headerFooter:reuseIdentifier:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 112,
+      "symbol": "UICollectionView.isEditing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 118,
+      "symbol": "UICollectionView.register(cell:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 122,
+      "symbol": "UICollectionView.register(nib:bundle:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 127,
+      "symbol": "UICollectionView.dequeue(cell:reuseIdentifier:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 133,
+      "symbol": "UICollectionView.register(class:ofKind:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 137,
+      "symbol": "UICollectionView.register(nib:ofKind:bundle:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 142,
+      "symbol": "UICollectionView.dequeue(supplementary:ofKind:reuseIdentifier:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 149,
+      "symbol": "UICollectionViewLayout.register(nib:bundle:ofKind:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Reuse.swift",
+      "line": 154,
+      "symbol": "UICollectionViewLayout.register(class:bundle:ofKind:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/Common/Types.swift",
+      "line": 11,
+      "symbol": "DequeueMethod.fromClass(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 3,
+      "symbol": "ComposedSectionView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 7,
+      "symbol": "ComposedSectionView.visibleCells",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 13,
+      "symbol": "ComposedSectionView.separatorInsets",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 14,
+      "symbol": "ComposedSectionView.separatorColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 16,
+      "symbol": "ComposedSectionView.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 45,
+      "symbol": "ComposedSectionView.addItemView(_:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 50,
+      "symbol": "ComposedSectionView.insertItem(_:at:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 55,
+      "symbol": "ComposedSectionView.removeItemView(_:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedSectionView.swift",
+      "line": 60,
+      "symbol": "ComposedSectionView.deleteItem(at:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedStackView.swift",
+      "line": 15,
+      "symbol": "ComposedStackView.Animation",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedStackView.swift",
+      "line": 16,
+      "symbol": "ComposedStackView.Animation.slide",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedStackView.swift",
+      "line": 17,
+      "symbol": "ComposedStackView.Animation.fade",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedStackView.swift",
+      "line": 18,
+      "symbol": "ComposedStackView.Animation.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedStackView.swift",
+      "line": 37,
+      "symbol": "ComposedStackView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedStackView.swift",
+      "line": 103,
+      "symbol": "ComposedStackView.removeArrangedSubvew(at:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 3,
+      "symbol": "ComposedView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 5,
+      "symbol": "ComposedView.backgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 17,
+      "symbol": "ComposedView.interSectionSpacing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 21,
+      "symbol": "ComposedView.contentInsets",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 25,
+      "symbol": "ComposedView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 30,
+      "symbol": "ComposedView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 77,
+      "symbol": "ComposedView.sections",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 81,
+      "symbol": "ComposedView.appendSection(_:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 85,
+      "symbol": "ComposedView.insertSection(_:at:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 89,
+      "symbol": "ComposedView.removeSection(_:animation:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 94,
+      "symbol": "ComposedView.removeSection(at:animation:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedView.swift",
+      "line": 99,
+      "symbol": "ComposedView.removeAllSections()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedViewCell.swift",
+      "line": 3,
+      "symbol": "ComposedViewCell",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedViewCell.swift",
+      "line": 27,
+      "symbol": "ComposedViewCell.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedViewCell.swift",
+      "line": 32,
+      "symbol": "ComposedViewCell.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedViewCell.swift",
+      "line": 79,
+      "symbol": "ComposedViewCell.addSubview(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedViewCell.swift",
+      "line": 85,
+      "symbol": "ComposedViewCell.insertSubview(_:at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/ComposedViewCell.swift",
+      "line": 91,
+      "symbol": "ComposedViewCell.safeAreaInsetsDidChange()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackCoordinator.swift",
+      "line": 4,
+      "symbol": "StackCoordinator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackCoordinator.swift",
+      "line": 6,
+      "symbol": "StackCoordinator.sectionProvider",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackCoordinator.swift",
+      "line": 15,
+      "symbol": "StackCoordinator.init(composedView:sectionProvider:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackCoordinator.swift",
+      "line": 30,
+      "symbol": "StackCoordinator.replace(sectionProvider:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackCoordinator.swift",
+      "line": 48,
+      "symbol": "StackCoordinator.reloadData()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackCoordinator.swift",
+      "line": 62,
+      "symbol": "StackCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackCoordinator.swift",
+      "line": 141,
+      "symbol": "StackCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElement.swift",
+      "line": 4,
+      "symbol": "StackLoadingMethod",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElement.swift",
+      "line": 5,
+      "symbol": "StackLoadingMethod.fromNib(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElement.swift",
+      "line": 6,
+      "symbol": "StackLoadingMethod.fromClass(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElement.swift",
+      "line": 9,
+      "symbol": "StackCellElement",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElement.swift",
+      "line": 14,
+      "symbol": "StackCellElement.init(section:loadingMethod:configure:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 3,
+      "symbol": "StackElementsProvider",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 4,
+      "symbol": "StackElementsProvider.cell",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 5,
+      "symbol": "StackElementsProvider.numberOfElements",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 8,
+      "symbol": "StackElementsProvider",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 9,
+      "symbol": "StackElementsProvider.isEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 12,
+      "symbol": "StackSectionProvider",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 13,
+      "symbol": "StackSectionProvider.section(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 16,
+      "symbol": "StackSectionAppearanceHandler",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 17,
+      "symbol": "StackSectionAppearanceHandler.separatorInsets(suggested:traitCollection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 18,
+      "symbol": "StackSectionAppearanceHandler.separatorColor(suggested:traitCollection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 21,
+      "symbol": "StackSectionAppearanceHandler",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 22,
+      "symbol": "StackSectionAppearanceHandler.separatorInsets(suggested:traitCollection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackElementsProvider.swift",
+      "line": 23,
+      "symbol": "StackSectionAppearanceHandler.separatorColor(suggested:traitCollection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackSection.swift",
+      "line": 4,
+      "symbol": "StackSection",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackSection.swift",
+      "line": 6,
+      "symbol": "StackSection.cell",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackSection.swift",
+      "line": 8,
+      "symbol": "StackSection.numberOfElements",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/StackView/StackSection.swift",
+      "line": 14,
+      "symbol": "StackSection.init(section:cell:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/Handlers/TableMoveHandler.swift",
+      "line": 7,
+      "symbol": "TableMovingHandler",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 25,
+      "symbol": "TableCoordinator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 32,
+      "symbol": "TableCoordinator.sectionProvider",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 84,
+      "symbol": "TableCoordinator.replace(sectionProvider:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 90,
+      "symbol": "TableCoordinator.setEditing(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 155,
+      "symbol": "TableCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 311,
+      "symbol": "TableCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 313,
+      "symbol": "TableCoordinator.tableView(_:willDisplayHeaderView:forSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 324,
+      "symbol": "TableCoordinator.tableView(_:viewForHeaderInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 333,
+      "symbol": "TableCoordinator.tableView(_:didEndDisplayingHeaderView:forSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 345,
+      "symbol": "TableCoordinator.tableView(_:willDisplayFooterView:forSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 356,
+      "symbol": "TableCoordinator.tableView(_:viewForFooterInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 366,
+      "symbol": "TableCoordinator.tableView(_:didEndDisplayingFooterView:forSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 377,
+      "symbol": "TableCoordinator.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 381,
+      "symbol": "TableCoordinator.tableView(_:numberOfRowsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 385,
+      "symbol": "TableCoordinator.tableView(_:willDisplay:forRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 396,
+      "symbol": "TableCoordinator.tableView(_:cellForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 412,
+      "symbol": "TableCoordinator.tableView(_:didEndDisplaying:forRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 434,
+      "symbol": "TableCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 438,
+      "symbol": "TableCoordinator.tableView(_:contextMenuConfigurationForRowAt:point:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 451,
+      "symbol": "TableCoordinator.tableView(_:previewForHighlightingContextMenuWithConfiguration:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 461,
+      "symbol": "TableCoordinator.tableView(_:previewForDismissingContextMenuWithConfiguration:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 471,
+      "symbol": "TableCoordinator.tableView(_:willPerformPreviewActionForMenuWith:animator:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 485,
+      "symbol": "TableCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 489,
+      "symbol": "TableCoordinator.tableView(_:canEditRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 496,
+      "symbol": "TableCoordinator.tableView(_:editingStyleForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 503,
+      "symbol": "TableCoordinator.tableView(_:commit:forRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 512,
+      "symbol": "TableCoordinator.tableView(_:willBeginEditingRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 526,
+      "symbol": "TableCoordinator.tableView(_:didEndEditingRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 542,
+      "symbol": "TableCoordinator.tableView(_:targetIndexPathForMoveFromRowAt:toProposedIndexPath:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 550,
+      "symbol": "TableCoordinator.tableView(_:canMoveRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 554,
+      "symbol": "TableCoordinator.tableView(_:shouldIndentWhileEditingRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 562,
+      "symbol": "TableCoordinator.tableView(_:moveRowAt:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 577,
+      "symbol": "TableCoordinator.tableView(_:shouldHighlightRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 588,
+      "symbol": "TableCoordinator.tableView(_:willSelectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 595,
+      "symbol": "TableCoordinator.tableView(_:didSelectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 616,
+      "symbol": "TableCoordinator.tableView(_:accessoryButtonTappedForRowWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 621,
+      "symbol": "TableCoordinator.tableView(_:willDeselectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 628,
+      "symbol": "TableCoordinator.tableView(_:didDeselectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 643,
+      "symbol": "TableCoordinator.tableView(_:leadingSwipeActionsConfigurationForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 650,
+      "symbol": "TableCoordinator.tableView(_:trailingSwipeActionsConfigurationForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 659,
+      "symbol": "TableCoordinator.tableView(_:heightForHeaderInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 666,
+      "symbol": "TableCoordinator.tableView(_:heightForFooterInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 673,
+      "symbol": "TableCoordinator.tableView(_:heightForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 682,
+      "symbol": "TableCoordinator.responds(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 688,
+      "symbol": "TableCoordinator.forwardingTarget(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 695,
+      "symbol": "TableCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 697,
+      "symbol": "TableCoordinator.tableView(_:dropSessionDidUpdate:withDestinationIndexPath:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 713,
+      "symbol": "TableCoordinator.tableView(_:performDropWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 717,
+      "symbol": "TableCoordinator.tableView(_:dropPreviewParametersForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableCoordinator.swift",
+      "line": 726,
+      "symbol": "TableCoordinator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/TableView/TableElement.swift",
+      "line": 4,
+      "symbol": "TableElement",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/runner/work/ComposedUI/ComposedUI"
+}

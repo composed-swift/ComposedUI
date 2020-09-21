@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TableElement Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/TableElement" class="dashAnchor"></a>
+    <a title="TableElement Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (55% documented)</p>
+        <p class="header-right"><a href="https://github.com/composed-swift/ComposedUI"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        TableElement Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCellElement.html">CollectionCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCoordinator.html">CollectionCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSection.html">CollectionSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedSectionView.html">ComposedSectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView.html">ComposedStackView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView/Animation.html">– Animation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedView.html">ComposedView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedViewCell.html">ComposedViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCellElement.html">StackCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCoordinator.html">StackCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackSection.html">StackSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableCoordinator.html">TableCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableElement.html">TableElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableSection.html">TableSection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionElementKind.html">CollectionElementKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DequeueMethod.html">DequeueMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/StackLoadingMethod.html">StackLoadingMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TableHeaderFooter.html">TableHeaderFooter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UICollectionReusableView">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionViewLayout.html">UICollectionViewLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITableView.html">UITableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewCell">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewHeaderFooterView">UITableViewHeaderFooterView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionContextMenuHandler.html">CollectionContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionCoordinatorDelegate.html">CollectionCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDragHandler.html">CollectionDragHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDropHandler.html">CollectionDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionEditingHandler.html">CollectionEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionElement.html">CollectionElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSelectionHandler.html">CollectionSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionUpdateHandler.html">CollectionUpdateHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NibLoadable.html">NibLoadable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReusableCell.html">ReusableCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReuseableView.html">ReuseableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackElementsProvider.html">StackElementsProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionAppearanceHandler.html">StackSectionAppearanceHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionProvider.html">StackSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableAccessoryHandler.html">TableAccessoryHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableActionsHandler.html">TableActionsHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableContextMenuHandler.html">TableContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableCoordinatorDelegate.html">TableCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableDropHandler.html">TableDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableEditingHandler.html">TableEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableMovingHandler.html">TableMovingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionLayoutHandler.html">TableSectionLayoutHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionProvider.html">TableSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSelectionHandler.html">TableSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableUpdateHandler.html">TableUpdateHandler</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>TableElement</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">TableElement</span><span class="o">&lt;</span><span class="kt">View</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">View</span> <span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="kt">View</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/ReusableCell.html">ReusableCell</a></span></code></pre>
+
+                </div>
+              </div>
+            
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12TableElementC13dequeueMethodAA07DequeueF0OyxGvp"></a>
+                    <a name="//apple_ref/swift/Property/dequeueMethod" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12TableElementC13dequeueMethodAA07DequeueF0OyxGvp">dequeueMethod</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The method to use for registering and dequeueing a view for this element</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">dequeueMethod</span><span class="p">:</span> <span class="kt"><a href="../Enums/DequeueMethod.html">DequeueMethod</a></span><span class="o">&lt;</span><span class="kt">View</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12TableElementC9configureyySo6UIViewC_Si0A07Section_ptcvp"></a>
+                    <a name="//apple_ref/swift/Property/configure" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12TableElementC9configureyySo6UIViewC_Si0A07Section_ptcvp">configure</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A closure that will be called whenever the elements view needs to be configured</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">configure</span><span class="p">:</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">,</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12TableElementC15reuseIdentifierSSvp"></a>
+                    <a name="//apple_ref/swift/Property/reuseIdentifier" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12TableElementC15reuseIdentifierSSvp">reuseIdentifier</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The reuseIdentifier to use for this element</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12TableElementC10willAppearyySo6UIViewC_Si0A07Section_ptcvp"></a>
+                    <a name="//apple_ref/swift/Property/willAppear" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12TableElementC10willAppearyySo6UIViewC_Si0A07Section_ptcvp">willAppear</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The closure that will be called before the elements view appears</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">willAppear</span><span class="p">:</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">,</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12TableElementC12didDisappearyySo6UIViewC_Si0A07Section_ptcvp"></a>
+                    <a name="//apple_ref/swift/Property/didDisappear" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12TableElementC12didDisappearyySo6UIViewC_Si0A07Section_ptcvp">didDisappear</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The closure that will be called after the elements view disappears</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">didDisappear</span><span class="p">:</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">,</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12TableElementC7section13dequeueMethod15reuseIdentifier9configureACyxGqd___AA07DequeueG0OyxGSSSgyx_Siqd__tctc0A07SectionRd__lufc"></a>
+                    <a name="//apple_ref/swift/Method/init(section:dequeueMethod:reuseIdentifier:configure:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12TableElementC7section13dequeueMethod15reuseIdentifier9configureACyxGqd___AA07DequeueG0OyxGSSSgyx_Siqd__tctc0A07SectionRd__lufc">init(section:<wbr>dequeueMethod:<wbr>reuseIdentifier:<wbr>configure:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Makes a new element for representing a view</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">Section</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">section</span><span class="p">:</span> <span class="kt">Section</span><span class="p">,</span> <span class="nv">dequeueMethod</span><span class="p">:</span> <span class="kt"><a href="../Enums/DequeueMethod.html">DequeueMethod</a></span><span class="o">&lt;</span><span class="kt">View</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">configure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">View</span><span class="p">,</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">where</span> <span class="kt">Section</span> <span class="p">:</span> <span class="kt">Section</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>section</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The section where this element&rsquo;s view will be shown in</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dequeueMethod</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The method to use for registering and dequeueing a view for this element</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>reuseIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The reuseIdentifier to use for this element</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configure</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A closure that will be called whenever the elements view needs to be configured</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12TableElementC7section13dequeueMethod15reuseIdentifier9configure10willAppear12didDisappearACyxGqd___AA07DequeueG0OyxGSSSgyx_Siqd__tcyx_Siqd__tcSgAOtc0A07SectionRd__lufc"></a>
+                    <a name="//apple_ref/swift/Method/init(section:dequeueMethod:reuseIdentifier:configure:willAppear:didDisappear:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12TableElementC7section13dequeueMethod15reuseIdentifier9configure10willAppear12didDisappearACyxGqd___AA07DequeueG0OyxGSSSgyx_Siqd__tcyx_Siqd__tcSgAOtc0A07SectionRd__lufc">init(section:<wbr>dequeueMethod:<wbr>reuseIdentifier:<wbr>configure:<wbr>willAppear:<wbr>didDisappear:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Makes a new element for representing a view</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">Section</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">section</span><span class="p">:</span> <span class="kt">Section</span><span class="p">,</span>
+                     <span class="nv">dequeueMethod</span><span class="p">:</span> <span class="kt"><a href="../Enums/DequeueMethod.html">DequeueMethod</a></span><span class="o">&lt;</span><span class="kt">View</span><span class="o">&gt;</span><span class="p">,</span>
+                     <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                     <span class="nv">configure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">View</span><span class="p">,</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+                     <span class="nv">willAppear</span><span class="p">:</span> <span class="p">((</span><span class="kt">View</span><span class="p">,</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                     <span class="nv">didDisappear</span><span class="p">:</span> <span class="p">((</span><span class="kt">View</span><span class="p">,</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="k">where</span> <span class="kt">Section</span><span class="p">:</span> <span class="kt">Composed</span><span class="o">.</span><span class="kt">Section</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>section</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The section where this element&rsquo;s view will be shown in</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dequeueMethod</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The method to use for registering and dequeueing a view for this element</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>reuseIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The reuseIdentifier to use for this element</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configure</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A closure that will be called whenever the elements view needs to be configured</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>willAppear</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A closure that will be called before the elements view appears</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>didDisappear</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A closure that will be called after the elements view disappears</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Composed Swift</a>. All rights reserved. (Last updated: 2020-09-21)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CollectionSection Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/CollectionSection" class="dashAnchor"></a>
+    <a title="CollectionSection Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (55% documented)</p>
+        <p class="header-right"><a href="https://github.com/composed-swift/ComposedUI"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        CollectionSection Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCellElement.html">CollectionCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCoordinator.html">CollectionCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSection.html">CollectionSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedSectionView.html">ComposedSectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView.html">ComposedStackView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView/Animation.html">– Animation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedView.html">ComposedView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedViewCell.html">ComposedViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCellElement.html">StackCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCoordinator.html">StackCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackSection.html">StackSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableCoordinator.html">TableCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableElement.html">TableElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableSection.html">TableSection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionElementKind.html">CollectionElementKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DequeueMethod.html">DequeueMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/StackLoadingMethod.html">StackLoadingMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TableHeaderFooter.html">TableHeaderFooter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UICollectionReusableView">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionViewLayout.html">UICollectionViewLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITableView.html">UITableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewCell">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewHeaderFooterView">UITableViewHeaderFooterView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionContextMenuHandler.html">CollectionContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionCoordinatorDelegate.html">CollectionCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDragHandler.html">CollectionDragHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDropHandler.html">CollectionDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionEditingHandler.html">CollectionEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionElement.html">CollectionElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSelectionHandler.html">CollectionSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionUpdateHandler.html">CollectionUpdateHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NibLoadable.html">NibLoadable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReusableCell.html">ReusableCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReuseableView.html">ReuseableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackElementsProvider.html">StackElementsProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionAppearanceHandler.html">StackSectionAppearanceHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionProvider.html">StackSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableAccessoryHandler.html">TableAccessoryHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableActionsHandler.html">TableActionsHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableContextMenuHandler.html">TableContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableCoordinatorDelegate.html">TableCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableDropHandler.html">TableDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableEditingHandler.html">TableEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableMovingHandler.html">TableMovingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionLayoutHandler.html">TableSectionLayoutHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionProvider.html">TableSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSelectionHandler.html">TableSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableUpdateHandler.html">TableUpdateHandler</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>CollectionSection</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CollectionSection</span> <span class="p">:</span> <span class="kt">CollectionElementsProvider</span></code></pre>
+
+                </div>
+              </div>
+            <p>Defines a configuration for a section in a <code>UICollectionView</code>.
+The section must contain a cell element, but can also optionally include a header and/or footer element.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI17CollectionSectionC4cellAA0C11CellElementCySo016UICollectionViewF0CGvp"></a>
+                    <a name="//apple_ref/swift/Property/cell" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI17CollectionSectionC4cellAA0C11CellElementCySo016UICollectionViewF0CGvp">cell</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The cell configuration element</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">cell</span><span class="p">:</span> <span class="kt"><a href="../Classes/CollectionCellElement.html">CollectionCellElement</a></span><span class="o">&lt;</span><span class="kt">UICollectionViewCell</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI17CollectionSectionC6headerAA0C20SupplementaryElementCySo24UICollectionReusableViewCGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/header" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI17CollectionSectionC6headerAA0C20SupplementaryElementCySo24UICollectionReusableViewCGSgvp">header</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The header configuration element</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">header</span><span class="p">:</span> <span class="kt"><a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a></span><span class="o">&lt;</span><span class="kt">UICollectionReusableView</span><span class="o">&gt;</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI17CollectionSectionC6footerAA0C20SupplementaryElementCySo24UICollectionReusableViewCGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/footer" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI17CollectionSectionC6footerAA0C20SupplementaryElementCySo24UICollectionReusableViewCGSgvp">footer</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The footer configuration element</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">footer</span><span class="p">:</span> <span class="kt"><a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a></span><span class="o">&lt;</span><span class="kt">UICollectionReusableView</span><span class="o">&gt;</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI17CollectionSectionC16numberOfElementsSivp"></a>
+                    <a name="//apple_ref/swift/Property/numberOfElements" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI17CollectionSectionC16numberOfElementsSivp">numberOfElements</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The number of elements in this section</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">numberOfElements</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI17CollectionSectionC7section4cell6header6footerACx_AA0C11CellElementCyq_GAA0c13SupplementaryJ0Cyq0_GSgALyq1_GSgtc0A00D0RzSo016UICollectionViewI0CRb_So0l8ReusableM0CRb0_AVRb1_r2_lufc"></a>
+                    <a name="//apple_ref/swift/Method/init(section:cell:header:footer:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI17CollectionSectionC7section4cell6header6footerACx_AA0C11CellElementCyq_GAA0c13SupplementaryJ0Cyq0_GSgALyq1_GSgtc0A00D0RzSo016UICollectionViewI0CRb_So0l8ReusableM0CRb0_AVRb1_r2_lufc">init(section:<wbr>cell:<wbr>header:<wbr>footer:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Makes a new configuration with the specified cell, header and/or footer elements</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">Section</span><span class="p">,</span> <span class="kt">Cell</span><span class="p">,</span> <span class="kt">Header</span><span class="p">,</span> <span class="kt">Footer</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">section</span><span class="p">:</span> <span class="kt">Section</span><span class="p">,</span>
+                                           <span class="nv">cell</span><span class="p">:</span> <span class="kt"><a href="../Classes/CollectionCellElement.html">CollectionCellElement</a></span><span class="o">&lt;</span><span class="kt">Cell</span><span class="o">&gt;</span><span class="p">,</span>
+                                           <span class="nv">header</span><span class="p">:</span> <span class="kt"><a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a></span><span class="o">&lt;</span><span class="kt">Header</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                                           <span class="nv">footer</span><span class="p">:</span> <span class="kt"><a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a></span><span class="o">&lt;</span><span class="kt">Footer</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="k">where</span> <span class="kt">Header</span><span class="p">:</span> <span class="kt">UICollectionReusableView</span><span class="p">,</span> <span class="kt">Footer</span><span class="p">:</span> <span class="kt">UICollectionReusableView</span><span class="p">,</span> <span class="kt">Cell</span><span class="p">:</span> <span class="kt">UICollectionViewCell</span><span class="p">,</span> <span class="kt">Section</span><span class="p">:</span> <span class="kt">Composed</span><span class="o">.</span><span class="kt">Section</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>section</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The section this will be associated with</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The cell configuration element</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>header</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The header configuration element</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>footer</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The footer configuration element</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Composed Swift</a>. All rights reserved. (Last updated: 2020-09-21)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

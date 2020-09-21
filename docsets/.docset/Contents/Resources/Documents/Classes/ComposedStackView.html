@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ComposedStackView Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/ComposedStackView" class="dashAnchor"></a>
+    <a title="ComposedStackView Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (55% documented)</p>
+        <p class="header-right"><a href="https://github.com/composed-swift/ComposedUI"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        ComposedStackView Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCellElement.html">CollectionCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCoordinator.html">CollectionCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSection.html">CollectionSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedSectionView.html">ComposedSectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView.html">ComposedStackView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView/Animation.html">– Animation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedView.html">ComposedView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedViewCell.html">ComposedViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCellElement.html">StackCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCoordinator.html">StackCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackSection.html">StackSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableCoordinator.html">TableCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableElement.html">TableElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableSection.html">TableSection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionElementKind.html">CollectionElementKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DequeueMethod.html">DequeueMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/StackLoadingMethod.html">StackLoadingMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TableHeaderFooter.html">TableHeaderFooter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UICollectionReusableView">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionViewLayout.html">UICollectionViewLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITableView.html">UITableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewCell">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewHeaderFooterView">UITableViewHeaderFooterView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionContextMenuHandler.html">CollectionContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionCoordinatorDelegate.html">CollectionCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDragHandler.html">CollectionDragHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDropHandler.html">CollectionDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionEditingHandler.html">CollectionEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionElement.html">CollectionElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSelectionHandler.html">CollectionSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionUpdateHandler.html">CollectionUpdateHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NibLoadable.html">NibLoadable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReusableCell.html">ReusableCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReuseableView.html">ReuseableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackElementsProvider.html">StackElementsProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionAppearanceHandler.html">StackSectionAppearanceHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionProvider.html">StackSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableAccessoryHandler.html">TableAccessoryHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableActionsHandler.html">TableActionsHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableContextMenuHandler.html">TableContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableCoordinatorDelegate.html">TableCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableDropHandler.html">TableDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableEditingHandler.html">TableEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableMovingHandler.html">TableMovingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionLayoutHandler.html">TableSectionLayoutHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionProvider.html">TableSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSelectionHandler.html">TableSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableUpdateHandler.html">TableUpdateHandler</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>ComposedStackView</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ComposedStackView</span> <span class="p">:</span> <span class="kt">UIStackView</span></code></pre>
+
+                </div>
+              </div>
+            <p>A stack view that supports animating showing/hiding arranged subviews,
+and has the option of dynamically creating separators when arranged subviews are added.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI0A9StackViewC9AnimationO"></a>
+                    <a name="//apple_ref/swift/Enum/Animation" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI0A9StackViewC9AnimationO">Animation</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="../Classes/ComposedStackView/Animation.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Animation</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI0A9StackViewC17animationDurationSdvp"></a>
+                    <a name="//apple_ref/swift/Property/animationDuration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI0A9StackViewC17animationDurationSdvp">animationDuration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The style of the stack view.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">animationDuration</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Life%20Cycle"></a>
+                <a name="//apple_ref/swift/Section/Life Cycle" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Life%20Cycle"></a>
+                  <h3 class="section-name"><p>Life Cycle</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@ComposedUI@objc(cs)ComposedStackView(im)init"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@ComposedUI@objc(cs)ComposedStackView(im)init">init()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the stack view with a style. A plain style is a typical stack view. A separated
+style will automatically create separators between arranged subviews whenever they&rsquo;re
+added.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>style</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The style for the stack view.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@ComposedUI@objc(cs)ComposedStackView(im)initWithCoder:"></a>
+                    <a name="//apple_ref/swift/Method/init(coder:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@ComposedUI@objc(cs)ComposedStackView(im)initWithCoder:">init(coder:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">(</span><span class="nv">coder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Methods"></a>
+                <a name="//apple_ref/swift/Section/Methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Methods"></a>
+                  <h3 class="section-name"><p>Methods</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI0A9StackViewC18addArrangedSubview_4withySo6UIViewC_AC9AnimationOtF"></a>
+                    <a name="//apple_ref/swift/Method/addArrangedSubview(_:with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI0A9StackViewC18addArrangedSubview_4withySo6UIViewC_AC9AnimationOtF">addArrangedSubview(_:<wbr>with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Add a subview to the end of the stack view. If the style is separated,
+separators will automatically be added. Provides the option to animate
+showing the new view.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">addArrangedSubview</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="n">with</span> <span class="nv">animation</span><span class="p">:</span> <span class="kt"><a href="../Classes/ComposedStackView/Animation.html">Animation</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>view</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The view to add.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Flag that determines if the view should animated on screen.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI0A9StackViewC21insertArrangedSubview_2at4withySo6UIViewC_SiAC9AnimationOtF"></a>
+                    <a name="//apple_ref/swift/Method/insertArrangedSubview(_:at:with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI0A9StackViewC21insertArrangedSubview_2at4withySo6UIViewC_SiAC9AnimationOtF">insertArrangedSubview(_:<wbr>at:<wbr>with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Insert an arranged subview at a particular index in the stack view. If the style is
+separated, separators will be automatically added.  Provides the option to animate
+showing the new view.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">insertArrangedSubview</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="n">at</span> <span class="nv">stackIndex</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">with</span> <span class="nv">animation</span><span class="p">:</span> <span class="kt"><a href="../Classes/ComposedStackView/Animation.html">Animation</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>view</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The view to add.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>stackIndex</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Index in the stack view to add the view.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Flag that determines if the view should animated on screen.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI0A9StackViewC21removeArrangedSubview_4withySo6UIViewC_AC9AnimationOtF"></a>
+                    <a name="//apple_ref/swift/Method/removeArrangedSubview(_:with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI0A9StackViewC21removeArrangedSubview_4withySo6UIViewC_AC9AnimationOtF">removeArrangedSubview(_:<wbr>with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Remove an arranged subview from the stack view. If the style is separated,
+the separators will be automatically removed. Option to animated the removal of the
+view.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">removeArrangedSubview</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="n">with</span> <span class="nv">animation</span><span class="p">:</span> <span class="kt"><a href="../Classes/ComposedStackView/Animation.html">Animation</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>view</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The view to remove.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Flag that determines if the view removal should be animated.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI0A9StackViewC20removeArrangedSubvew2at4withySi_AC9AnimationOtF"></a>
+                    <a name="//apple_ref/swift/Method/removeArrangedSubvew(at:with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI0A9StackViewC20removeArrangedSubvew2at4withySi_AC9AnimationOtF">removeArrangedSubvew(at:<wbr>with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">removeArrangedSubvew</span><span class="p">(</span><span class="n">at</span> <span class="nv">stackIndex</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">with</span> <span class="nv">animation</span><span class="p">:</span> <span class="kt"><a href="../Classes/ComposedStackView/Animation.html">Animation</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Composed Swift</a>. All rights reserved. (Last updated: 2020-09-21)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

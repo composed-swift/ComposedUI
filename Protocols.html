@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Protocols  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Protocols" class="dashAnchor"></a>
+    <a title="Protocols  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html"> Docs</a> (55% documented)</p>
+        <p class="header-right"><a href="https://github.com/composed-swift/ComposedUI"><img src="img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html"> Reference</a>
+        <img id="carat" src="img/carat.png" />
+        Protocols  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/CollectionCellElement.html">CollectionCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/CollectionCoordinator.html">CollectionCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/CollectionSection.html">CollectionSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ComposedSectionView.html">ComposedSectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ComposedStackView.html">ComposedStackView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ComposedStackView/Animation.html">– Animation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ComposedView.html">ComposedView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ComposedViewCell.html">ComposedViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/StackCellElement.html">StackCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/StackCoordinator.html">StackCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/StackSection.html">StackSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/TableCoordinator.html">TableCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/TableElement.html">TableElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/TableSection.html">TableSection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/CollectionElementKind.html">CollectionElementKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/DequeueMethod.html">DequeueMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/StackLoadingMethod.html">StackLoadingMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/TableHeaderFooter.html">TableHeaderFooter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Extensions.html#/c:objc(cs)UICollectionReusableView">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/UICollectionViewLayout.html">UICollectionViewLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/UITableView.html">UITableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/c:objc(cs)UITableViewCell">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/c:objc(cs)UITableViewHeaderFooterView">UITableViewHeaderFooterView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionContextMenuHandler.html">CollectionContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionCoordinatorDelegate.html">CollectionCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionDragHandler.html">CollectionDragHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionDropHandler.html">CollectionDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionEditingHandler.html">CollectionEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionElement.html">CollectionElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionSelectionHandler.html">CollectionSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CollectionUpdateHandler.html">CollectionUpdateHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/NibLoadable.html">NibLoadable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/ReusableCell.html">ReusableCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/ReuseableView.html">ReuseableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/StackElementsProvider.html">StackElementsProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/StackSectionAppearanceHandler.html">StackSectionAppearanceHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/StackSectionProvider.html">StackSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableAccessoryHandler.html">TableAccessoryHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableActionsHandler.html">TableActionsHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableContextMenuHandler.html">TableContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableCoordinatorDelegate.html">TableCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableDropHandler.html">TableDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableEditingHandler.html">TableEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableMovingHandler.html">TableMovingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableSectionLayoutHandler.html">TableSectionLayoutHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableSectionProvider.html">TableSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableSelectionHandler.html">TableSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/TableUpdateHandler.html">TableUpdateHandler</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Protocols</h1>
+            <p>The following protocols are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI29CollectionCoordinatorDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionCoordinatorDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI29CollectionCoordinatorDelegateP">CollectionCoordinatorDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Conform to this protocol to receive <code><a href="Classes/CollectionCoordinator.html">CollectionCoordinator</a></code> events</p>
+
+                        <a href="Protocols/CollectionCoordinatorDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionCoordinatorDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI17CollectionElementP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionElement" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI17CollectionElementP">CollectionElement</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Defines an element used by a <code><a href="Classes/CollectionSection.html">CollectionSection</a></code> to provide configurations for a cell, header and/or footer.</p>
+
+                        <a href="Protocols/CollectionElement.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionElement</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI25CollectionSectionProviderP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionSectionProvider" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI25CollectionSectionProviderP">CollectionSectionProvider</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides a section to a collection view. Conform to this protool to use your section with a <code>UICollectionView</code></p>
+
+                        <a href="Protocols/CollectionSectionProvider.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionSectionProvider</span> <span class="p">:</span> <span class="kt">Section</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI28CollectionContextMenuHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionContextMenuHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI28CollectionContextMenuHandlerP">CollectionContextMenuHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides context menu handling for <code>UICollectionView</code>&lsquo;s</p>
+
+                        <a href="Protocols/CollectionContextMenuHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionContextMenuHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI21CollectionDragHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionDragHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI21CollectionDragHandlerP">CollectionDragHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Protocols/CollectionDragHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionDragHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI21CollectionDropHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionDropHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI21CollectionDropHandlerP">CollectionDropHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides drag and drop handling for <code>UICollectionView</code>&lsquo;s</p>
+
+                        <a href="Protocols/CollectionDropHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionDropHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI24CollectionEditingHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionEditingHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI24CollectionEditingHandlerP">CollectionEditingHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides edit handling for <code>UICollectionView</code>&lsquo;s</p>
+
+                        <a href="Protocols/CollectionEditingHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionEditingHandler</span> <span class="p">:</span> <span class="kt">EditingHandler</span><span class="p">,</span> <span class="kt"><a href="Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI26CollectionSelectionHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionSelectionHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI26CollectionSelectionHandlerP">CollectionSelectionHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides selection handling for <code>UICollectionView</code>&lsquo;s</p>
+
+                        <a href="Protocols/CollectionSelectionHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionSelectionHandler</span> <span class="p">:</span> <span class="kt">SelectionHandler</span><span class="p">,</span> <span class="kt"><a href="Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI23CollectionUpdateHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/CollectionUpdateHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI23CollectionUpdateHandlerP">CollectionUpdateHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Conform your section to this to signal to the Coordinator that you want to handle updates manually for the cells in this section. Your cell configuration closure will be called instead of <code>reloadItems</code></p>
+
+                        <a href="Protocols/CollectionUpdateHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionUpdateHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI11NibLoadableP"></a>
+                    <a name="//apple_ref/swift/Protocol/NibLoadable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI11NibLoadableP">NibLoadable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Represents any type that can be loaded via a XIB/NIB</p>
+
+                        <a href="Protocols/NibLoadable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">NibLoadable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI12ReusableCellP"></a>
+                    <a name="//apple_ref/swift/Protocol/ReusableCell" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI12ReusableCellP">ReusableCell</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Protocols/ReusableCell.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ReusableCell</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ReuseableView.html">ReuseableView</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI13ReuseableViewP"></a>
+                    <a name="//apple_ref/swift/Protocol/ReuseableView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI13ReuseableViewP">ReuseableView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Protocols/ReuseableView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ReuseableView</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI21StackElementsProviderP"></a>
+                    <a name="//apple_ref/swift/Protocol/StackElementsProvider" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI21StackElementsProviderP">StackElementsProvider</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Protocols/StackElementsProvider.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">StackElementsProvider</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI20StackSectionProviderP"></a>
+                    <a name="//apple_ref/swift/Protocol/StackSectionProvider" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI20StackSectionProviderP">StackSectionProvider</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Protocols/StackSectionProvider.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">StackSectionProvider</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI29StackSectionAppearanceHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/StackSectionAppearanceHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI29StackSectionAppearanceHandlerP">StackSectionAppearanceHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Protocols/StackSectionAppearanceHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">StackSectionAppearanceHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/StackSectionProvider.html">StackSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI21TableAccessoryHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableAccessoryHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI21TableAccessoryHandlerP">TableAccessoryHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides cell accessory handling for <code>UITableView</code>&lsquo;s</p>
+
+                        <a href="Protocols/TableAccessoryHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableAccessoryHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI19TableActionsHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableActionsHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI19TableActionsHandlerP">TableActionsHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides cell action handling for <code>UITableView</code>&lsquo;s</p>
+
+                        <a href="Protocols/TableActionsHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableActionsHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI23TableContextMenuHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableContextMenuHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI23TableContextMenuHandlerP">TableContextMenuHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides context menu handling for <code>UITableView</code>&lsquo;s</p>
+
+                        <a href="Protocols/TableContextMenuHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">13.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableContextMenuHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI16TableDropHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableDropHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI16TableDropHandlerP">TableDropHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides drag and drop handling for <code>UITableView</code>&lsquo;s</p>
+
+                        <a href="Protocols/TableDropHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableDropHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI19TableEditingHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableEditingHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI19TableEditingHandlerP">TableEditingHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides edit handling for <code>UITableView</code>&lsquo;s</p>
+
+                        <a href="Protocols/TableEditingHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableEditingHandler</span> <span class="p">:</span> <span class="kt">EditingHandler</span><span class="p">,</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI25TableSectionLayoutHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableSectionLayoutHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI25TableSectionLayoutHandlerP">TableSectionLayoutHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Conform to this protocol to provide layout specific details for a <code>UITableView</code> and its cells, headers and footers.</p>
+
+                        <a href="Protocols/TableSectionLayoutHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableSectionLayoutHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Deprecations"></a>
+                <a name="//apple_ref/swift/Section/Deprecations" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Deprecations"></a>
+                  <h3 class="section-name"><p>Deprecations</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI18TableMovingHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableMovingHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI18TableMovingHandlerP">TableMovingHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Protocols/TableMovingHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableMovingHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI21TableSelectionHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableSelectionHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI21TableSelectionHandlerP">TableSelectionHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides selection handling for <code>UITableView</code>&lsquo;s</p>
+
+                        <a href="Protocols/TableSelectionHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableSelectionHandler</span> <span class="p">:</span> <span class="kt">SelectionHandler</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI18TableUpdateHandlerP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableUpdateHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI18TableUpdateHandlerP">TableUpdateHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Conform your section to this to signal to the Coordinator that you want to handle updates manually for the cells in this section. Your cell configuration closure will be called instead of <code>reloadItems</code></p>
+
+                        <a href="Protocols/TableUpdateHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableUpdateHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableSectionProvider.html">TableSectionProvider</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI24TableCoordinatorDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableCoordinatorDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI24TableCoordinatorDelegateP">TableCoordinatorDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Conform to this protocol to receive <code><a href="Classes/TableCoordinator.html">TableCoordinator</a></code> events</p>
+
+                        <a href="Protocols/TableCoordinatorDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableCoordinatorDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI20TableSectionProviderP"></a>
+                    <a name="//apple_ref/swift/Protocol/TableSectionProvider" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI20TableSectionProviderP">TableSectionProvider</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides a section to a table view. Conform to this protool to use your section with a <code>UITableView</code></p>
+
+                        <a href="Protocols/TableSectionProvider.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableSectionProvider</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Composed Swift</a>. All rights reserved. (Last updated: 2020-09-21)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

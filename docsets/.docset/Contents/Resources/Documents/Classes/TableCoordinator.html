@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TableCoordinator Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/TableCoordinator" class="dashAnchor"></a>
+    <a title="TableCoordinator Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (55% documented)</p>
+        <p class="header-right"><a href="https://github.com/composed-swift/ComposedUI"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        TableCoordinator Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCellElement.html">CollectionCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionCoordinator.html">CollectionCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSection.html">CollectionSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionSupplementaryElement.html">CollectionSupplementaryElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedSectionView.html">ComposedSectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView.html">ComposedStackView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedStackView/Animation.html">– Animation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedView.html">ComposedView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ComposedViewCell.html">ComposedViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCellElement.html">StackCellElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackCoordinator.html">StackCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StackSection.html">StackSection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableCoordinator.html">TableCoordinator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableElement.html">TableElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableSection.html">TableSection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionElementKind.html">CollectionElementKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DequeueMethod.html">DequeueMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/StackLoadingMethod.html">StackLoadingMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TableHeaderFooter.html">TableHeaderFooter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UICollectionReusableView">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionViewLayout.html">UICollectionViewLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITableView.html">UITableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewCell">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewHeaderFooterView">UITableViewHeaderFooterView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionContextMenuHandler.html">CollectionContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionCoordinatorDelegate.html">CollectionCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDragHandler.html">CollectionDragHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDropHandler.html">CollectionDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionEditingHandler.html">CollectionEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionElement.html">CollectionElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSectionProvider.html">CollectionSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionSelectionHandler.html">CollectionSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionUpdateHandler.html">CollectionUpdateHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NibLoadable.html">NibLoadable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReusableCell.html">ReusableCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReuseableView.html">ReuseableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackElementsProvider.html">StackElementsProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionAppearanceHandler.html">StackSectionAppearanceHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StackSectionProvider.html">StackSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableAccessoryHandler.html">TableAccessoryHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableActionsHandler.html">TableActionsHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableContextMenuHandler.html">TableContextMenuHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableCoordinatorDelegate.html">TableCoordinatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableDropHandler.html">TableDropHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableEditingHandler.html">TableEditingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableMovingHandler.html">TableMovingHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionLayoutHandler.html">TableSectionLayoutHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSectionProvider.html">TableSectionProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableSelectionHandler.html">TableSelectionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableUpdateHandler.html">TableUpdateHandler</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>TableCoordinator</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TableCoordinator</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">TableCoordinator</span><span class="p">:</span> <span class="kt">SectionProviderMappingDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">TableCoordinator</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">TableCoordinator</span><span class="p">:</span> <span class="kt">UITableViewDelegate</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">TableCoordinator</span><span class="p">:</span> <span class="kt">UITableViewDropDelegate</span></code></pre>
+
+                </div>
+              </div>
+            
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI16TableCoordinatorC8delegateAA0cD8Delegate_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI16TableCoordinatorC8delegateAA0cD8Delegate_pSgvp">delegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get/set the delegate for this coordinator</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/TableCoordinatorDelegate.html">TableCoordinatorDelegate</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI16TableCoordinatorC15sectionProvider0A007SectionF0_pvp"></a>
+                    <a name="//apple_ref/swift/Property/sectionProvider" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI16TableCoordinatorC15sectionProvider0A007SectionF0_pvp">sectionProvider</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">sectionProvider</span><span class="p">:</span> <span class="kt">SectionProvider</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI16TableCoordinatorC9tableView15sectionProviderACSo07UITableF0C_0A007SectionH0_ptcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(tableView:sectionProvider:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI16TableCoordinatorC9tableView15sectionProviderACSo07UITableF0C_0A007SectionH0_ptcfc">init(tableView:<wbr>sectionProvider:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Make a new coordinator with the specified tableView and sectionProvider</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="nv">sectionProvider</span><span class="p">:</span> <span class="kt">SectionProvider</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tableView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The tableView to associate with this coordinator</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sectionProvider</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The sectionProvider to associate with this coordinator</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI16TableCoordinatorC7replace15sectionProvidery0A007SectionG0_p_tF"></a>
+                    <a name="//apple_ref/swift/Method/replace(sectionProvider:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI16TableCoordinatorC7replace15sectionProvidery0A007SectionG0_p_tF">replace(sectionProvider:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">replace</span><span class="p">(</span><span class="nv">sectionProvider</span><span class="p">:</span> <span class="kt">SectionProvider</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI16TableCoordinatorC10setEditing_8animatedySb_SbtF"></a>
+                    <a name="//apple_ref/swift/Method/setEditing(_:animated:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI16TableCoordinatorC10setEditing_8animatedySb_SbtF">setEditing(_:<wbr>animated:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">editing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/SectionProviderMappingDelegate"></a>
+                <a name="//apple_ref/swift/Section/SectionProviderMappingDelegate" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/SectionProviderMappingDelegate"></a>
+                  <h3 class="section-name"><p>SectionProviderMappingDelegate</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP20mappingDidInvalidateyyAA0bcD0CF"></a>
+                    <a name="//apple_ref/swift/Method/mappingDidInvalidate(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP20mappingDidInvalidateyyAA0bcD0CF">mappingDidInvalidate(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mappingDidInvalidate</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP24mappingWillBeginUpdatingyyAA0bcD0CF"></a>
+                    <a name="//apple_ref/swift/Method/mappingWillBeginUpdating(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP24mappingWillBeginUpdatingyyAA0bcD0CF">mappingWillBeginUpdating(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mappingWillBeginUpdating</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP21mappingDidEndUpdatingyyAA0bcD0CF"></a>
+                    <a name="//apple_ref/swift/Method/mappingDidEndUpdating(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP21mappingDidEndUpdatingyyAA0bcD0CF">mappingDidEndUpdating(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mappingDidEndUpdating</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_17didUpdateSectionsyAA0bcD0C_10Foundation8IndexSetVtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:didUpdateSections:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_17didUpdateSectionsyAA0bcD0C_10Foundation8IndexSetVtF">mapping(_:<wbr>didUpdateSections:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">didUpdateSections</span> <span class="nv">sections</span><span class="p">:</span> <span class="kt">IndexSet</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_17didInsertSectionsyAA0bcD0C_10Foundation8IndexSetVtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:didInsertSections:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_17didInsertSectionsyAA0bcD0C_10Foundation8IndexSetVtF">mapping(_:<wbr>didInsertSections:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">didInsertSections</span> <span class="nv">sections</span><span class="p">:</span> <span class="kt">IndexSet</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_17didRemoveSectionsyAA0bcD0C_10Foundation8IndexSetVtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:didRemoveSections:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_17didRemoveSectionsyAA0bcD0C_10Foundation8IndexSetVtF">mapping(_:<wbr>didRemoveSections:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">didRemoveSections</span> <span class="nv">sections</span><span class="p">:</span> <span class="kt">IndexSet</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_19didInsertElementsAtyAA0bcD0C_Say10Foundation9IndexPathVGtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:didInsertElementsAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_19didInsertElementsAtyAA0bcD0C_Say10Foundation9IndexPathVGtF">mapping(_:<wbr>didInsertElementsAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">didInsertElementsAt</span> <span class="nv">indexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">IndexPath</span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_19didRemoveElementsAtyAA0bcD0C_Say10Foundation9IndexPathVGtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:didRemoveElementsAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_19didRemoveElementsAtyAA0bcD0C_Say10Foundation9IndexPathVGtF">mapping(_:<wbr>didRemoveElementsAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">didRemoveElementsAt</span> <span class="nv">indexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">IndexPath</span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_19didUpdateElementsAtyAA0bcD0C_Say10Foundation9IndexPathVGtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:didUpdateElementsAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_19didUpdateElementsAtyAA0bcD0C_Say10Foundation9IndexPathVGtF">mapping(_:<wbr>didUpdateElementsAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">didUpdateElementsAt</span> <span class="nv">indexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">IndexPath</span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_17didMoveElementsAtyAA0bcD0C_Say10Foundation9IndexPathV_AJtGtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:didMoveElementsAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_17didMoveElementsAtyAA0bcD0C_Say10Foundation9IndexPathV_AJtGtF">mapping(_:<wbr>didMoveElementsAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">didMoveElementsAt</span> <span class="nv">moves</span><span class="p">:</span> <span class="p">[(</span><span class="kt">IndexPath</span><span class="p">,</span> <span class="kt">IndexPath</span><span class="p">)])</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_17selectedIndexesInSaySiGAA0bcD0C_SitF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:selectedIndexesIn:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_17selectedIndexesInSaySiGAA0bcD0C_SitF">mapping(_:<wbr>selectedIndexesIn:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">selectedIndexesIn</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_6selectyAA0bcD0C_10Foundation9IndexPathVtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:select:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_6selectyAA0bcD0C_10Foundation9IndexPathVtF">mapping(_:<wbr>select:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">select</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_8deselectyAA0bcD0C_10Foundation9IndexPathVtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:deselect:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_8deselectyAA0bcD0C_10Foundation9IndexPathVtF">mapping(_:<wbr>deselect:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">deselect</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8Composed30SectionProviderMappingDelegateP7mapping_4move2toyAA0bcD0C_10Foundation9IndexPathVAKtF"></a>
+                    <a name="//apple_ref/swift/Method/mapping(_:move:to:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8Composed30SectionProviderMappingDelegateP7mapping_4move2toyAA0bcD0C_10Foundation9IndexPathVAKtF">mapping(_:<wbr>move:<wbr>to:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt">SectionProviderMapping</span><span class="p">,</span> <span class="n">move</span> <span class="nv">sourceIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">to</span> <span class="nv">destinationIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/UITableViewDataSource"></a>
+                <a name="//apple_ref/swift/Section/UITableViewDataSource" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/UITableViewDataSource"></a>
+                  <h3 class="section-name"><p>UITableViewDataSource</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDisplayHeaderView:forSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:willDisplayHeaderView:forSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDisplayHeaderView:forSection:">tableView(_:<wbr>willDisplayHeaderView:<wbr>forSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willDisplayHeaderView</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="n">forSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:viewForHeaderInSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:viewForHeaderInSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:viewForHeaderInSection:">tableView(_:<wbr>viewForHeaderInSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">viewForHeaderInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndDisplayingHeaderView:forSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:didEndDisplayingHeaderView:forSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndDisplayingHeaderView:forSection:">tableView(_:<wbr>didEndDisplayingHeaderView:<wbr>forSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didEndDisplayingHeaderView</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="n">forSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDisplayFooterView:forSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:willDisplayFooterView:forSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDisplayFooterView:forSection:">tableView(_:<wbr>willDisplayFooterView:<wbr>forSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willDisplayFooterView</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="n">forSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:viewForFooterInSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:viewForFooterInSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:viewForFooterInSection:">tableView(_:<wbr>viewForFooterInSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">viewForFooterInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndDisplayingFooterView:forSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:didEndDisplayingFooterView:forSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndDisplayingFooterView:forSection:">tableView(_:<wbr>didEndDisplayingFooterView:<wbr>forSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didEndDisplayingFooterView</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="n">forSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)numberOfSectionsInTableView:"></a>
+                    <a name="//apple_ref/swift/Method/numberOfSections(in:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)numberOfSectionsInTableView:">numberOfSections(in:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">numberOfSections</span><span class="p">(</span><span class="k">in</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:numberOfRowsInSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:numberOfRowsInSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:numberOfRowsInSection:">tableView(_:<wbr>numberOfRowsInSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDisplayCell:forRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:willDisplay:forRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDisplayCell:forRowAtIndexPath:">tableView(_:<wbr>willDisplay:<wbr>forRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willDisplay</span> <span class="nv">cell</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:cellForRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:cellForRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:cellForRowAtIndexPath:">tableView(_:<wbr>cellForRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndDisplayingCell:forRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:didEndDisplaying:forRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndDisplayingCell:forRowAtIndexPath:">tableView(_:<wbr>didEndDisplaying:<wbr>forRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didEndDisplaying</span> <span class="nv">cell</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Context%20Menus"></a>
+                <a name="//apple_ref/swift/Section/Context Menus" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Context%20Menus"></a>
+                  <h3 class="section-name"><p>Context Menus</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:contextMenuConfigurationForRowAtIndexPath:point:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:contextMenuConfigurationForRowAt:point:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:contextMenuConfigurationForRowAtIndexPath:point:">tableView(_:<wbr>contextMenuConfigurationForRowAt:<wbr>point:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">contextMenuConfigurationForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="nv">point</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIContextMenuConfiguration</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:previewForHighlightingContextMenuWithConfiguration:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:previewForHighlightingContextMenuWithConfiguration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:previewForHighlightingContextMenuWithConfiguration:">tableView(_:<wbr>previewForHighlightingContextMenuWithConfiguration:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">previewForHighlightingContextMenuWithConfiguration</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">UIContextMenuConfiguration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITargetedPreview</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:previewForDismissingContextMenuWithConfiguration:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:previewForDismissingContextMenuWithConfiguration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:previewForDismissingContextMenuWithConfiguration:">tableView(_:<wbr>previewForDismissingContextMenuWithConfiguration:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">previewForDismissingContextMenuWithConfiguration</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">UIContextMenuConfiguration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITargetedPreview</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willPerformPreviewActionForMenuWithConfiguration:animator:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:willPerformPreviewActionForMenuWith:animator:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willPerformPreviewActionForMenuWithConfiguration:animator:">tableView(_:<wbr>willPerformPreviewActionForMenuWith:<wbr>animator:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willPerformPreviewActionForMenuWith</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">UIContextMenuConfiguration</span><span class="p">,</span> <span class="nv">animator</span><span class="p">:</span> <span class="kt">UIContextMenuInteractionCommitAnimating</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Editing"></a>
+                <a name="//apple_ref/swift/Section/Editing" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Editing"></a>
+                  <h3 class="section-name"><p>Editing</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:canEditRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:canEditRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:canEditRowAtIndexPath:">tableView(_:<wbr>canEditRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canEditRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:editingStyleForRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:editingStyleForRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:editingStyleForRowAtIndexPath:">tableView(_:<wbr>editingStyleForRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">editingStyleForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span><span class="o">.</span><span class="kt">EditingStyle</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:commitEditingStyle:forRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:commit:forRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:commitEditingStyle:forRowAtIndexPath:">tableView(_:<wbr>commit:<wbr>forRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">commit</span> <span class="nv">editingStyle</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">.</span><span class="kt">EditingStyle</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willBeginEditingRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:willBeginEditingRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willBeginEditingRowAtIndexPath:">tableView(_:<wbr>willBeginEditingRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willBeginEditingRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndEditingRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:didEndEditingRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didEndEditingRowAtIndexPath:">tableView(_:<wbr>didEndEditingRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didEndEditingRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Moving"></a>
+                <a name="//apple_ref/swift/Section/Moving" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Moving"></a>
+                  <h3 class="section-name"><p>Moving</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:targetIndexPathForMoveFromRowAtIndexPath:toProposedIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:targetIndexPathForMoveFromRowAt:toProposedIndexPath:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:targetIndexPathForMoveFromRowAtIndexPath:toProposedIndexPath:">tableView(_:<wbr>targetIndexPathForMoveFromRowAt:<wbr>toProposedIndexPath:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">targetIndexPathForMoveFromRowAt</span> <span class="nv">sourceIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">toProposedIndexPath</span> <span class="nv">proposedDestinationIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IndexPath</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:canMoveRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:canMoveRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:canMoveRowAtIndexPath:">tableView(_:<wbr>canMoveRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canMoveRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:shouldIndentWhileEditingRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:shouldIndentWhileEditingRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:shouldIndentWhileEditingRowAtIndexPath:">tableView(_:<wbr>shouldIndentWhileEditingRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">shouldIndentWhileEditingRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:moveRowAtIndexPath:toIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:moveRowAt:to:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:moveRowAtIndexPath:toIndexPath:">tableView(_:<wbr>moveRowAt:<wbr>to:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">moveRowAt</span> <span class="nv">sourceIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">to</span> <span class="nv">destinationIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Selection"></a>
+                <a name="//apple_ref/swift/Section/Selection" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Selection"></a>
+                  <h3 class="section-name"><p>Selection</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:shouldHighlightRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:shouldHighlightRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:shouldHighlightRowAtIndexPath:">tableView(_:<wbr>shouldHighlightRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">shouldHighlightRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willSelectRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:willSelectRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willSelectRowAtIndexPath:">tableView(_:<wbr>willSelectRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willSelectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IndexPath</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didSelectRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:didSelectRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didSelectRowAtIndexPath:">tableView(_:<wbr>didSelectRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didSelectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:accessoryButtonTappedForRowWithIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:accessoryButtonTappedForRowWith:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:accessoryButtonTappedForRowWithIndexPath:">tableView(_:<wbr>accessoryButtonTappedForRowWith:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">accessoryButtonTappedForRowWith</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDeselectRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:willDeselectRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:willDeselectRowAtIndexPath:">tableView(_:<wbr>willDeselectRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willDeselectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IndexPath</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didDeselectRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:didDeselectRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:didDeselectRowAtIndexPath:">tableView(_:<wbr>didDeselectRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didDeselectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Actions"></a>
+                <a name="//apple_ref/swift/Section/Actions" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Actions"></a>
+                  <h3 class="section-name"><p>Actions</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:leadingSwipeActionsConfigurationForRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:">tableView(_:<wbr>leadingSwipeActionsConfigurationForRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">leadingSwipeActionsConfigurationForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:trailingSwipeActionsConfigurationForRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:">tableView(_:<wbr>trailingSwipeActionsConfigurationForRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">trailingSwipeActionsConfigurationForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Metrics"></a>
+                <a name="//apple_ref/swift/Section/Metrics" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Metrics"></a>
+                  <h3 class="section-name"><p>Metrics</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:heightForHeaderInSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:heightForHeaderInSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:heightForHeaderInSection:">tableView(_:<wbr>heightForHeaderInSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">heightForHeaderInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:heightForFooterInSection:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:heightForFooterInSection:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:heightForFooterInSection:">tableView(_:<wbr>heightForFooterInSection:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">heightForFooterInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:heightForRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:heightForRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:heightForRowAtIndexPath:">tableView(_:<wbr>heightForRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">heightForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Forwarding"></a>
+                <a name="//apple_ref/swift/Section/Forwarding" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Forwarding"></a>
+                  <h3 class="section-name"><p>Forwarding</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)respondsToSelector:"></a>
+                    <a name="//apple_ref/swift/Method/responds(to:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)respondsToSelector:">responds(to:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">responds</span><span class="p">(</span><span class="n">to</span> <span class="nv">aSelector</span><span class="p">:</span> <span class="kt">Selector</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)forwardingTargetForSelector:"></a>
+                    <a name="//apple_ref/swift/Method/forwardingTarget(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)forwardingTargetForSelector:">forwardingTarget(for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">forwardingTarget</span><span class="p">(</span><span class="k">for</span> <span class="nv">aSelector</span><span class="p">:</span> <span class="kt">Selector</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/UITableViewDataSource2"></a>
+                <a name="//apple_ref/swift/Section/UITableViewDataSource" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/UITableViewDataSource2"></a>
+                  <h3 class="section-name"><p>UITableViewDataSource</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:dropSessionDidUpdate:withDestinationIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:dropSessionDidUpdate:withDestinationIndexPath:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:dropSessionDidUpdate:withDestinationIndexPath:">tableView(_:<wbr>dropSessionDidUpdate:<wbr>withDestinationIndexPath:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">dropSessionDidUpdate</span> <span class="nv">session</span><span class="p">:</span> <span class="kt">UIDropSession</span><span class="p">,</span> <span class="n">withDestinationIndexPath</span> <span class="nv">destinationIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewDropProposal</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:performDropWithCoordinator:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:performDropWith:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:performDropWithCoordinator:">tableView(_:<wbr>performDropWith:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">performDropWith</span> <span class="nv">coordinator</span><span class="p">:</span> <span class="kt">UITableViewDropCoordinator</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:dropPreviewParametersForRowAtIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:dropPreviewParametersForRowAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@ComposedUI@objc(cs)TableCoordinator(im)tableView:dropPreviewParametersForRowAtIndexPath:">tableView(_:<wbr>dropPreviewParametersForRowAt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">dropPreviewParametersForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIDragPreviewParameters</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ComposedUI16TableCoordinatorC9tableView8sectionsACSo07UITableF0C_0A07Section_pdtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(tableView:sections:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ComposedUI16TableCoordinatorC9tableView8sectionsACSo07UITableF0C_0A07Section_pdtcfc">init(tableView:<wbr>sections:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A convenience initializer that allows creation without a provider</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="nv">sections</span><span class="p">:</span> <span class="kt">Section</span><span class="o">...</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>collectionView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The collectionView associated with this coordinator</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sections</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The sections associated with this coordinator</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Composed Swift</a>. All rights reserved. (Last updated: 2020-09-21)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
