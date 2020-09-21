@@ -221,7 +221,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
-        collectionView.performBatchUpdates {
+        collectionView.performBatchUpdates({
             if defersUpdate {
                 prepareSections()
             }
@@ -235,7 +235,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             sectionUpdates.forEach { $0() }
             reset()
             defersUpdate = false
-        }
+        })
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateSections sections: IndexSet) {
