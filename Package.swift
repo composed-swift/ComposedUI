@@ -21,6 +21,6 @@ let package = Package(
             dependencies: ["Composed"]),
         .testTarget(
             name: "ComposedUITests",
-            dependencies: ["Composed"]),
+            dependencies: ["Composed", "ComposedUI"]),
     ]
 )

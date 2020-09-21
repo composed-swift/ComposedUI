@@ -1,0 +1,5 @@
+author: "Composed Swift"
+github_url: https://github.com/composed-swift/ComposedUI
+undocumented_text: ""
+swift_build_tool: xcodebuild
+xcodebuild_arguments: [-scheme, ComposedUI, -sdk, iphonesimulator]
