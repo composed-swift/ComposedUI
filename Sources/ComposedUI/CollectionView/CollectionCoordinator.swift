@@ -217,6 +217,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true
+        collectionView.layoutIfNeeded()
     }
 
     public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
