@@ -217,6 +217,14 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
         reset()
         defersUpdate = true
+
+        // This is called here to ensure that the collection view's internal state is in-sync with the state of the
+        // data in hierarchy of sections. If this is not done it can cause various crashes when `performBatchUpdates` is called
+        // due to the collection view requesting data for sections that no longer exist, or crashes because the collection view is
+        // told to delete/insert from/into sections that it does not yet think exist.
+        //
+        // For more information on this see https://github.com/composed-swift/ComposedUI/pull/14
+        collectionView.layoutIfNeeded()
     }
 
     public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
