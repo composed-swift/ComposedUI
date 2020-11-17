@@ -216,7 +216,6 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     }
 
     public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
-        reset()
         defersUpdate = true
 
         // This is called here to ensure that the collection view's internal state is in-sync with the state of the
