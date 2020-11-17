@@ -205,6 +205,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         moves.removeAll()
         sectionInserts.removeAll()
         sectionRemoves.removeAll()
+        sectionUpdates.removeAll()
     }
 
     public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
