@@ -9,238 +9,238 @@
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 359,
+      "line": 367,
       "symbol": "CollectionCoordinator.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 363,
+      "line": 371,
       "symbol": "CollectionCoordinator.collectionView(_:numberOfItemsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 367,
+      "line": 375,
       "symbol": "CollectionCoordinator.collectionView(_:willDisplay:forItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 378,
+      "line": 386,
       "symbol": "CollectionCoordinator.collectionView(_:didEndDisplaying:forItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 390,
+      "line": 398,
       "symbol": "CollectionCoordinator.collectionView(_:cellForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 407,
+      "line": 415,
       "symbol": "CollectionCoordinator.collectionView(_:willDisplaySupplementaryView:forElementKind:at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 426,
+      "line": 434,
       "symbol": "CollectionCoordinator.collectionView(_:viewForSupplementaryElementOfKind:at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 450,
+      "line": 458,
       "symbol": "CollectionCoordinator.collectionView(_:didEndDisplayingSupplementaryView:forElementOfKind:at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 483,
+      "line": 491,
       "symbol": "CollectionCoordinator.collectionView(_:contextMenuConfigurationForItemAt:point:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 493,
+      "line": 501,
       "symbol": "CollectionCoordinator.collectionView(_:previewForHighlightingContextMenuWithConfiguration:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 500,
+      "line": 508,
       "symbol": "CollectionCoordinator.collectionView(_:previewForDismissingContextMenuWithConfiguration:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 507,
+      "line": 515,
       "symbol": "CollectionCoordinator.collectionView(_:willPerformPreviewActionForMenuWith:animator:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 520,
+      "line": 528,
       "symbol": "CollectionCoordinator.collectionView(_:shouldHighlightItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 528,
+      "line": 536,
       "symbol": "CollectionCoordinator.collectionView(_:shouldSelectItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 536,
+      "line": 544,
       "symbol": "CollectionCoordinator.collectionView(_:didSelectItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 556,
+      "line": 564,
       "symbol": "CollectionCoordinator.scrollViewDidScroll(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 560,
+      "line": 568,
       "symbol": "CollectionCoordinator.collectionView(_:shouldDeselectItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 568,
+      "line": 576,
       "symbol": "CollectionCoordinator.collectionView(_:didDeselectItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 583,
+      "line": 591,
       "symbol": "CollectionCoordinator.responds(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 589,
+      "line": 597,
       "symbol": "CollectionCoordinator.forwardingTarget(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 600,
+      "line": 608,
       "symbol": "CollectionCoordinator.collectionView(_:dragSessionWillBegin:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 608,
+      "line": 616,
       "symbol": "CollectionCoordinator.collectionView(_:dragSessionDidEnd:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 616,
+      "line": 624,
       "symbol": "CollectionCoordinator.collectionView(_:dragSessionIsRestrictedToDraggingApplication:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 620,
+      "line": 628,
       "symbol": "CollectionCoordinator.collectionView(_:itemsForBeginning:at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 629,
+      "line": 637,
       "symbol": "CollectionCoordinator.collectionView(_:itemsForAddingTo:at:point:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 637,
+      "line": 645,
       "symbol": "CollectionCoordinator.collectionView(_:dragSessionAllowsMoveOperation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 648,
+      "line": 656,
       "symbol": "CollectionCoordinator.collectionView(_:canHandle:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 653,
+      "line": 661,
       "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidEnter:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 663,
+      "line": 671,
       "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidExit:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 667,
+      "line": 675,
       "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidEnd:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 675,
+      "line": 683,
       "symbol": "CollectionCoordinator.collectionView(_:dragPreviewParametersForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 687,
+      "line": 695,
       "symbol": "CollectionCoordinator.collectionView(_:dropPreviewParametersForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 697,
+      "line": 705,
       "symbol": "CollectionCoordinator.collectionView(_:dropSessionDidUpdate:withDestinationIndexPath:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ComposedUI/ComposedUI/Sources/ComposedUI/CollectionView/CollectionCoordinator.swift",
-      "line": 719,
+      "line": 727,
       "symbol": "CollectionCoordinator.collectionView(_:performDropWith:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
