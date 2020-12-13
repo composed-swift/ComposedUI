@@ -325,7 +325,36 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        let removedSectionIndexes = Array(sections)
+        /**
+         We have a local set of batched updates, meaning that what the mapping has and what we have is
+         subtly different. For example, if we had sections:
+
+         - A
+         - B
+         - C
+
+         And then delete section B we have
+
+         - A (batch index 0)
+         - C (batch index 2)
+
+         So if C were then deleted the batched updates should be:
+
+         - Delete B (batch index 1)
+         - Delete C (batch index 2)
+
+         However, the mapping will have already deleted B and does not have a concept of batch updates,
+         so it will provide:
+
+         - Delete B (index 1)
+         - Delete C (index 1)
+
+         This map accounts for this.
+         */
+        let removedSectionIndexes = Array(sections).map { removedSection -> Int in
+            let removedSectionsBeforeRemovalCount = batchedSectionRemovals.filter { $0 <= removedSection }.count
+            return removedSection + removedSectionsBeforeRemovalCount
+        }
         // Removals are processed prior to other updates, so other updates now need to be corrected.
 
         batchedSectionRemovals = batchedSectionRemovals.compactMap { removedSectionIndex in
