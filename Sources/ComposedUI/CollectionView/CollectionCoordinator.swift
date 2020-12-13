@@ -216,6 +216,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         batchedRowMoves.removeAll()
         batchedSectionInserts.removeAll()
         batchedSectionRemovals.removeAll()
+        batchedSectionUpdates.removeAll()
     }
 
     public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
