@@ -352,6 +352,9 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
          This map accounts for this.
          */
+
+        // TODO: Loop over `Array(sections)` and apply changes as neccessary
+
         let removedSectionIndexes = Array(sections).map { removedSection -> Int in
             let removedSectionsBeforeRemovalCount = batchedSectionRemovals.filter { $0 <= removedSection }.count
             return removedSection + removedSectionsBeforeRemovalCount
