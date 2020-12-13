@@ -34,20 +34,21 @@ open class CollectionCoordinator: NSObject {
         return mapper.provider
     }
 
+    internal var batchedSectionRemovals: [Int] = []
+    internal var batchedSectionInserts: [Int] = []
+    internal var batchedSectionUpdates: [Int] = []
+
+    internal var batchedRowRemovals: [IndexPath] = []
+    internal var batchedRowInserts: [IndexPath] = []
+    internal var batchedRowUpdates: [IndexPath] = []
+    internal var batchedRowMoves: [(IndexPath, IndexPath)] = []
+
     private var mapper: SectionProviderMapping
 
     private var batchedUpdatesCount = 0
     private var isPerformingBatchedUpdates: Bool {
         batchedUpdatesCount > 0
     }
-    private var batchedSectionRemovals: [Int] = []
-    private var batchedSectionInserts: [Int] = []
-    private var batchedSectionUpdates: [Int] = []
-
-    private var batchedRowRemovals: [IndexPath] = []
-    private var batchedRowInserts: [IndexPath] = []
-    private var batchedRowUpdates: [IndexPath] = []
-    private var batchedRowMoves: [(IndexPath, IndexPath)] = []
 
     private let collectionView: UICollectionView
 
