@@ -13,7 +13,7 @@ let package = Package(
             targets: ["ComposedUI"]),
     ],
     dependencies: [
-        .package(name: "Composed", url: "https://github.com/composed-swift/composed", from: "1.0.0"),
+        .package(name: "Composed", url: "https://github.com/composed-swift/Composed.git", from: "1.0.0"),
     ],
     targets: [
         .target(

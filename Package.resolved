@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "Composed",
-        "repositoryURL": "https://github.com/composed-swift/composed",
+        "repositoryURL": "https://github.com/composed-swift/Composed.git",
         "state": {
           "branch": null,
-          "revision": "8dcf1fbbc1a23f7e2b9e0e09f6126f12469e8d80",
-          "version": "1.0.4"
+          "revision": "408b96560b9b7734a3de2e9e66528ec21c778f29",
+          "version": "1.1.0"
         }
       }
     ]
