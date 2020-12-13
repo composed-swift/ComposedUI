@@ -1,5 +1,6 @@
 import UIKit
 import Composed
+import os.log
 
 /// Conform to this protocol to receive `CollectionCoordinator` events
 public protocol CollectionCoordinatorDelegate: class {
@@ -156,6 +157,8 @@ open class CollectionCoordinator: NSObject {
 
     // Prepares and caches the section to improve performance
     private func prepareSections() {
+        debugLog("Preparing sections")
+
         cachedProviders.removeAll()
         mapper.delegate = self
 
@@ -195,12 +198,18 @@ open class CollectionCoordinator: NSObject {
         delegate?.coordinatorDidUpdate(self)
     }
 
+    fileprivate func debugLog(_ message: String) {
+        if #available(iOS 12, *) {
+            os_log("%@", log: OSLog(subsystem: "ComposedUI", category: "CollectionCoordinator"), type: .debug, message)
+        }
+    }
 }
 
 // MARK: - SectionProviderMappingDelegate
 
 extension CollectionCoordinator: SectionProviderMappingDelegate {
     private func reset() {
+        debugLog("Resetting")
         batchedRowRemovals.removeAll()
         batchedRowInserts.removeAll()
         batchedRowUpdates.removeAll()
@@ -211,6 +220,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
+
+        debugLog(#function)
         reset()
         prepareSections()
         collectionView.reloadData()
@@ -218,6 +229,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
     public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
         batchedUpdatesCount += 1
+
+        debugLog("\(#function); batchedUpdatesCount = \(batchedUpdatesCount)")
 
         // This is called here to ensure that the collection view's internal state is in-sync with the state of the
         // data in hierarchy of sections. If this is not done it can cause various crashes when `performBatchUpdates` is called
@@ -233,6 +246,8 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
 
         batchedUpdatesCount -= 1
 
+        debugLog("\(#function); batchedUpdatesCount = \(batchedUpdatesCount)")
+
         guard batchedUpdatesCount == 0 else {
             assert(batchedUpdatesCount > 0, "`mappingDidEndUpdating` calls must be balanced with`mappingWillBeginUpdating`")
             return
@@ -241,20 +256,34 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         /**
          Deletes are processed before inserts in batch operations. This means the indexes for the deletions are processed relative to the indexes of the collection view’s state before the batch operation, and the indexes for the insertions are processed relative to the indexes of the state after all the deletions in the batch operation.
          */
+        debugLog("Performing batch updates")
         collectionView.performBatchUpdates({
             prepareSections()
 
+            debugLog("Deleting \(batchedRowRemovals)")
             collectionView.deleteItems(at: batchedRowRemovals)
+
+            debugLog("Inserting \(batchedRowInserts)")
             collectionView.insertItems(at: batchedRowInserts)
+
             // TODO: Account for `section.prefersReload`
+
+            debugLog("Updating \(batchedRowUpdates)")
             collectionView.reloadItems(at: batchedRowUpdates)
+
             batchedRowMoves.forEach { element in
                 let (from, to) = element
+                debugLog("Moving \(from) to \(to)")
                 collectionView.moveItem(at: from, to: to)
             }
 
+            debugLog("Deleting \(batchedSectionRemovals)")
             collectionView.deleteSections(IndexSet(batchedSectionRemovals))
+
+            debugLog("Inserting \(batchedSectionInserts)")
             collectionView.insertSections(IndexSet(batchedSectionInserts))
+
+            debugLog("Updating \(batchedSectionUpdates)")
             collectionView.reloadSections(IndexSet(batchedSectionUpdates))
             // TODO: Implement Moves
 
