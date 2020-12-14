@@ -435,8 +435,26 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             if batchedSectionInserts.contains(removedSectionIndex) {
                 batchedSectionInserts.removeAll(where: { $0 == removedSectionIndex })
             } else {
-                let priorRemovals = batchedSectionRemovals.filter { $0 <= removedSectionIndex }.count
-                batchedSectionRemovals.append(removedSectionIndex + priorRemovals)
+                batchedSectionRemovals = batchedSectionRemovals
+                    .sorted(by: <)
+                    .reduce(into: (previous: Int?.none, batchedSectionRemovals: [Int]()), { (result, batchedSectionRemoval) in
+                        if batchedSectionRemoval == removedSectionIndex {
+                            result.batchedSectionRemovals.append(batchedSectionRemoval)
+                            result.batchedSectionRemovals.append(batchedSectionRemoval + 1)
+                            result.previous = batchedSectionRemoval + 1
+                        } else if let previous = result.previous, batchedSectionRemoval == previous {
+                            result.batchedSectionRemovals.append(batchedSectionRemoval + 1)
+                            result.previous = batchedSectionRemoval + 1
+                        } else {
+                            result.batchedSectionRemovals.append(batchedSectionRemoval)
+                            result.previous = batchedSectionRemoval
+                        }
+                    })
+                    .batchedSectionRemovals
+
+                if !batchedSectionRemovals.contains(where: { $0 == removedSectionIndex }) {
+                    batchedSectionRemovals.append(removedSectionIndex)
+                }
             }
 
             batchedSectionInserts = batchedSectionInserts.map { batchedSectionInsert in
@@ -530,26 +548,27 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        // TODO: Remove updates, inserts, moves for `indexPaths`
-        for removedIndexPath in indexPaths {
-            batchedRowRemovals = batchedRowRemovals.map { batchRemovedIndexPath in
-                guard batchRemovedIndexPath.section == removedIndexPath.section else { return batchRemovedIndexPath }
-
-                if batchRemovedIndexPath.item > removedIndexPath.item {
-                    return IndexPath(item: batchRemovedIndexPath.item - 1, section: batchRemovedIndexPath.section)
-                } else {
-                    return batchRemovedIndexPath
-                }
+        indexPaths.forEach { removedIndexPath in
+            if batchedRowUpdates.contains(removedIndexPath) {
+                batchedRowUpdates.removeAll(where: { $0 == removedIndexPath })
+            } else if batchedRowInserts.contains(removedIndexPath) {
+                batchedRowInserts.removeAll(where: { $0 == removedIndexPath })
+            } else {
+                batchedRowRemovals.append(removedIndexPath)
             }
-        }
 
-        batchedRowRemovals.append(contentsOf: indexPaths)
-
-        for removedIndexPath in indexPaths {
-            batchedRowUpdates = batchedRowUpdates.map { updatedIndexPath in
+            batchedRowUpdates = batchedRowUpdates.compactMap { updatedIndexPath in
                 guard updatedIndexPath.section == removedIndexPath.section else { return updatedIndexPath }
 
                 if updatedIndexPath.item > removedIndexPath.item {
+                    if updatedIndexPath.item == removedIndexPath.item + 1 {
+                        // Triggering an update to row with the same index path as one that's been removed
+                        // will trigger "attempt to delete and reload the same index path"
+                        batchedRowRemovals.append(updatedIndexPath)
+                        batchedRowInserts.append(updatedIndexPath)
+                        return nil
+                    }
+
                     return IndexPath(item: updatedIndexPath.item - 1, section: updatedIndexPath.section)
                 } else {
                     return updatedIndexPath

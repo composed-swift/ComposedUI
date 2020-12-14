@@ -17,6 +17,43 @@ final class CollectionCoordinatorTests: XCTestCase {
         var child4 = MockCollectionArraySection(["1", "2", "3"])
 
         rootSectionProvider.append(child0)
+        rootSectionProvider.append(child1)
+        rootSectionProvider.append(child2)
+        rootSectionProvider.append(child3)
+        rootSectionProvider.append(child4)
+
+        rootSectionProvider.updateDelegate?.didEndUpdating(rootSectionProvider)
+
+        rootSectionProvider.updateDelegate?.willBeginUpdating(rootSectionProvider)
+
+        rootSectionProvider.remove(child3)
+        rootSectionProvider.remove(child0)
+        rootSectionProvider.remove(child1)
+        rootSectionProvider.remove(child2)
+        rootSectionProvider.remove(child4)
+
+        XCTAssertTrue(collectionCoordinator.batchedSectionInserts.isEmpty)
+        XCTAssertEqual(
+            collectionCoordinator.batchedSectionRemovals,
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+            ]
+        )
+        XCTAssertTrue(collectionCoordinator.batchedSectionUpdates.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowMoves.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowInserts.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowUpdates.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowRemovals.isEmpty)
+
+        rootSectionProvider.updateDelegate?.didEndUpdating(rootSectionProvider)
+
+        rootSectionProvider.updateDelegate?.willBeginUpdating(rootSectionProvider)
+
+        rootSectionProvider.append(child0)
 
         XCTAssertEqual(collectionCoordinator.batchedSectionInserts, [0])
         XCTAssertTrue(collectionCoordinator.batchedSectionRemovals.isEmpty)
@@ -172,15 +209,15 @@ final class CollectionCoordinatorTests: XCTestCase {
         XCTAssertTrue(collectionCoordinator.batchedRowMoves.isEmpty)
         XCTAssertEqual(
             collectionCoordinator.batchedRowInserts,
-            [IndexPath(item: 2, section: 1)]
+            [IndexPath(item: 2, section: 1), IndexPath(item: 1, section: 1)]
         )
         XCTAssertEqual(
             collectionCoordinator.batchedRowUpdates,
-            [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1)]
+            [IndexPath(row: 0, section: 1)]
         )
         XCTAssertEqual(
             collectionCoordinator.batchedRowRemovals,
-            [IndexPath(row: 1, section: 0), IndexPath(row: 1, section: 1)],
+            [IndexPath(row: 1, section: 0), IndexPath(row: 1, section: 1), IndexPath(row: 2, section: 1)],
             "Section should be updated to account for previously deleted section"
         )
 
@@ -192,17 +229,27 @@ final class CollectionCoordinatorTests: XCTestCase {
         XCTAssertTrue(collectionCoordinator.batchedRowMoves.isEmpty)
         XCTAssertEqual(
             collectionCoordinator.batchedRowInserts,
-            [IndexPath(item: 2, section: 2)]
+            [IndexPath(item: 2, section: 2), IndexPath(item: 1, section: 2)]
         )
         XCTAssertEqual(
             collectionCoordinator.batchedRowUpdates,
-            [IndexPath(row: 0, section: 2), IndexPath(row: 1, section: 2)]
+            [IndexPath(row: 0, section: 2)]
         )
         XCTAssertEqual(
             collectionCoordinator.batchedRowRemovals,
-            [IndexPath(row: 1, section: 0), IndexPath(row: 1, section: 2)],
+            [IndexPath(row: 1, section: 0), IndexPath(row: 1, section: 2), IndexPath(item: 2, section: 2)],
             "Section should be updated to account for previously deleted section"
         )
+
+        rootSectionProvider.updateDelegate?.didEndUpdating(rootSectionProvider)
+
+        XCTAssertTrue(collectionCoordinator.batchedSectionInserts.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedSectionRemovals.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedSectionUpdates.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowMoves.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowInserts.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowUpdates.isEmpty)
+        XCTAssertTrue(collectionCoordinator.batchedRowRemovals.isEmpty)
     }
 }
 
