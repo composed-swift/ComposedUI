@@ -41,7 +41,13 @@ open class CollectionCoordinator: NSObject {
     internal var batchedRowRemovals: [IndexPath] = []
     internal var batchedRowInserts: [IndexPath] = []
     internal var batchedRowUpdates: [IndexPath] = []
-    internal var batchedRowMoves: [(IndexPath, IndexPath)] = []
+
+    internal struct ItemMove: Hashable {
+        internal var from: IndexPath
+        internal var to: IndexPath
+    }
+
+    internal var batchedRowMoves: [ItemMove] = []
 
     private var mapper: SectionProviderMapping
 
@@ -273,10 +279,9 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             debugLog("Updating \(batchedRowUpdates)")
             collectionView.reloadItems(at: batchedRowUpdates)
 
-            batchedRowMoves.forEach { element in
-                let (from, to) = element
-                debugLog("Moving \(from) to \(to)")
-                collectionView.moveItem(at: from, to: to)
+            batchedRowMoves.forEach { move in
+                debugLog("Moving \(move.from) to \(move.to)")
+                collectionView.moveItem(at: move.from, to: move.to)
             }
 
             debugLog("Deleting \(batchedSectionRemovals)")
@@ -314,7 +319,81 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        batchedSectionInserts.append(contentsOf: Array(sections))
+        sections.forEach { insertedSection in
+            if batchedSectionRemovals.contains(insertedSection) {
+                batchedSectionRemovals.removeAll(where: { $0 == insertedSection })
+                batchedSectionUpdates.append(insertedSection)
+            } else {
+                batchedSectionRemovals = batchedSectionRemovals.map { batchedSectionRemoval in
+                    if batchedSectionRemoval > insertedSection {
+                        return batchedSectionRemoval + 1
+                    } else {
+                        return batchedSectionRemoval
+                    }
+                }
+                batchedSectionInserts.append(insertedSection)
+            }
+
+            batchedSectionInserts = batchedSectionInserts.map { batchedSectionInsert in
+                if batchedSectionInsert > insertedSection {
+                    return batchedSectionInsert + 1
+                } else {
+                    return batchedSectionInsert
+                }
+            }
+
+            batchedSectionUpdates = batchedSectionUpdates.map { batchedSectionUpdate in
+                if batchedSectionUpdate > insertedSection {
+                    return batchedSectionUpdate + 1
+                } else {
+                    return batchedSectionUpdate
+                }
+            }
+
+            batchedRowRemovals = batchedRowRemovals.map { removedIndexPath in
+                var removedIndexPath = removedIndexPath
+
+                if removedIndexPath.section > insertedSection {
+                    removedIndexPath.section += 1
+                }
+
+                return removedIndexPath
+            }
+
+            batchedRowInserts = batchedRowInserts.map { insertedIndexPath in
+                var insertedIndexPath = insertedIndexPath
+
+                if insertedIndexPath.section > insertedSection {
+                    insertedIndexPath.section += 1
+                }
+
+                return insertedIndexPath
+            }
+
+            batchedRowUpdates = batchedRowUpdates.map { updatedIndexPath in
+                var updatedIndexPath = updatedIndexPath
+
+                if updatedIndexPath.section > insertedSection {
+                    updatedIndexPath.section += 1
+                }
+
+                return updatedIndexPath
+            }
+
+            batchedRowMoves = batchedRowMoves.map { move in
+                var move = move
+
+                if move.from.section > insertedSection {
+                    move.from.section += 1
+                }
+
+                if move.to.section > insertedSection {
+                    move.to.section += 1
+                }
+
+                return move
+            }
+        }
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -350,95 +429,83 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
          - Delete B (index 1)
          - Delete C (index 1)
 
-         This map accounts for this.
+         This logic accounts for this.
          */
-
-        // TODO: Loop over `Array(sections)` and apply changes as neccessary
-
-        let removedSectionIndexes = Array(sections).map { removedSection -> Int in
-            let removedSectionsBeforeRemovalCount = batchedSectionRemovals.filter { $0 <= removedSection }.count
-            return removedSection + removedSectionsBeforeRemovalCount
-        }
-        // Removals are processed prior to other updates, so other updates now need to be corrected.
-
-        batchedSectionRemovals = batchedSectionRemovals.compactMap { removedSectionIndex in
-            if removedSectionIndexes.contains(removedSectionIndex) {
-                return nil
+        sections.forEach { removedSectionIndex in
+            if batchedSectionInserts.contains(removedSectionIndex) {
+                batchedSectionInserts.removeAll(where: { $0 == removedSectionIndex })
+            } else {
+                let priorRemovals = batchedSectionRemovals.filter { $0 <= removedSectionIndex }.count
+                batchedSectionRemovals.append(removedSectionIndex + priorRemovals)
             }
 
-            let removedSectionsBeforeRemovalCount = removedSectionIndexes.filter { $0 < removedSectionIndex }.count
-            return removedSectionIndex - removedSectionsBeforeRemovalCount
-        }
-
-        batchedSectionRemovals.append(contentsOf: removedSectionIndexes)
-
-        // Section changes
-
-        batchedSectionInserts = batchedSectionInserts.compactMap { insertedSectionIndex in
-            if removedSectionIndexes.contains(insertedSectionIndex) {
-                return nil
+            batchedSectionInserts = batchedSectionInserts.map { batchedSectionInsert in
+                if batchedSectionInsert > removedSectionIndex {
+                    return batchedSectionInsert - 1
+                } else {
+                    return batchedSectionInsert
+                }
             }
 
-            let removedSectionsBeforeInsertCount = removedSectionIndexes.filter { $0 < insertedSectionIndex }.count
-            return insertedSectionIndex - removedSectionsBeforeInsertCount
-        }
-        batchedSectionUpdates = batchedSectionUpdates.compactMap { updatedSectionIndex in
-            if removedSectionIndexes.contains(updatedSectionIndex) {
-                return nil
+            batchedSectionUpdates = batchedSectionUpdates.map { batchedSectionUpdate in
+                if batchedSectionUpdate > removedSectionIndex {
+                    return batchedSectionUpdate - 1
+                } else {
+                    return batchedSectionUpdate
+                }
             }
 
-            let removedSectionsBeforeUpdateCount = removedSectionIndexes.filter { $0 < updatedSectionIndex }.count
-            return updatedSectionIndex - removedSectionsBeforeUpdateCount
-        }
+            batchedRowInserts = batchedRowInserts.compactMap { batchedRowInsert in
+                guard batchedRowInsert.section != removedSectionIndex else { return nil }
 
-        // Row changes
+                var batchedRowInsert = batchedRowInsert
 
-        batchedRowUpdates = batchedRowUpdates.compactMap { updatedIndexPath -> IndexPath? in
-            if removedSectionIndexes.contains(updatedIndexPath.section) {
-                return nil
+                if batchedRowInsert.section > removedSectionIndex {
+                    batchedRowInsert.section -= 1
+                }
+
+                return batchedRowInsert
             }
 
-            let removedSectionsBeforeRowUpdateCount = removedSectionIndexes.filter { $0 < updatedIndexPath.section }.count
-            return IndexPath(item: updatedIndexPath.item, section: updatedIndexPath.section - removedSectionsBeforeRowUpdateCount)
-        }
+            batchedRowUpdates = batchedRowUpdates.compactMap { batchedRowUpdate in
+                guard batchedRowUpdate.section != removedSectionIndex else { return nil }
 
-        batchedRowInserts = batchedRowInserts.compactMap { insertedIndexPath -> IndexPath? in
-            if removedSectionIndexes.contains(insertedIndexPath.section) {
-                return nil
+                var batchedRowUpdate = batchedRowUpdate
+
+                if batchedRowUpdate.section > removedSectionIndex {
+                    batchedRowUpdate.section -= 1
+                }
+
+                return batchedRowUpdate
             }
 
-            let removedSectionsBeforeRowInsertCount = removedSectionIndexes.filter { $0 < insertedIndexPath.section }.count
-            return IndexPath(item: insertedIndexPath.item, section: insertedIndexPath.section - removedSectionsBeforeRowInsertCount)
-        }
+            batchedRowRemovals = batchedRowRemovals.compactMap { batchedRowRemoval in
+                guard batchedRowRemoval.section != removedSectionIndex else { return nil }
 
-        batchedRowMoves = batchedRowMoves.compactMap { movedIndexPaths in
-            if removedSectionIndexes.contains(movedIndexPaths.0.section) {
-                // The cell that was being moved has now had its section deleted. This should
-                // maybe be an insert at `movedIndexPaths.1`?
-                return nil
+                var batchedRowRemoval = batchedRowRemoval
+
+                if batchedRowRemoval.section > removedSectionIndex {
+                    batchedRowRemoval.section -= 1
+                }
+
+                return batchedRowRemoval
             }
 
-            if removedSectionIndexes.contains(movedIndexPaths.1.section) {
-                // The cell that was being moved has now had its destination section deleted. This should
-                // maybe be a delete at `movedIndexPaths.0`?
-                return nil
+            batchedRowMoves = batchedRowMoves.compactMap { move in
+                guard move.to.section != removedSectionIndex else { return nil }
+
+                var move = move
+
+                if move.from.section > removedSectionIndex {
+                    move.from.section -= 1
+                }
+
+                if move.to.section > removedSectionIndex {
+                    move.to.section -= 1
+                }
+
+                return move
             }
-
-            let removedSectionsBeforeFromCount = removedSectionIndexes.filter { $0 < movedIndexPaths.0.section }.count
-            let removedSectionsBeforeToCount = removedSectionIndexes.filter { $0 < movedIndexPaths.1.section }.count
-            return (
-                IndexPath(item: movedIndexPaths.0.item, section: movedIndexPaths.0.section - removedSectionsBeforeFromCount),
-                IndexPath(item: movedIndexPaths.1.item, section: movedIndexPaths.1.section - removedSectionsBeforeToCount)
-            )
-        }
-
-        batchedRowRemovals = batchedRowRemovals.compactMap { removedIndexPath -> IndexPath? in
-            if removedSectionIndexes.contains(removedIndexPath.section) {
-                return nil
-            }
-
-            let removedSectionsBeforeRowRemovalCount = removedSectionIndexes.filter { $0 < removedIndexPath.section }.count
-            return IndexPath(item: removedIndexPath.item, section: removedIndexPath.section - removedSectionsBeforeRowRemovalCount)
         }
     }
 
@@ -499,18 +566,18 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
                 }
             }
 
-            batchedRowMoves = batchedRowMoves.map { element in
-                var (from, to) = element
+            batchedRowMoves = batchedRowMoves.map { move in
+                var move = move
 
-                if from.section == removedIndexPath.section, from.item > removedIndexPath.item {
-                    from.item -= 1
+                if move.from.section == removedIndexPath.section, move.from.item > removedIndexPath.item {
+                    move.from.item -= 1
                 }
 
-                if to.section == removedIndexPath.section, to.item > removedIndexPath.item {
-                    to.item -= 1
+                if move.to.section == removedIndexPath.section, move.to.item > removedIndexPath.item {
+                    move.to.item -= 1
                 }
 
-                return (from, to)
+                return move
             }
         }
     }
@@ -555,6 +622,9 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
+        let moves = moves.map { move in
+            ItemMove(from: move.0, to: move.1)
+        }
         batchedRowMoves.append(contentsOf: moves)
     }
 
