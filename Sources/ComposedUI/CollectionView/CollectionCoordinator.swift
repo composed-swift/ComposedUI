@@ -664,8 +664,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     }
 
     public func mapping(_ mapping: SectionProviderMapping, move sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        // TODO: Account for batched updates?
-        collectionView.moveItem(at: sourceIndexPath, to: destinationIndexPath)
+        self.mapping(mapping, didMoveElementsAt: [(sourceIndexPath, destinationIndexPath)])
     }
 
 }
