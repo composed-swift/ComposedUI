@@ -256,4 +256,8 @@ internal struct ChangesReducer {
     internal mutating func moveElements(_ moves: [Changeset.Move]) {
         changeset.elementsMoved.formUnion(moves)
     }
+
+    internal mutating func moveElements(_ moves: [(from: IndexPath, to: IndexPath)]) {
+        changeset.elementsMoved.formUnion(moves.map { Changeset.Move(from: $0.from, to: $0.to) })
+    }
 }
