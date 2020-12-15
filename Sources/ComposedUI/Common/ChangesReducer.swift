@@ -106,14 +106,14 @@ internal struct ChangesReducer {
                     .sorted(by: <)
                     .reduce(into: (previous: Int?.none, groupsRemoved: [Int]()), { (result, groupsRemoved) in
                         if groupsRemoved == removedGroup {
-                            result.batchedSectionRemovals.append(groupsRemoved)
-                            result.batchedSectionRemovals.append(groupsRemoved + 1)
+                            result.groupsRemoved.append(groupsRemoved)
+                            result.groupsRemoved.append(groupsRemoved + 1)
                             result.previous = groupsRemoved + 1
                         } else if let previous = result.previous, groupsRemoved == previous {
-                            result.batchedSectionRemovals.append(groupsRemoved + 1)
+                            result.groupsRemoved.append(groupsRemoved + 1)
                             result.previous = groupsRemoved + 1
                         } else {
-                            result.batchedSectionRemovals.append(groupsRemoved)
+                            result.groupsRemoved.append(groupsRemoved)
                             result.previous = groupsRemoved
                         }
                     })
