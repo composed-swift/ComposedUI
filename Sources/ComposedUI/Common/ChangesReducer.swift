@@ -23,40 +23,40 @@ internal struct ChangesReducer {
     }
 
     internal mutating func insertGroups(_ groups: IndexSet) {
-        groups.forEach { insertedSection in
-            if changeset.groupsRemoved.remove(insertedSection) != nil {
-                changeset.groupsUpdated.insert(insertedSection)
+        groups.forEach { insertedGroup in
+            if changeset.groupsRemoved.remove(insertedGroup) != nil {
+                changeset.groupsUpdated.insert(insertedGroup)
             } else {
-                changeset.groupsRemoved = Set(changeset.groupsRemoved.map { batchedSectionRemoval in
-                    if batchedSectionRemoval > insertedSection {
-                        return batchedSectionRemoval + 1
+                changeset.groupsRemoved = Set(changeset.groupsRemoved.map { removedGroup in
+                    if removedGroup > insertedGroup {
+                        return removedGroup + 1
                     } else {
-                        return batchedSectionRemoval
+                        return removedGroup
                     }
                 })
-                changeset.groupsInserted.insert(insertedSection)
+                changeset.groupsInserted.insert(insertedGroup)
             }
 
-            changeset.groupsInserted = Set(changeset.groupsInserted.map { batchedSectionInsert in
-                if batchedSectionInsert > insertedSection {
-                    return batchedSectionInsert + 1
+            changeset.groupsInserted = Set(changeset.groupsInserted.map { insertedGroup in
+                if insertedGroup > insertedGroup {
+                    return insertedGroup + 1
                 } else {
-                    return batchedSectionInsert
+                    return insertedGroup
                 }
             })
 
-            changeset.groupsUpdated = Set(changeset.groupsUpdated.map { batchedSectionUpdate in
-                if batchedSectionUpdate > insertedSection {
-                    return batchedSectionUpdate + 1
+            changeset.groupsUpdated = Set(changeset.groupsUpdated.map { updatedGroup in
+                if updatedGroup > insertedGroup {
+                    return updatedGroup + 1
                 } else {
-                    return batchedSectionUpdate
+                    return updatedGroup
                 }
             })
 
             changeset.elementsRemoved = Set(changeset.elementsRemoved.map { removedIndexPath in
                 var removedIndexPath = removedIndexPath
 
-                if removedIndexPath.section > insertedSection {
+                if removedIndexPath.section > insertedGroup {
                     removedIndexPath.section += 1
                 }
 
@@ -66,7 +66,7 @@ internal struct ChangesReducer {
             changeset.elementsInserted = Set(changeset.elementsInserted.map { insertedIndexPath in
                 var insertedIndexPath = insertedIndexPath
 
-                if insertedIndexPath.section > insertedSection {
+                if insertedIndexPath.section > insertedGroup {
                     insertedIndexPath.section += 1
                 }
 
@@ -76,7 +76,7 @@ internal struct ChangesReducer {
             changeset.elementsUpdated = Set(changeset.elementsUpdated.map { updatedIndexPath in
                 var updatedIndexPath = updatedIndexPath
 
-                if updatedIndexPath.section > insertedSection {
+                if updatedIndexPath.section > insertedGroup {
                     updatedIndexPath.section += 1
                 }
 
@@ -86,11 +86,11 @@ internal struct ChangesReducer {
             changeset.elementsMoved = Set(changeset.elementsMoved.map { move in
                 var move = move
 
-                if move.from.section > insertedSection {
+                if move.from.section > insertedGroup {
                     move.from.section += 1
                 }
 
-                if move.to.section > insertedSection {
+                if move.to.section > insertedGroup {
                     move.to.section += 1
                 }
 
@@ -99,78 +99,78 @@ internal struct ChangesReducer {
         }
     }
 
-    public mutating func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
-        sections.forEach { removedSectionIndex in
-            if changeset.groupsInserted.remove(removedSectionIndex) == nil {
+    internal mutating func removeGroups(_ groups: IndexSet) {
+        groups.forEach { removedGroup in
+            if changeset.groupsInserted.remove(removedGroup) == nil {
                 changeset.groupsRemoved = Set(changeset.groupsRemoved
                     .sorted(by: <)
-                    .reduce(into: (previous: Int?.none, batchedSectionRemovals: [Int]()), { (result, batchedSectionRemoval) in
-                        if batchedSectionRemoval == removedSectionIndex {
-                            result.batchedSectionRemovals.append(batchedSectionRemoval)
-                            result.batchedSectionRemovals.append(batchedSectionRemoval + 1)
-                            result.previous = batchedSectionRemoval + 1
-                        } else if let previous = result.previous, batchedSectionRemoval == previous {
-                            result.batchedSectionRemovals.append(batchedSectionRemoval + 1)
-                            result.previous = batchedSectionRemoval + 1
+                    .reduce(into: (previous: Int?.none, groupsRemoved: [Int]()), { (result, groupsRemoved) in
+                        if groupsRemoved == removedGroup {
+                            result.batchedSectionRemovals.append(groupsRemoved)
+                            result.batchedSectionRemovals.append(groupsRemoved + 1)
+                            result.previous = groupsRemoved + 1
+                        } else if let previous = result.previous, groupsRemoved == previous {
+                            result.batchedSectionRemovals.append(groupsRemoved + 1)
+                            result.previous = groupsRemoved + 1
                         } else {
-                            result.batchedSectionRemovals.append(batchedSectionRemoval)
-                            result.previous = batchedSectionRemoval
+                            result.batchedSectionRemovals.append(groupsRemoved)
+                            result.previous = groupsRemoved
                         }
                     })
-                    .batchedSectionRemovals
+                    .groupsRemoved
                 )
 
-                if !changeset.groupsRemoved.contains(removedSectionIndex) {
-                    changeset.groupsRemoved.insert(removedSectionIndex)
+                if !changeset.groupsRemoved.contains(removedGroup) {
+                    changeset.groupsRemoved.insert(removedGroup)
                 }
             }
 
-            changeset.groupsInserted = Set(changeset.groupsInserted.map { batchedSectionInsert in
-                if batchedSectionInsert > removedSectionIndex {
-                    return batchedSectionInsert - 1
+            changeset.groupsInserted = Set(changeset.groupsInserted.map { insertedGroup in
+                if insertedGroup > removedGroup {
+                    return insertedGroup - 1
                 } else {
-                    return batchedSectionInsert
+                    return insertedGroup
                 }
             })
 
-            changeset.groupsUpdated = Set(changeset.groupsUpdated.map { batchedSectionUpdate in
-                if batchedSectionUpdate > removedSectionIndex {
-                    return batchedSectionUpdate - 1
+            changeset.groupsUpdated = Set(changeset.groupsUpdated.map { updatedGroup in
+                if updatedGroup > removedGroup {
+                    return updatedGroup - 1
                 } else {
-                    return batchedSectionUpdate
+                    return updatedGroup
                 }
             })
 
-            changeset.elementsInserted = Set(changeset.elementsInserted.compactMap { batchedRowInsert in
-                guard batchedRowInsert.section != removedSectionIndex else { return nil }
+            changeset.elementsInserted = Set(changeset.elementsInserted.compactMap { insertedIndexPath in
+                guard insertedIndexPath.section != removedGroup else { return nil }
 
-                var batchedRowInsert = batchedRowInsert
+                var batchedRowInsert = insertedIndexPath
 
-                if batchedRowInsert.section > removedSectionIndex {
+                if batchedRowInsert.section > removedGroup {
                     batchedRowInsert.section -= 1
                 }
 
                 return batchedRowInsert
             })
 
-            changeset.elementsUpdated = Set(changeset.elementsUpdated.compactMap { batchedRowUpdate in
-                guard batchedRowUpdate.section != removedSectionIndex else { return nil }
+            changeset.elementsUpdated = Set(changeset.elementsUpdated.compactMap { updatedIndexPath in
+                guard updatedIndexPath.section != removedGroup else { return nil }
 
-                var batchedRowUpdate = batchedRowUpdate
+                var batchedRowUpdate = updatedIndexPath
 
-                if batchedRowUpdate.section > removedSectionIndex {
+                if batchedRowUpdate.section > removedGroup {
                     batchedRowUpdate.section -= 1
                 }
 
                 return batchedRowUpdate
             })
 
-            changeset.elementsRemoved = Set(changeset.elementsRemoved.compactMap { batchedRowRemoval in
-                guard batchedRowRemoval.section != removedSectionIndex else { return nil }
+            changeset.elementsRemoved = Set(changeset.elementsRemoved.compactMap { removedIndexPath in
+                guard removedIndexPath.section != removedGroup else { return nil }
 
-                var batchedRowRemoval = batchedRowRemoval
+                var batchedRowRemoval = removedIndexPath
 
-                if batchedRowRemoval.section > removedSectionIndex {
+                if batchedRowRemoval.section > removedGroup {
                     batchedRowRemoval.section -= 1
                 }
 
@@ -178,15 +178,15 @@ internal struct ChangesReducer {
             })
 
             changeset.elementsMoved = Set(changeset.elementsMoved.compactMap { move in
-                guard move.to.section != removedSectionIndex else { return nil }
+                guard move.to.section != removedGroup else { return nil }
 
                 var move = move
 
-                if move.from.section > removedSectionIndex {
+                if move.from.section > removedGroup {
                     move.from.section -= 1
                 }
 
-                if move.to.section > removedSectionIndex {
+                if move.to.section > removedGroup {
                     move.to.section -= 1
                 }
 
@@ -195,11 +195,11 @@ internal struct ChangesReducer {
         }
     }
 
-    public mutating func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
+    internal mutating func insertElements(at indexPaths: [IndexPath]) {
         changeset.elementsInserted.formUnion(indexPaths)
     }
 
-    public mutating func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
+    internal mutating func removeElements(at indexPaths: [IndexPath]) {
         indexPaths.forEach { removedIndexPath in
             if changeset.elementsUpdated.remove(removedIndexPath) == nil, changeset.elementsInserted.remove(removedIndexPath) == nil {
                 changeset.elementsRemoved.insert(removedIndexPath)
@@ -249,14 +249,11 @@ internal struct ChangesReducer {
         }
     }
 
-    public mutating func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
+    internal mutating func updateElements(at indexPaths: [IndexPath]) {
         changeset.elementsUpdated.formUnion(indexPaths)
     }
 
-    public mutating func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
-        let moves = moves.map { move in
-            Changeset.Move(from: move.0, to: move.1)
-        }
+    internal mutating func moveElements(_ moves: [Changeset.Move]) {
         changeset.elementsMoved.formUnion(moves)
     }
 }
