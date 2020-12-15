@@ -34,26 +34,12 @@ open class CollectionCoordinator: NSObject {
         return mapper.provider
     }
 
-    internal var batchedSectionRemovals: [Int] = []
-    internal var batchedSectionInserts: [Int] = []
-    internal var batchedSectionUpdates: [Int] = []
-
-    internal var batchedRowRemovals: [IndexPath] = []
-    internal var batchedRowInserts: [IndexPath] = []
-    internal var batchedRowUpdates: [IndexPath] = []
-
-    internal struct ItemMove: Hashable {
-        internal var from: IndexPath
-        internal var to: IndexPath
-    }
-
-    internal var batchedRowMoves: [ItemMove] = []
+    internal var changesReducer = ChangesReducer()
 
     private var mapper: SectionProviderMapping
 
-    private var batchedUpdatesCount = 0
     private var isPerformingBatchedUpdates: Bool {
-        batchedUpdatesCount > 0
+        changesReducer.hasActiveUpdates
     }
 
     private let collectionView: UICollectionView
@@ -215,30 +201,20 @@ open class CollectionCoordinator: NSObject {
 // MARK: - SectionProviderMappingDelegate
 
 extension CollectionCoordinator: SectionProviderMappingDelegate {
-    private func reset() {
-        debugLog("Resetting")
-        batchedRowRemovals.removeAll()
-        batchedRowInserts.removeAll()
-        batchedRowUpdates.removeAll()
-        batchedRowMoves.removeAll()
-        batchedSectionInserts.removeAll()
-        batchedSectionRemovals.removeAll()
-        batchedSectionUpdates.removeAll()
-    }
-
     public func mappingDidInvalidate(_ mapping: SectionProviderMapping) {
         assert(Thread.isMainThread)
 
         debugLog(#function)
-        reset()
+        changesReducer = ChangesReducer()
         prepareSections()
         collectionView.reloadData()
     }
 
     public func mappingWillBeginUpdating(_ mapping: SectionProviderMapping) {
-        batchedUpdatesCount += 1
+        debugLog(#function)
+        assert(Thread.isMainThread)
 
-        debugLog("\(#function); batchedUpdatesCount = \(batchedUpdatesCount)")
+        changesReducer.beginUpdating()
 
         // This is called here to ensure that the collection view's internal state is in-sync with the state of the
         // data in hierarchy of sections. If this is not done it can cause various crashes when `performBatchUpdates` is called
@@ -250,16 +226,10 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
     }
 
     public func mappingDidEndUpdating(_ mapping: SectionProviderMapping) {
+        debugLog(#function)
         assert(Thread.isMainThread)
 
-        batchedUpdatesCount -= 1
-
-        debugLog("\(#function); batchedUpdatesCount = \(batchedUpdatesCount)")
-
-        guard batchedUpdatesCount == 0 else {
-            assert(batchedUpdatesCount > 0, "`mappingDidEndUpdating` calls must be balanced with`mappingWillBeginUpdating`")
-            return
-        }
+        guard let changeset = changesReducer.endUpdating() else { return }
 
         /**
          Deletes are processed before inserts in batch operations. This means the indexes for the deletions are processed relative to the indexes of the collection view’s state before the batch operation, and the indexes for the insertions are processed relative to the indexes of the state after all the deletions in the batch operation.
@@ -268,33 +238,30 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
         collectionView.performBatchUpdates({
             prepareSections()
 
-            debugLog("Deleting \(batchedRowRemovals)")
-            collectionView.deleteItems(at: batchedRowRemovals)
+            debugLog("Deleting \(changeset.groupsRemoved)")
+            collectionView.deleteItems(at: Array(changeset.elementsRemoved))
 
-            debugLog("Inserting \(batchedRowInserts)")
-            collectionView.insertItems(at: batchedRowInserts)
+            debugLog("Inserting \(changeset.groupsInserted)")
+            collectionView.insertItems(at: Array(changeset.elementsInserted))
 
             // TODO: Account for `section.prefersReload`
+            debugLog("Updating \(changeset.groupsUpdated)")
+            collectionView.reloadItems(at: Array(changeset.elementsUpdated))
 
-            debugLog("Updating \(batchedRowUpdates)")
-            collectionView.reloadItems(at: batchedRowUpdates)
-
-            batchedRowMoves.forEach { move in
+            changeset.elementsMoved.forEach { move in
                 debugLog("Moving \(move.from) to \(move.to)")
                 collectionView.moveItem(at: move.from, to: move.to)
             }
 
-            debugLog("Deleting \(batchedSectionRemovals)")
-            collectionView.deleteSections(IndexSet(batchedSectionRemovals))
+            debugLog("Deleting \(changeset.groupsRemoved)")
+            collectionView.deleteSections(IndexSet(changeset.groupsRemoved))
 
-            debugLog("Inserting \(batchedSectionInserts)")
-            collectionView.insertSections(IndexSet(batchedSectionInserts))
+            debugLog("Inserting \(changeset.groupsInserted)")
+            collectionView.insertSections(IndexSet(changeset.groupsInserted))
 
-            debugLog("Updating \(batchedSectionUpdates)")
-            collectionView.reloadSections(IndexSet(batchedSectionUpdates))
+            debugLog("Updating \(changeset.groupsUpdated)")
+            collectionView.reloadSections(IndexSet(changeset.groupsUpdated))
             // TODO: Implement Moves
-
-            reset()
         })
     }
 
@@ -307,7 +274,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        batchedSectionUpdates.append(contentsOf: Array(sections))
+        changesReducer.updateGroups(sections)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertSections sections: IndexSet) {
@@ -319,81 +286,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        sections.forEach { insertedSection in
-            if batchedSectionRemovals.contains(insertedSection) {
-                batchedSectionRemovals.removeAll(where: { $0 == insertedSection })
-                batchedSectionUpdates.append(insertedSection)
-            } else {
-                batchedSectionRemovals = batchedSectionRemovals.map { batchedSectionRemoval in
-                    if batchedSectionRemoval > insertedSection {
-                        return batchedSectionRemoval + 1
-                    } else {
-                        return batchedSectionRemoval
-                    }
-                }
-                batchedSectionInserts.append(insertedSection)
-            }
-
-            batchedSectionInserts = batchedSectionInserts.map { batchedSectionInsert in
-                if batchedSectionInsert > insertedSection {
-                    return batchedSectionInsert + 1
-                } else {
-                    return batchedSectionInsert
-                }
-            }
-
-            batchedSectionUpdates = batchedSectionUpdates.map { batchedSectionUpdate in
-                if batchedSectionUpdate > insertedSection {
-                    return batchedSectionUpdate + 1
-                } else {
-                    return batchedSectionUpdate
-                }
-            }
-
-            batchedRowRemovals = batchedRowRemovals.map { removedIndexPath in
-                var removedIndexPath = removedIndexPath
-
-                if removedIndexPath.section > insertedSection {
-                    removedIndexPath.section += 1
-                }
-
-                return removedIndexPath
-            }
-
-            batchedRowInserts = batchedRowInserts.map { insertedIndexPath in
-                var insertedIndexPath = insertedIndexPath
-
-                if insertedIndexPath.section > insertedSection {
-                    insertedIndexPath.section += 1
-                }
-
-                return insertedIndexPath
-            }
-
-            batchedRowUpdates = batchedRowUpdates.map { updatedIndexPath in
-                var updatedIndexPath = updatedIndexPath
-
-                if updatedIndexPath.section > insertedSection {
-                    updatedIndexPath.section += 1
-                }
-
-                return updatedIndexPath
-            }
-
-            batchedRowMoves = batchedRowMoves.map { move in
-                var move = move
-
-                if move.from.section > insertedSection {
-                    move.from.section += 1
-                }
-
-                if move.to.section > insertedSection {
-                    move.to.section += 1
-                }
-
-                return move
-            }
-        }
+        changesReducer.insertGroups(sections)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveSections sections: IndexSet) {
@@ -405,126 +298,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        /**
-         We have a local set of batched updates, meaning that what the mapping has and what we have is
-         subtly different. For example, if we had sections:
-
-         - A
-         - B
-         - C
-
-         And then delete section B we have
-
-         - A (batch index 0)
-         - C (batch index 2)
-
-         So if C were then deleted the batched updates should be:
-
-         - Delete B (batch index 1)
-         - Delete C (batch index 2)
-
-         However, the mapping will have already deleted B and does not have a concept of batch updates,
-         so it will provide:
-
-         - Delete B (index 1)
-         - Delete C (index 1)
-
-         This logic accounts for this.
-         */
-        sections.forEach { removedSectionIndex in
-            if batchedSectionInserts.contains(removedSectionIndex) {
-                batchedSectionInserts.removeAll(where: { $0 == removedSectionIndex })
-            } else {
-                batchedSectionRemovals = batchedSectionRemovals
-                    .sorted(by: <)
-                    .reduce(into: (previous: Int?.none, batchedSectionRemovals: [Int]()), { (result, batchedSectionRemoval) in
-                        if batchedSectionRemoval == removedSectionIndex {
-                            result.batchedSectionRemovals.append(batchedSectionRemoval)
-                            result.batchedSectionRemovals.append(batchedSectionRemoval + 1)
-                            result.previous = batchedSectionRemoval + 1
-                        } else if let previous = result.previous, batchedSectionRemoval == previous {
-                            result.batchedSectionRemovals.append(batchedSectionRemoval + 1)
-                            result.previous = batchedSectionRemoval + 1
-                        } else {
-                            result.batchedSectionRemovals.append(batchedSectionRemoval)
-                            result.previous = batchedSectionRemoval
-                        }
-                    })
-                    .batchedSectionRemovals
-
-                if !batchedSectionRemovals.contains(where: { $0 == removedSectionIndex }) {
-                    batchedSectionRemovals.append(removedSectionIndex)
-                }
-            }
-
-            batchedSectionInserts = batchedSectionInserts.map { batchedSectionInsert in
-                if batchedSectionInsert > removedSectionIndex {
-                    return batchedSectionInsert - 1
-                } else {
-                    return batchedSectionInsert
-                }
-            }
-
-            batchedSectionUpdates = batchedSectionUpdates.map { batchedSectionUpdate in
-                if batchedSectionUpdate > removedSectionIndex {
-                    return batchedSectionUpdate - 1
-                } else {
-                    return batchedSectionUpdate
-                }
-            }
-
-            batchedRowInserts = batchedRowInserts.compactMap { batchedRowInsert in
-                guard batchedRowInsert.section != removedSectionIndex else { return nil }
-
-                var batchedRowInsert = batchedRowInsert
-
-                if batchedRowInsert.section > removedSectionIndex {
-                    batchedRowInsert.section -= 1
-                }
-
-                return batchedRowInsert
-            }
-
-            batchedRowUpdates = batchedRowUpdates.compactMap { batchedRowUpdate in
-                guard batchedRowUpdate.section != removedSectionIndex else { return nil }
-
-                var batchedRowUpdate = batchedRowUpdate
-
-                if batchedRowUpdate.section > removedSectionIndex {
-                    batchedRowUpdate.section -= 1
-                }
-
-                return batchedRowUpdate
-            }
-
-            batchedRowRemovals = batchedRowRemovals.compactMap { batchedRowRemoval in
-                guard batchedRowRemoval.section != removedSectionIndex else { return nil }
-
-                var batchedRowRemoval = batchedRowRemoval
-
-                if batchedRowRemoval.section > removedSectionIndex {
-                    batchedRowRemoval.section -= 1
-                }
-
-                return batchedRowRemoval
-            }
-
-            batchedRowMoves = batchedRowMoves.compactMap { move in
-                guard move.to.section != removedSectionIndex else { return nil }
-
-                var move = move
-
-                if move.from.section > removedSectionIndex {
-                    move.from.section -= 1
-                }
-
-                if move.to.section > removedSectionIndex {
-                    move.to.section -= 1
-                }
-
-                return move
-            }
-        }
+        changesReducer.removeGroups(sections)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didInsertElementsAt indexPaths: [IndexPath]) {
@@ -536,7 +310,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        batchedRowInserts.append(contentsOf: indexPaths)
+        changesReducer.insertElements(at: indexPaths)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didRemoveElementsAt indexPaths: [IndexPath]) {
@@ -548,57 +322,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        indexPaths.forEach { removedIndexPath in
-            if batchedRowUpdates.contains(removedIndexPath) {
-                batchedRowUpdates.removeAll(where: { $0 == removedIndexPath })
-            } else if batchedRowInserts.contains(removedIndexPath) {
-                batchedRowInserts.removeAll(where: { $0 == removedIndexPath })
-            } else {
-                batchedRowRemovals.append(removedIndexPath)
-            }
-
-            batchedRowUpdates = batchedRowUpdates.compactMap { updatedIndexPath in
-                guard updatedIndexPath.section == removedIndexPath.section else { return updatedIndexPath }
-
-                if updatedIndexPath.item > removedIndexPath.item {
-                    if updatedIndexPath.item == removedIndexPath.item + 1 {
-                        // Triggering an update to row with the same index path as one that's been removed
-                        // will trigger "attempt to delete and reload the same index path"
-                        batchedRowRemovals.append(updatedIndexPath)
-                        batchedRowInserts.append(updatedIndexPath)
-                        return nil
-                    }
-
-                    return IndexPath(item: updatedIndexPath.item - 1, section: updatedIndexPath.section)
-                } else {
-                    return updatedIndexPath
-                }
-            }
-
-            batchedRowInserts = batchedRowInserts.map { insertedIndexPath in
-                guard insertedIndexPath.section == removedIndexPath.section else { return insertedIndexPath }
-
-                if insertedIndexPath.item > removedIndexPath.item {
-                    return IndexPath(item: insertedIndexPath.item - 1, section: insertedIndexPath.section)
-                } else {
-                    return insertedIndexPath
-                }
-            }
-
-            batchedRowMoves = batchedRowMoves.map { move in
-                var move = move
-
-                if move.from.section == removedIndexPath.section, move.from.item > removedIndexPath.item {
-                    move.from.item -= 1
-                }
-
-                if move.to.section == removedIndexPath.section, move.to.item > removedIndexPath.item {
-                    move.to.item -= 1
-                }
-
-                return move
-            }
-        }
+        changesReducer.removeElements(at: indexPaths)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didUpdateElementsAt indexPaths: [IndexPath]) {
@@ -629,7 +353,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        batchedRowUpdates.append(contentsOf: indexPaths)
+        changesReducer.updateElements(at: indexPaths)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, didMoveElementsAt moves: [(IndexPath, IndexPath)]) {
@@ -641,10 +365,7 @@ extension CollectionCoordinator: SectionProviderMappingDelegate {
             return
         }
 
-        let moves = moves.map { move in
-            ItemMove(from: move.0, to: move.1)
-        }
-        batchedRowMoves.append(contentsOf: moves)
+        changesReducer.moveElements(moves)
     }
 
     public func mapping(_ mapping: SectionProviderMapping, selectedIndexesIn section: Int) -> [Int] {

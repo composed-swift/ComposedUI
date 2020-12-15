@@ -11,15 +11,45 @@ import Foundation
  to "section" and "row" for `UITableView`s and "section" and "item" for `UICollectionView`.
  */
 internal struct ChangesReducer {
-    internal private(set) var changeset: Changeset = Changeset()
+    internal var hasActiveUpdates: Bool {
+        return activeUpdates > 0
+    }
 
-    /// Reset the set of changes to be empty.
-    internal mutating func reset() {
-        changeset = Changeset()
+    private var activeUpdates = 0
+
+    private var changeset: Changeset = Changeset()
+
+    /// Begin performing updates. This must be called prior to making updates.
+    ///
+    /// It is possible to call this function multiple times to build up a batch of changes.
+    ///
+    /// All calls to this must be balanced with a call to `endUpdating`.
+    internal mutating func beginUpdating() {
+        activeUpdates += 1
+    }
+
+    /// End the current collection of updates.
+    ///
+    /// - Returns: The completed changeset, if this ends the last update in the batch.
+    internal mutating func endUpdating() -> Changeset? {
+        activeUpdates -= 1
+
+        guard activeUpdates == 0 else {
+            assert(activeUpdates > 0, "`endUpdating` calls must be balanced with `beginUpdating`")
+            return nil
+        }
+
+        let changeset = self.changeset
+        self.changeset = Changeset()
+        return changeset
     }
 
     internal mutating func updateGroups(_ groups: IndexSet) {
         changeset.groupsUpdated.formUnion(groups)
+    }
+
+    internal mutating func insertGroups(_ groups: [Int]) {
+        insertGroups(IndexSet(groups))
     }
 
     internal mutating func insertGroups(_ groups: IndexSet) {
@@ -97,6 +127,10 @@ internal struct ChangesReducer {
                 return move
             })
         }
+    }
+
+    internal mutating func removeGroups(_ groups: [Int]) {
+        removeGroups(IndexSet(groups))
     }
 
     internal mutating func removeGroups(_ groups: IndexSet) {
